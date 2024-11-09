@@ -1,9 +1,9 @@
 import React, { useState, useRef, useEffect } from 'react';
 import ReactPlayer from 'react-player';
 import screenfull from 'screenfull';
-import ControlIcons from './course/ControlIcons';
+import ControlIcons from '../course/ControlIcons';
 
-const VideoPlayer = ({ videoUrl, title }) => {
+const CourseStepDetailVideoPlayer = ({ videoUrl, title }) => {
     const [playerState, setPlayerState] = useState({
         playing: false,
         muted: false,
@@ -135,7 +135,7 @@ const VideoPlayer = ({ videoUrl, title }) => {
 
     return (
         <div
-            className="playerDiv"
+            className="stepDetailPlayerDiv"
             ref={playerDivRef}
             onMouseEnter={handleMouseEnter}
             onMouseLeave={handleMouseLeave}
@@ -217,4 +217,4 @@ const VideoPlayer = ({ videoUrl, title }) => {
     );
 };
 
-export default VideoPlayer;
+export default CourseStepDetailVideoPlayer;

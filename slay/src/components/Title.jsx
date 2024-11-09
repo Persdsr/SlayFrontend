@@ -201,28 +201,37 @@ const Title = () => {
                         </div>
                         <div className="modal-column">
                             {errors.username && <span className="error-message">*{errors.username}</span>}
-                            <input
-                                className="input-modal-field"
-                                type="text"
-                                name="username"
-                                placeholder="Имя пользователя"
-                                value={formValues.username}
-                                onChange={handleInputChange}
-                            />
+
+                            <div className="input-wrapper">
+                                <input type="username"
+                                       className="input-box"
+                                       placeholder="Имя пользователя"
+                                       name="email"
+                                       value={formValues.username}
+                                       onChange={handleInputChange}
+                                />
+                                <span className="underline"></span>
+                            </div>
 
                             {errors.password && <span className="error-message">*{errors.password}</span>}
-                            <input
-                                className="input-modal-field"
-                                type="password"
-                                name="password"
-                                placeholder="Пароль"
-                                value={formValues.password}
-                                onChange={handleInputChange}
-                            />
+
+                            <div className="input-wrapper">
+                                <input type="password"
+                                       className="input-box"
+                                       placeholder="Пароль"
+                                       name="password"
+                                       value={formValues.password}
+                                       onChange={handleInputChange}
+                                />
+                                <span className="underline"></span>
+                            </div>
+
 
                         </div>
                         <div className="auth-choise">
-                            <span className="auth-choise-text">Нет аккаунта? <span style={{color: "blue", cursor: "pointer"}} onClick={() => (setLoginOpen(false), setRegisterOpen(true))}>Создать</span></span>
+                            <span className="auth-choise-text">Нет аккаунта? <span
+                                style={{color: "blue", cursor: "pointer"}}
+                                onClick={() => (setLoginOpen(false), setRegisterOpen(true))}>Создать</span></span>
                         </div>
                         <button type="submit" className="modal-btn-confirm">Войти</button>
                     </form>

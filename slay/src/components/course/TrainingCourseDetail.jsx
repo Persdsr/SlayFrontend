@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import TrainingCourseService from '../../service/TrainingCourseService';
 import VideoPlayer from '../VideoPlayer';
+import CourseStepDetailVideoPlayer from "./CourseStepDetailVideoPlayer";
 
 const TrainingCourseDetail = () => {
     const params = useParams();
@@ -118,10 +119,16 @@ const TrainingCourseDetail = () => {
                 {courseDetails?.trainingCourseSteps.map((trainingCourseStep) =>
                     <div className="step-block">
                         <h2 className="step-title">{trainingCourseStep?.title}</h2>
-
+                        {trainingCourseStep?.trainingCourseStepDetails.map((stepDetail) =>
+                            <div className="step-detail-block">
+                                <span className="step-detail-description">{stepDetail.description}</span>
+                                <CourseStepDetailVideoPlayer title={courseDetails?.description} videoUrl={stepDetail?.videos.replace("download", "view")} />
+                            </div>
+                        )}
                     </div>
                 )}
             </div>
+
 
         </div>
     );

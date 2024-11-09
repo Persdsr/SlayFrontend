@@ -706,6 +706,14 @@ footer {
     max-width: 800px;
 }
 
+.stepDetailPlayerDiv {
+    position: relative;
+    width: 70%;
+    height: 100%;
+    max-width: 800px;
+    margin: 12px auto;
+}
+
 .video-container {
     width: 80%;
     overflow: hidden;
@@ -921,7 +929,7 @@ footer {
 }
 
 .material-info {
-    margin: 0 auto; /* Center the whole section */
+    margin: 0 auto 140px;
 }
 
 .material-block {
@@ -1041,4 +1049,26 @@ footer {
     border: #232323 1px solid;
     border-radius: 20px;
     padding: 10px;
+}
+
+.course-steps-block {
+    margin: 0 15px;
+}
+
+.step-title {
+    font-size: 32px;
+    margin: 0 0 15px 0;
+}
+
+.step-block {
+    margin-bottom: 100px;
+}
+
+.step-detail-description {
+    font-size: 20px;
+    color: #444444;
+}
+
+.step-detail-block {
+    margin-bottom: 80px;
 }
