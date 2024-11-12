@@ -3,12 +3,19 @@ import { useParams } from 'react-router-dom';
 import TrainingCourseService from '../../service/TrainingCourseService';
 import VideoPlayer from '../VideoPlayer';
 import CourseStepDetailVideoPlayer from "./CourseStepDetailVideoPlayer";
+import { Swiper, SwiperSlide } from 'swiper/react';
+import 'swiper/css';
+import 'swiper/css/navigation';
+import 'swiper/css/pagination';
+import { Navigation, Pagination } from 'swiper/modules';
+
 
 const TrainingCourseDetail = () => {
     const params = useParams();
     const [courseDetails, setCourseDetails] = useState(null);
     const [videoUrl, setVideoUrl] = useState('');
     let [createAt, setCreateAt] = useState('');
+    const [videosCount, setVideosCount] = useState(0);
 
     useEffect(() => {
         const fetchCourse = async () => {
@@ -17,6 +24,13 @@ const TrainingCourseDetail = () => {
                 setCourseDetails(response.data);
                 setVideoUrl(response.data.trailer);
                 setCreateAt(formatDate(response.data.createAt));
+
+                const countVideos = response.data.trainingCourseSteps.reduce((acc, step) => {
+                    return acc + step.trainingCourseStepDetails.filter(detail => detail.videos).length;
+                }, 0);
+
+                setVideosCount(countVideos);
+
             } catch (error) {
                 console.error('Error fetching course:', error);
             }
@@ -28,11 +42,10 @@ const TrainingCourseDetail = () => {
     function formatDate(isoString) {
         const date = new Date(isoString);
         const days = String(date.getUTCDate()).padStart(2, '0');
-        const month = String(date.getUTCMonth() + 1).padStart(2, '0'); // Обратите внимание на +1
+        const month = String(date.getUTCMonth() + 1).padStart(2, '0');
         const year = String(date.getUTCFullYear()).padStart(2, '0');
         return `${days}-${month}-${year}`;
     }
-
 
     return (
         <div className="main">
@@ -79,7 +92,7 @@ const TrainingCourseDetail = () => {
                             <div className="circle">
                                 <img src="/dnevnikvideo.png" alt="" className="material-icon"/>
                             </div>
-                            <span className="material-description">{`Изображения: `}</span>
+                            <span className="material-description">{`Материал из ` + videosCount + " видео"}</span>
                         </div>
                         <div className="material-info-block">
                             <div className="circle">
@@ -110,26 +123,41 @@ const TrainingCourseDetail = () => {
                     </div>
                 </div>
             </div>
-            {/*<div className="buy-btn-container">
-                <button className="btn-course-buy">
-                    Приобрести 12.99$
-                </button>
-            </div>*/}
+
             <div className="course-steps-block">
                 {courseDetails?.trainingCourseSteps.map((trainingCourseStep) =>
-                    <div className="step-block">
-                        <h2 className="step-title">{trainingCourseStep?.title}</h2>
-                        {trainingCourseStep?.trainingCourseStepDetails.map((stepDetail) =>
-                            <div className="step-detail-block">
-                                <span className="step-detail-description">{stepDetail.description}</span>
-                                <CourseStepDetailVideoPlayer title={courseDetails?.description} videoUrl={stepDetail?.videos.replace("download", "view")} />
-                            </div>
-                        )}
+                    <div className="step-block" key={trainingCourseStep?.id}>
+                        <h2 className="step-title"><h2 style={{fontSize: '38px', color: "#23c483", display: 'inline-block'}}>#</h2>  {trainingCourseStep?.title}</h2>
+
+                        {/* Swiper для слайдера */}
+                        <Swiper
+                            spaceBetween={0}
+                            slidesPerView={1}
+                            navigation={true}  // Навигация включена
+                            pagination={{ clickable: true }}
+                            loop={false} // Отключаем бесконечный цикл
+                            modules={[Navigation, Pagination]}  // Указываем модули здесь
+                            className="step-slider"
+
+                            simulateTouch={false}  // Отключает возможность перемещения слайдов на мобильных устройствах
+                            allowTouchMove={false} // Отключает перетаскивание слайдов
+                            mousewheel={false} // Отключает прокрутку колесиком мыши
+                        >
+                            {trainingCourseStep?.trainingCourseStepDetails.map((stepDetail, index) => (
+                                <SwiperSlide key={index}>
+                                    <div className="step-detail-block">
+                                        <span className="step-detail-description">{stepDetail.description}</span>
+                                        <CourseStepDetailVideoPlayer
+                                            title={courseDetails?.description}
+                                            videoUrl={stepDetail?.videos.replace("download", "view")}
+                                        />
+                                    </div>
+                                </SwiperSlide>
+                            ))}
+                        </Swiper>
                     </div>
                 )}
             </div>
-
-
         </div>
     );
 };
