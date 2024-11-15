@@ -10,11 +10,7 @@ export default class TrainingCourseService {
         return await axios.get("http://localhost:8080/api/category/categories-name");
     }
 
-    static async getMoviesByGenre(genre) {
-        return await axios.get("http://localhost:8080/api/genre/" + genre);
-    }
-
-    static async getLastTwoBigMovies() {
-        return await axios.get("http://localhost:8080/api/lasttwo");
+    static async getCategoriesWithCourses() {
+        return await axios.get("http://localhost:8080/api/category/training-courses");
     }
 }

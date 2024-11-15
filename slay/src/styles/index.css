@@ -314,7 +314,7 @@ a {
 }
 
 .catalog-navigate-btn {
-    margin-top: 50px;
+    margin-top: 20px;
     padding: 15px 30px;
     font-size: 12px;
     text-transform: uppercase;
@@ -330,6 +330,10 @@ a {
     outline: none;
     margin-bottom: 20px;
     width: fit-content;
+}
+
+.catalog-title {
+    padding-bottom: 14px;
 }
 
 .catalog-navigate-btn:hover {
@@ -461,7 +465,7 @@ footer {
     color: white;
     padding: 40px 20px;
     font-family: 'Arial', sans-serif;
-    margin-top: 80px
+    margin-top: 80px;
 }
 
 .footer-container {
@@ -880,7 +884,7 @@ footer {
     font-style: normal;
 }
 
-.author-avatar span {
+.author-avatar span .card-author-avatar {
     display: block;
     width: 40px;
     height: 40px;
@@ -1134,4 +1138,72 @@ footer {
 
 .swiper-button-next:hover, .swiper-button-prev:hover {
     color: #23c483 !important;; /* Цвет стрелок при наведении */
+}
+
+.courses-catalog-container {
+    margin: 30px 30px;
+    min-height: 999px;
+}
+
+.course-poster {
+    width: 315px;
+    height: 190px;
+}
+
+.course-block {
+    display: flex;
+    flex-direction: column;
+    width: max-content;
+}
+
+.category-name {
+    color: black;
+    text-decoration: none !important;
+    font-size: 28px;
+    font-family: "Oswald", sans-serif;
+    letter-spacing: 1px;
+    font-weight: 700;
+    text-transform: uppercase;
+    margin-bottom: 5px;
+}
+
+.course-name {
+    font-size: 18px;
+    font-family: "Oswald", sans-serif;
+    color: black;
+    width: max-content;
+}
+
+.catalog-author-avatar .catalog-author-avatar {
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    background: #f2f2f2;
+    margin: 0 10px;
+}
+
+.catalog-author-info {
+    display: flex;
+    flex-direction: row;
+}
+
+.catalog-half-circle {
+    position: relative;
+    bottom: 28px;
+    left: 4px;
+    width: 47px;
+    height: 35px;
+    fill: none;
+    stroke: #23c483;
+    stroke-width: 8;
+    stroke-linecap: round;
+}
+
+.course-avatar-block {
+    display: flex;
+    flex-direction: column;
+}
+
+.author-name {
+    margin-left: 7px;
 }
