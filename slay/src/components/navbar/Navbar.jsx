@@ -21,7 +21,7 @@ const Navbar = () => {
 
             <ul className="navbar-links">
                 <li className="navbar-title dropdown">
-                    <a href="#support">Поддержка</a>
+                    <a href="/support">Поддержка</a>
                     <ul className="dropdown-menu">
                         <li><a className="navbar-title" href="#faq">FAQ</a></li>
                         <li><a className="navbar-title" href="#docs">Документы</a></li>

@@ -5,6 +5,7 @@ import Main from "./pages/Main";
 import TrainingCourseDetail from "./components/course/TrainingCourseDetail";
 import CreateTrainingCourse from "./components/CreateTrainingCourse";
 import CoursesCatalog from "./components/CoursesCatalog";
+import Support from "./pages/Support";
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
               <Route path={"/course/detail/:id"} element={<TrainingCourseDetail />}/>
               <Route path={"/create-course"} element={<CreateTrainingCourse />}/>
               <Route path={"/courses"} element={<CoursesCatalog />}/>
+              <Route path={"/support"} element={<Support />}/>
           </Routes>
 
       </BrowserRouter>

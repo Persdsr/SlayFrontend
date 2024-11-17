@@ -17,6 +17,10 @@ const Main = () => {
                     <span className="catalog-navigate-text">Alfdok podfll flldl l ldllfdp pddfd</span>
                     <a href="/courses"><button className="catalog-navigate-btn">Посмотреть</button></a>
                 </div>
+                
+                <div className="main-right-poster">
+                    <img src="/main-poster-3.jpg" alt=""/>
+                </div>
             </div>
 
             <TipApplication/>
