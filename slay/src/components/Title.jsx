@@ -15,11 +15,8 @@ const Title = () => {
 
 
     const handleInputChange = (e) => {
-        const { name, value } = e.target;
-        setFormValues({
-            ...formValues,
-            [name]: value,
-        });
+        ///3442343
+        e.target.constructor()
     };
 
     const handleSubmit = (e) => {
