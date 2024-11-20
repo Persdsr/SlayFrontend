@@ -12,7 +12,7 @@ const Navbar = () => {
                         <li><a className="navbar-title" href="#category3">Категория 3</a></li>
                     </ul>
                 </li>
-                <li className="navbar-title"><a href="#about">О нас</a></li>
+                <li className="navbar-title"><a href="/about">О нас</a></li>
             </ul>
 
             <div className="navbar-logo">

@@ -305,16 +305,6 @@ a {
     overflow: hidden;  /* Это предотвратит переполнение */
 }
 
-.main-right-poster {
-    position: absolute;
-    top: 0;
-    right: 0;
-    width: 50%;
-    height: 100%;
-    object-fit: cover;
-    clip-path: polygon(0 0, 100% 0, 100% 100%, 0 10%);
-    overflow: hidden;  /* Это также может помочь, если у изображения есть скрытые элементы */
-}
 
 
 .catalog-navigate-info {
@@ -481,6 +471,8 @@ footer {
     padding: 40px 20px;
     font-family: 'Arial', sans-serif;
     margin-top: 80px;
+
+
 }
 
 .footer-container {
@@ -1297,7 +1289,7 @@ footer {
 .menu-card .menu-item {
     display: flex;
     align-items: center;
-    color: #000000;
+    color: #414141;
     gap: 10px;
     transition: all 0.3s ease-out;
     padding: 4px 7px;
@@ -1334,11 +1326,40 @@ footer {
 }
 
 .menu-card .menu-list:last-child .menu-item {
-    color: #000000;
+    color: #414141;
 }
 
 .menu-card .menu-list:last-child .delete:hover {
     background-color: rgba(253, 62, 62, 0.84);
     color: #ffffff;
     transform: translate(1px, -1px);
+}
+
+.about-container {
+    margin: 130px 10px 30px 180px;
+}
+
+.about-content {
+    width: 400px;
+}
+
+.about-title {
+    margin-bottom: 20px;
+    color: #4c4c4c;
+}
+
+.about-circle {
+    width: 500px;
+    height: 500px;
+    left: 400px;
+    bottom: 30px;
+    background: #23c483;
+    border-radius: 50%;
+}
+
+.about-text {
+    font-family: 'Roboto', Arial, sans-serif; /* Красивый шрифт с запасным */
+    color: #252525; /* Темно-серый цвет для хорошего контраста */
+    line-height: 1.6;
+    max-width: 600px; /* Максимальная ширина блока */
 }

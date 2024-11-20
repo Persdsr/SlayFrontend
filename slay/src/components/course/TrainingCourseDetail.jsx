@@ -135,7 +135,7 @@ const TrainingCourseDetail = () => {
 
             {/* Основная информация курса */}
             <div className="course-detail-info">
-                <VideoPlayer title={courseDetails?.name} videoUrl={videoUrl.replace("download", "view")} />
+                <VideoPlayer title={courseDetails?.name} videoUrl={videoUrl.replace("download", "view")}/>
                 <div className="card-author">
                     <header className="card-header">
                         <p>{createAt}</p>
@@ -162,20 +162,74 @@ const TrainingCourseDetail = () => {
                 </div>
             </div>
 
+            <div className="course-detail-material">
+                <h1 className="course-detail-title">Информация</h1>
+                <div className="material-info">
+                    <div className="material-block">
+                        <div className="material-info-block">
+                            <div className="circle">
+                                <img src="/ganteli.png" alt="" className="material-icon"/>
+                            </div>
+                            <span className="material-description">uuh</span>
+                        </div>
+                        <div className="material-info-block">
+                            <div className="circle">
+                                <img src="/dnevnikvideo.png" alt="" className="material-icon"/>
+                            </div>
+                            <span className="material-description">{`Материал из ` + videosCount + " видео"}</span>
+                        </div>
+                        <div className="material-info-block">
+                            <div className="circle">
+                                <img src="/gym100.png" alt="" className="material-icon"/>
+                            </div>
+                            <span className="material-description">Course buyers: 3</span>
+                        </div>
+                    </div>
+                    <div className="material-block">
+                        <div className="material-info-block">
+                            <div className="circle">
+                                <img src="/ganteli.png" alt="" className="material-icon"/>
+                            </div>
+                            <span className="material-description">uuh</span>
+                        </div>
+                        <div className="material-info-block">
+                            <div className="circle">
+                                <img src="/dnevnikvideo.png" alt="" className="material-icon"/>
+                            </div>
+                            <span className="material-description">{`Изображения: `}</span>
+                        </div>
+                        <div className="material-info-block">
+                            <div className="circle">
+                                <img src="/gym100.png" alt="" className="material-icon"/>
+                            </div>
+                            <span className="material-description">Course buyers: 3</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             {/* Этапы курса */}
             <div className="course-steps-block">
                 {courseDetails?.trainingCourseSteps.map((trainingCourseStep) =>
                     <div className="step-block" key={trainingCourseStep?.id}>
-                        <h2 className="step-title"><h2 style={{fontSize: '38px', color: "#23c483", display: 'inline-block'}}>#</h2>  {trainingCourseStep?.title}</h2>
+                        <h2 className="step-title"><h2 style={{
+                            fontSize: '38px',
+                            color: "#23c483",
+                            display: 'inline-block'
+                        }}>#</h2>  {trainingCourseStep?.title}</h2>
 
                         <Swiper
-                            spaceBetween={0}
+                            spaceBetween={20}
                             slidesPerView={1}
                             navigation={true}
-                            pagination={{ clickable: true }}
+                            pagination={{clickable: true}}
                             loop={false}
                             modules={[Navigation, Pagination]}
                             className="step-slider"
+
+                            simulateTouch={false}  // Отключает возможность перемещения слайдов на мобильных устройствах
+                            allowTouchMove={false} // Отключает перетаскивание слайдов
+                            mousewheel={false}
                         >
                             {trainingCourseStep?.trainingCourseStepDetails.map((stepDetail, index) => (
                                 <SwiperSlide key={index}>

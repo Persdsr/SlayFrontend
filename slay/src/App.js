@@ -6,6 +6,8 @@ import TrainingCourseDetail from "./components/course/TrainingCourseDetail";
 import CreateTrainingCourse from "./components/CreateTrainingCourse";
 import CoursesCatalog from "./components/CoursesCatalog";
 import Support from "./pages/Support";
+import About from "./pages/About";
+import Profile from "./pages/Profile";
 
 function App() {
   return (
@@ -16,6 +18,8 @@ function App() {
               <Route path={"/create-course"} element={<CreateTrainingCourse />}/>
               <Route path={"/courses"} element={<CoursesCatalog />}/>
               <Route path={"/support"} element={<Support />}/>
+              <Route path={"/about"} element={<About />}/>
+              <Route path={"/:username"} element={<Profile />}/>
           </Routes>
 
       </BrowserRouter>
