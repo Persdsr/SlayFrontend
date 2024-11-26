@@ -8,6 +8,10 @@ import CoursesCatalog from "./components/CoursesCatalog";
 import Support from "./pages/Support";
 import About from "./pages/About";
 import Profile from "./pages/Profile";
+import Admin from "./pages/Admin";
+import AdminSupport from "./components/admin/AdminSupport";
+import Complaints from "./components/admin/Complaints";
+import BannedUsers from "./components/admin/BannedUsers";
 
 function App() {
   return (
@@ -20,6 +24,11 @@ function App() {
               <Route path={"/support"} element={<Support />}/>
               <Route path={"/about"} element={<About />}/>
               <Route path={"/:username"} element={<Profile />}/>
+              <Route path={"/admin"} element={<Admin />}/>
+
+              <Route path="/support" element={<AdminSupport />} />
+              <Route path="/complaints" element={<Complaints />} />
+              <Route path="/banned-users" element={<BannedUsers />} />
           </Routes>
 
       </BrowserRouter>

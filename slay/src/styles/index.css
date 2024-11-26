@@ -1558,3 +1558,41 @@ footer {
     color: white;
     font-family: "Oswald", sans-serif;
 }
+
+.admin-container {
+    display: flex;
+    width: 100%;
+    height: 100vh;
+    background-color: #f4f4f4;
+}
+
+.admin-list-menu {
+    width: 20%;
+    background-color: white;
+    color: #fff;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.admin-menu-link {
+    text-decoration: none;
+    color: #000000;
+    padding: 10px;
+    border-radius: 5px;
+    font-weight: 700;
+    transition: background-color 0.3s ease;
+}
+
+.admin-menu-link:hover,
+.admin-menu-link.active {
+    background-color: rgba(35, 196, 131, 0.85);
+    color: #fff;
+}
+
+.admin-content {
+    width: 80%;
+    padding: 20px;
+    background-color: #fff;
+}
