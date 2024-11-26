@@ -1,86 +1,64 @@
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import Modal from './Modal';
+import {useForm, SubmitHandler} from "react-hook-form"
+import axios from "axios";
+
 
 const Title = () => {
     const [isRegisterOpen, setRegisterOpen] = useState(false);
     const [isLoginOpen, setLoginOpen] = useState(false);
     const [errors, setErrors] = useState({});
     const [errorMessage, setErrorMessage] = useState();
-    const [formValues, setFormValues] = useState({
-        username: '',
-        email: '',
-        password: '',
-        confirmPassword: ''
-    });
+
+    const {register, handleSubmit} = useForm()
 
 
-    const handleInputChange = (e) => {
-        ///3442343
-        e.target.constructor()
-    };
-
-    const handleSubmit = (e) => {
-        e.preventDefault();
-            fetch('http://localhost:8080/api/auth/signup', {
-                method: 'POST',
-                body: JSON.stringify({
-                    username: formValues.username,
-                    email: formValues.email,
-                    password: formValues.password,
-                }),
-                headers: {
-                    'Content-type': 'application/json; charset=UTF-8',
-                },
-
+    const onSubmit = (data) => {
+        axios.post('http://localhost:8080/api/auth/signup',
+            data
+        )
+            .then((response) => {
+                console.log('Успех:', response);
             })
-                .then((response) => {
-                    if (!response.ok) {
-                        return response.json().then(errorData => {
-                            throw new Error(errorData.message || 'Что-то пошло не так');
-                        });
-                    }
-                })
-                .then(data => {
-                    console.log('Успех:', data);
-                    // Обработка успешного ответа
-                })
-                .catch((err) => {
-                    setErrorMessage(err.message)
-                    const errorMessage = document.getElementById('error-message');
-                    errorMessage.classList.remove('hidden'); // Убираем класс hidden
-                    console.error(err.message);
-                });
-        }
+            .catch((err) => {
+                console.log(err.response.data.message);
+                const errorMessage = document.getElementById('error-message');
+                errorMessage.classList.remove('hidden'); // Убираем класс hidden
+                setErrorMessage(err.response.data.message)
+            });
+    }
 
     return (
         <div className="title-block">
             <div className="title-info-block">
                 <div className="title-block-content">
-                    <h1 className="title-block-text"><span className="title-block-slay">SLAY</span> THE BEST GYM PRACTICE COURSES</h1>
+                    <h1 className="title-block-text"><span className="title-block-slay">SLAY</span> THE BEST GYM
+                        PRACTICE COURSES</h1>
                     <span className="title-block-description">Alquam vismmil nvnm fili, aw congue masssa pretm ul in vel jusi ops</span>
                     <div className="title-buttons">
-                        <button className="title-block-button" onClick={() => setRegisterOpen(true)}>Регистрация</button>
+                        <button className="title-block-button" onClick={() => setRegisterOpen(true)}>Регистрация
+                        </button>
                         <button className="title-block-button" onClick={() => setLoginOpen(true)}>Войти</button>
                     </div>
                 </div>
             </div>
 
             <div className="title-poster-block">
-                <img src="/maxresdefault.png" alt="" className="title-poster" />
+                <img src="/maxresdefault.png" alt="" className="title-poster"/>
             </div>
 
             <div className="title-detail-block">
                 <ul>
                     <li className="title-detail-text">
-                        <img src="/maxresdefault.png" alt="Icon 1" className="list-icon" />
+                        <img src="/maxresdefault.png" alt="Icon 1" className="list-icon"/>
                         Many training courses for sport interest
                     </li>
                     <li className="title-detail-text">
-                        <img src="/slay.png" alt="Icon 2" className="list-icon" />
+                        <img src="/slay.png" alt="Icon 2" className="list-icon"/>
                         Razlichnik podhot for everybody
                     </li>
                     <li className="title-detail-text">
-                        <img src="/slay.png" alt="Icon 3" className="list-icon" />
+                        <img src="/slay.png" alt="Icon 3" className="list-icon"/>
                         Prosmort otcheta self trenirovok
                     </li>
                 </ul>
@@ -88,7 +66,7 @@ const Title = () => {
 
             <Modal isOpen={isRegisterOpen} onClose={() => setRegisterOpen(false)}>
                 <div className="modal-block">
-                    <form className="modal-form" onSubmit={handleSubmit}>
+                    <form className="modal-form" onSubmit={handleSubmit(onSubmit)}>
                         <div id="error-message" className="card-error hidden">
                             <svg className="error-icon" xmlns="http://www.w3.org/2000/svg" fill="none"
                                  viewBox="0 0 24 24" stroke="currentColor">
@@ -100,13 +78,12 @@ const Title = () => {
                         <div className="modal-column">
                             {errors.username && <span className="error-message">*{errors.username}</span>}
 
-                            <div className="input-wrapper">
+                            <div className="input-support-wrapper">
                                 <input type="text"
                                        className="input-box"
                                        placeholder="Имя пользователя"
                                        name="username"
-                                       value={formValues.username}
-                                       onChange={handleInputChange}
+                                       {...register("username")}
                                 />
                                 <span className="underline"></span>
                             </div>
@@ -118,20 +95,18 @@ const Title = () => {
                                        className="input-box"
                                        placeholder="email"
                                        name="email"
-                                       value={formValues.email}
-                                       onChange={handleInputChange}
+                                       {...register("email")}
                                 />
                                 <span className="underline"></span>
                             </div>
 
                             {errors.password && <span className="error-message">*{errors.password}</span>}
                             <div className="input-wrapper">
-                                <input type="text"
+                                <input type="password"
                                        className="input-box"
                                        placeholder="password"
                                        name="password"
-                                       value={formValues.password}
-                                       onChange={handleInputChange}
+                                       {...register("password")}
                                 />
                                 <span className="underline"></span>
                             </div>
@@ -140,12 +115,11 @@ const Title = () => {
 
                             {errors.confirmPassword && <span className="error-message">*{errors.confirmPassword}</span>}
                             <div className="input-wrapper">
-                                <input type="text"
+                                <input type="password"
                                        className="input-box"
                                        placeholder="confirmPassword"
                                        name="confirmPassword"
-                                       value={formValues.confirmPassword}
-                                       onChange={handleInputChange}
+
                                 />
                                 <span className="underline"></span>
                             </div>
@@ -185,7 +159,7 @@ const Title = () => {
                 </div>
             </Modal>
 
-            <Modal isOpen={isLoginOpen} onClose={() => setLoginOpen(false)}>
+            {/*<Modal isOpen={isLoginOpen} onClose={() => setLoginOpen(false)}>
                 <div className="modal-block">
                     <form className="modal-form" onSubmit={handleSubmit}>
                         <div id="error-message" className="card-error hidden">
@@ -233,10 +207,10 @@ const Title = () => {
                         <button type="submit" className="modal-btn-confirm">Войти</button>
                     </form>
 
-                    {/*<div className="modal-inline">
+                    <div className="modal-inline">
                             <input className="input-modal-field" type="text" placeholder="name" required/>
                             <input className="input-modal-field" type="email" placeholder="email" required/>
-                        </div>*/}
+                        </div>
 
                     <div className="modal-info">
                         <div className="modal-poster">
@@ -258,7 +232,7 @@ const Title = () => {
                         </ul>
                     </div>
                 </div>
-            </Modal>
+            </Modal>*/}
         </div>
     );
 }
