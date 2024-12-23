@@ -11,26 +11,32 @@ import { Navigation, Pagination } from 'swiper/modules';
 
 const TrainingCourseDetail = () => {
     const params = useParams();
-    const [courseDetails, setCourseDetails] = useState(null);
+    const [courseDetails, setCourseDetails] = useState([]);
     const [videoUrl, setVideoUrl] = useState('');
     let [createAt, setCreateAt] = useState('');
     const [videosCount, setVideosCount] = useState(0);
+    let [isPurchased, setPurchased] = useState(false)
     const [menuOpen, setMenuOpen] = useState(false); // Стейт для управления состоянием меню
 
     useEffect(() => {
         const fetchCourse = async () => {
             try {
                 const response = await TrainingCourseService.getTrainingCourseById(params.id);
-                setCourseDetails(response.data);
-                setVideoUrl(response.data.trailer);
-                setCreateAt(formatDate(response.data.createAt));
+                setPurchased(!response.data.body.trainingCourseCroppedStep)
+                console.log(isPurchased)
 
-                const countVideos = response.data.trainingCourseSteps.reduce((acc, step) => {
+                setCourseDetails(response.data.body);
+                console.log(response.data.body)
+                setVideoUrl(response.data.body.trailer);
+                setCreateAt(formatDate(response.data.body.createAt));
+
+
+               /* const countVideos = response.data.trainingCourseSteps.reduce((acc, step) => {
                     return acc + step.trainingCourseStepDetails.filter(detail => detail.videos).length;
                 }, 0);
 
                 setVideosCount(countVideos);
-
+*/
             } catch (error) {
                 console.error('Error fetching course:', error);
             }
@@ -144,6 +150,7 @@ const TrainingCourseDetail = () => {
                     </header>
                     <div className="card-author-info">
                         <a className="author-avatar" href="#">
+                            <img src="/рарпаапр.PNG" alt="Author Avatar" className="avatar-image"/>
                             <span></span>
                         </a>
                         <svg className="half-circle" viewBox="0 0 106 57">
@@ -155,9 +162,11 @@ const TrainingCourseDetail = () => {
                         </div>
                     </div>
                     <div className="tags">
-                        {courseDetails?.categories.map((category) =>
-                            <a className="card-author-tag" href="#" key={category}>{category}</a>
-                        )}
+                        {courseDetails?.categories?.map((category) => (
+                            <a className="card-author-tag" href="#" key={category}>
+                                {category}
+                            </a>
+                        ))}
                     </div>
                 </div>
             </div>
@@ -208,44 +217,75 @@ const TrainingCourseDetail = () => {
                 </div>
             </div>
 
-            {/* Этапы курса */}
-            <div className="course-steps-block">
-                {courseDetails?.trainingCourseSteps.map((trainingCourseStep) =>
-                    <div className="step-block" key={trainingCourseStep?.id}>
-                        <h2 className="step-title"><h2 style={{
-                            fontSize: '38px',
-                            color: "#23c483",
-                            display: 'inline-block'
-                        }}>#</h2>  {trainingCourseStep?.title}</h2>
+            {isPurchased ?
+                <div className="course-steps-block">
+                    3232
+                    {courseDetails?.trainingCourseSteps?.map((trainingCourseStep) =>
+                        <div className="step-block" key={trainingCourseStep?.id}>
+                            <h2 className="step-title"><h2 style={{
+                                fontSize: '38px',
+                                color: "#23c483",
+                                display: 'inline-block'
+                            }}>#</h2>  {trainingCourseStep?.title}</h2>
 
-                        <Swiper
-                            spaceBetween={20}
-                            slidesPerView={1}
-                            navigation={true}
-                            pagination={{clickable: true}}
-                            loop={false}
-                            modules={[Navigation, Pagination]}
-                            className="step-slider"
+                            <Swiper
+                                spaceBetween={20}
+                                slidesPerView={1}
+                                navigation={true}
+                                pagination={{clickable: true}}
+                                loop={false}
+                                modules={[Navigation, Pagination]}
+                                className="step-slider"
 
-                            simulateTouch={false}  // Отключает возможность перемещения слайдов на мобильных устройствах
-                            allowTouchMove={false} // Отключает перетаскивание слайдов
-                            mousewheel={false}
-                        >
-                            {trainingCourseStep?.trainingCourseStepDetails.map((stepDetail, index) => (
-                                <SwiperSlide key={index}>
-                                    <div className="step-detail-block">
-                                        <span className="step-detail-description">{stepDetail.description}</span>
-                                        <CourseStepDetailVideoPlayer
-                                            title={courseDetails?.description}
-                                            videoUrl={stepDetail?.videos.replace("download", "view")}
-                                        />
-                                    </div>
-                                </SwiperSlide>
-                            ))}
-                        </Swiper>
+                                simulateTouch={false}  // Отключает возможность перемещения слайдов на мобильных устройствах
+                                allowTouchMove={false} // Отключает перетаскивание слайдов
+                                mousewheel={false}
+                            >
+                                {trainingCourseStep?.trainingCourseStepDetails?.map((stepDetail, index) => (
+                                    <SwiperSlide key={index}>
+                                        <div className="step-detail-block">
+                                            <span className="step-detail-description">{stepDetail.description}</span>
+                                            <CourseStepDetailVideoPlayer
+                                                title={courseDetails?.description}
+                                                videoUrl={stepDetail?.videos?.replace("download", "view")}
+                                            />
+                                        </div>
+                                    </SwiperSlide>
+                                ))}
+                            </Swiper>
+                        </div>
+                    )}
+                </div>
+                :
+                <div className="course-steps-block">
+                    <div className="buy-btn-container">
+                        <button className="btn-course-buy">
+                            Купить за 499P
+                        </button>
                     </div>
-                )}
-            </div>
+                    <div className="course-blur-course-steps">
+                        <div className="step-block">
+                            <h2 className="step-title not-clickable"><h2 style={{
+                                fontSize: '38px',
+                                color: "#23c483",
+                                display: 'inline-block'
+                            }}>#</h2>  {courseDetails?.trainingCourseCroppedStep?.title}</h2>
+
+
+                            <div className="step-detail-block">
+                                <span
+                                    className="step-detail-description not-clickable">{courseDetails?.trainingCourseCroppedStep?.description}</span>
+                            </div>
+                            <div className="course-steps-video not-clickable" >
+                                <VideoPlayer title={courseDetails?.name}
+                                             videoUrl={videoUrl.replace("download", "view")}/>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            }
+
         </div>
     );
 };

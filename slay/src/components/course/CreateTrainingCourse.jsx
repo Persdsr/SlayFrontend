@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import TrainingCourseService from "../service/TrainingCourseService";
+import TrainingCourseService from "../../service/TrainingCourseService";
 import axios from "axios";
 
 const CreateTrainingCourse = () => {

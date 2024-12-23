@@ -3,8 +3,8 @@ import React  from "react";
 import {BrowserRouter, Route, Routes} from "react-router-dom";
 import Main from "./pages/Main";
 import TrainingCourseDetail from "./components/course/TrainingCourseDetail";
-import CreateTrainingCourse from "./components/CreateTrainingCourse";
-import CoursesCatalog from "./components/CoursesCatalog";
+import CreateTrainingCourse from "./components/course/CreateTrainingCourse";
+import CoursesCatalog from "./components/course/CoursesCatalog";
 import Support from "./pages/Support";
 import About from "./pages/About";
 import Profile from "./pages/Profile";
@@ -12,6 +12,10 @@ import Admin from "./pages/Admin";
 import AdminSupport from "./components/admin/AdminSupport";
 import Complaints from "./components/admin/Complaints";
 import BannedUsers from "./components/admin/BannedUsers";
+import AdminSupportDetail from "./components/admin/AdminSupportDetail";
+import AdminComplaintDetail from "./components/admin/AdminComplaintDetail";
+import MySupportRequests from "./components/user/MySupportRequests";
+import MyComplaintsRequests from "./components/user/MyComplaintsRequests";
 
 function App() {
   return (
@@ -22,13 +26,19 @@ function App() {
               <Route path={"/create-course"} element={<CreateTrainingCourse />}/>
               <Route path={"/courses"} element={<CoursesCatalog />}/>
               <Route path={"/support"} element={<Support />}/>
+              {/*<Route path={"/category/:category"} element={<Category />}/>*/}
               <Route path={"/about"} element={<About />}/>
               <Route path={"/:username"} element={<Profile />}/>
-              <Route path={"/admin"} element={<Admin />}/>
+              <Route path={"/my-supports"} element={<MySupportRequests />}/>
+              <Route path={"/my-complaints"} element={<MyComplaintsRequests />}/>
 
-              <Route path="/support" element={<AdminSupport />} />
-              <Route path="/complaints" element={<Complaints />} />
-              <Route path="/banned-users" element={<BannedUsers />} />
+
+              <Route path={"/admin"} element={<AdminSupport />}/>
+              <Route path="/admin/support" element={<AdminSupport />} />
+              <Route path="/admin/support/:supportId" element={<AdminSupportDetail />} />
+              <Route path="/admin/complaint/:complaintId" element={<AdminComplaintDetail />} />
+              <Route path="/admin/complaints" element={<Complaints />} />
+              <Route path="/admin/banned-users" element={<BannedUsers />} />
           </Routes>
 
       </BrowserRouter>

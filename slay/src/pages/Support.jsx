@@ -1,9 +1,11 @@
 import React, {useEffect, useState} from "react";
 import { useForm } from "react-hook-form";
 import axios from "axios";
+import SupportService from "../service/SupportService";
+import AdminService from "../service/AdminService";
 
 const Support = () => {
-    const { register, handleSubmit } = useForm();
+    const { register, handleSubmit, reset } = useForm();
     const [uploadedFiles, setUploadedFiles] = useState([]);
     const [uploadProgress, setUploadProgress] = useState({});
     const [requestResultText, setRequestResultText] = useState("");
@@ -11,17 +13,11 @@ const Support = () => {
     const [supportTypes, setSupportTypes] = useState([]);
 
     useEffect(() => {
-        // Запрашиваем список типов
-        axios.get("http://localhost:8080/api/support/support-request-types", {
-
-        })
-            .then((response) => {
-                setSupportTypes(response.data);
-                console.log(response.data)
-            })
-            .catch((error) => {
-                console.error("Ошибка при загрузке типов поддержки:", error);
-            });
+        const fetchRequestTypes = async () => {
+            const response = await AdminService.getSupportRequestTypes()
+            setSupportTypes(response);
+        }
+        fetchRequestTypes()
     }, []);
 
     const onSubmit = (data) => {
@@ -60,12 +56,15 @@ const Support = () => {
             .then((response) => {
                 setUploadedFiles([]);
                 setUploadProgress({});
+                reset()
+                window.scrollTo({ top: 0, behavior: "smooth" }); // Прокрутка наверх
                 setRequestResultText(response.data); // Успешный ответ
             })
             .catch((error) => {
                 setRequestResultText("Произошла ошибка при отправке. Попробуйте снова."); // Ошибка
                 console.error("Ошибка:", error);
             });
+
     };
 
     const handleFileChange = (event) => {

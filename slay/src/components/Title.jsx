@@ -3,7 +3,6 @@ import Modal from './Modal';
 import {useForm, SubmitHandler} from "react-hook-form"
 import axios from "axios";
 
-
 const Title = () => {
     const [isRegisterOpen, setRegisterOpen] = useState(false);
     const [isLoginOpen, setLoginOpen] = useState(false);
@@ -11,7 +10,6 @@ const Title = () => {
     const [errorMessage, setErrorMessage] = useState();
 
     const {register, handleSubmit} = useForm()
-
 
     const onSubmit = (data) => {
         axios.post('http://localhost:8080/api/auth/signup',
@@ -26,6 +24,23 @@ const Title = () => {
                 errorMessage.classList.remove('hidden'); // Убираем класс hidden
                 setErrorMessage(err.response.data.message)
             });
+
+    }
+
+    const onSubmitLogin = (data) => {
+        axios.post('http://localhost:8080/api/auth/signin',
+            data
+        )
+            .then((response) => {
+                console.log('Успех:', response);
+            })
+            .catch((err) => {
+                console.log(err.response.data.message);
+                const errorMessage = document.getElementById('error-message');
+                errorMessage.classList.remove('hidden'); // Убираем класс hidden
+                setErrorMessage(err.response.data.message)
+            });
+
     }
 
     return (
@@ -159,9 +174,9 @@ const Title = () => {
                 </div>
             </Modal>
 
-            {/*<Modal isOpen={isLoginOpen} onClose={() => setLoginOpen(false)}>
+            <Modal isOpen={isLoginOpen} onClose={() => setLoginOpen(false)}>
                 <div className="modal-block">
-                    <form className="modal-form" onSubmit={handleSubmit}>
+                    <form className="modal-form" onSubmit={handleSubmit(onSubmit)}>
                         <div id="error-message" className="card-error hidden">
                             <svg className="error-icon" xmlns="http://www.w3.org/2000/svg" fill="none"
                                  viewBox="0 0 24 24" stroke="currentColor">
@@ -178,8 +193,7 @@ const Title = () => {
                                        className="input-box"
                                        placeholder="Имя пользователя"
                                        name="email"
-                                       value={formValues.username}
-                                       onChange={handleInputChange}
+                                       {...register("username")}
                                 />
                                 <span className="underline"></span>
                             </div>
@@ -191,8 +205,7 @@ const Title = () => {
                                        className="input-box"
                                        placeholder="Пароль"
                                        name="password"
-                                       value={formValues.password}
-                                       onChange={handleInputChange}
+                                       {...register("password")}
                                 />
                                 <span className="underline"></span>
                             </div>
@@ -232,7 +245,7 @@ const Title = () => {
                         </ul>
                     </div>
                 </div>
-            </Modal>*/}
+            </Modal>
         </div>
     );
 }

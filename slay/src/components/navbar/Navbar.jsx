@@ -1,15 +1,30 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
+import TrainingCourseService from "../../service/TrainingCourseService";
 
 const Navbar = () => {
+    const [categories, setCategories] = useState()
+
+    useEffect(() => {
+        const fetchCategories = async () => {
+            const response = await TrainingCourseService.getSportCategoriesName()
+            setCategories(response.data)
+            console.log(response.data)
+        }
+
+        fetchCategories()
+    }, []);
+
     return (
         <div className="navbar-content">
             <ul className="navbar-links">
                 <li className="navbar-title dropdown">
-                    <a href="#categories">Категории</a>
+                    <a href="/courses">Категории</a>
                     <ul className="dropdown-menu">
-                        <li><a className="navbar-title" href="#category1">Категория 1</a></li>
-                        <li><a className="navbar-title" href="#category2">Категория 2</a></li>
-                        <li><a className="navbar-title" href="#category3">Категория 3</a></li>
+                        {
+                            categories?.map((category) => (
+                                <li><a className="navbar-title" href={category}>{category}</a></li>
+                            ))
+                        }
                     </ul>
                 </li>
                 <li className="navbar-title"><a href="/about">О нас</a></li>
@@ -24,11 +39,18 @@ const Navbar = () => {
                     <a href="/support">Поддержка</a>
                     <ul className="dropdown-menu">
                         <li><a className="navbar-title" href="#faq">FAQ</a></li>
+                        <li><a className="navbar-title" href="/my-supports">Мои запросы</a></li>
+                        <li><a className="navbar-title" href="#forum">Форум</a></li>
+                    </ul>
+                </li>
+                <li className="navbar-title dropdown">
+                    <a href={`/${"Persdsr"}`}>Persdsr</a>
+                    <ul className="dropdown-menu">
+                        <li><a className="navbar-title" href="/admin/support">Админ панель</a></li>
                         <li><a className="navbar-title" href="#docs">Документы</a></li>
                         <li><a className="navbar-title" href="#forum">Форум</a></li>
                     </ul>
                 </li>
-                <li className="navbar-title"><a href="#contact">Контакты</a></li>
             </ul>
         </div>
     );
