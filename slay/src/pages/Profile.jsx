@@ -19,9 +19,8 @@ const Profile = () => {
     const [showImageModal, setShowImageModal] = useState(false);
     const [selectedImage, setSelectedImage] = useState("");
 
-    const params = useParams()
-
     const authStore = useAuthStore()
+    const params = useParams()
 
     const toggleMenu = (name) => {
         setMenuOpen(menuOpen === name ? null : name);
