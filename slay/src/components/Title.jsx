@@ -2,6 +2,7 @@ import React, {useState} from 'react';
 import Modal from './Modal';
 import {useForm, SubmitHandler} from "react-hook-form"
 import axios from "axios";
+import {setAuthTokens} from "./user/fetcher";
 
 const Title = () => {
     const [isRegisterOpen, setRegisterOpen] = useState(false);
@@ -33,6 +34,8 @@ const Title = () => {
         )
             .then((response) => {
                 console.log('Успех:', response);
+                setAuthTokens(response.data)
+                window.location.reload()
             })
             .catch((err) => {
                 console.log(err.response.data.message);
@@ -176,7 +179,7 @@ const Title = () => {
 
             <Modal isOpen={isLoginOpen} onClose={() => setLoginOpen(false)}>
                 <div className="modal-block">
-                    <form className="modal-form" onSubmit={handleSubmit(onSubmit)}>
+                    <form className="modal-form" onSubmit={handleSubmit(onSubmitLogin)}>
                         <div id="error-message" className="card-error hidden">
                             <svg className="error-icon" xmlns="http://www.w3.org/2000/svg" fill="none"
                                  viewBox="0 0 24 24" stroke="currentColor">
@@ -221,8 +224,6 @@ const Title = () => {
                     </form>
 
                     <div className="modal-inline">
-                            <input className="input-modal-field" type="text" placeholder="name" required/>
-                            <input className="input-modal-field" type="email" placeholder="email" required/>
                         </div>
 
                     <div className="modal-info">

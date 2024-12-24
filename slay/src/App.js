@@ -1,6 +1,6 @@
 import './styles/App.css';
-import React  from "react";
-import {BrowserRouter, Route, Routes} from "react-router-dom";
+import React, {useEffect} from "react";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Main from "./pages/Main";
 import TrainingCourseDetail from "./components/course/TrainingCourseDetail";
 import CreateTrainingCourse from "./components/course/CreateTrainingCourse";
@@ -16,33 +16,50 @@ import AdminSupportDetail from "./components/admin/AdminSupportDetail";
 import AdminComplaintDetail from "./components/admin/AdminComplaintDetail";
 import MySupportRequests from "./components/user/MySupportRequests";
 import MyComplaintsRequests from "./components/user/MyComplaintsRequests";
+import axios from "axios";
+import {useAuthStore} from "./components/store/store";
 
 function App() {
-  return (
-      <BrowserRouter>
-          <Routes>
-              <Route path={"/"} element={<Main />}/>
-              <Route path={"/course/detail/:id"} element={<TrainingCourseDetail />}/>
-              <Route path={"/create-course"} element={<CreateTrainingCourse />}/>
-              <Route path={"/courses"} element={<CoursesCatalog />}/>
-              <Route path={"/support"} element={<Support />}/>
-              {/*<Route path={"/category/:category"} element={<Category />}/>*/}
-              <Route path={"/about"} element={<About />}/>
-              <Route path={"/:username"} element={<Profile />}/>
-              <Route path={"/my-supports"} element={<MySupportRequests />}/>
-              <Route path={"/my-complaints"} element={<MyComplaintsRequests />}/>
+    const authStore = useAuthStore()
 
+    useEffect(() => {
 
-              <Route path={"/admin"} element={<AdminSupport />}/>
-              <Route path="/admin/support" element={<AdminSupport />} />
-              <Route path="/admin/support/:supportId" element={<AdminSupportDetail />} />
-              <Route path="/admin/complaint/:complaintId" element={<AdminComplaintDetail />} />
-              <Route path="/admin/complaints" element={<Complaints />} />
-              <Route path="/admin/banned-users" element={<BannedUsers />} />
-          </Routes>
+        const fetchRequestTypes = async () => {
+        const response = await axios.get("http://localhost:8080/api/auth/userinfo", {
+            headers: {
+                "Authorization": `Bearer ${localStorage.getItem("accessToken")}`, // Токен должен быть корректным
+            },
+        })
+        authStore.setAuth(response.data)
+            }
+            fetchRequestTypes()
+    }, []);
 
-      </BrowserRouter>
-  )
+    useEffect(() => {
+        console.log(authStore.userData)
+    })
+
+    return (
+        <BrowserRouter>
+                <Routes>
+                    <Route path="/" element={<Main />} />
+                    <Route path="/course/detail/:id" element={<TrainingCourseDetail />} />
+                    <Route path="/create-course" element={<CreateTrainingCourse />} />
+                    <Route path="/courses" element={<CoursesCatalog />} />
+                    <Route path="/support" element={<Support />} />
+                    <Route path="/about" element={<About />} />
+                    <Route path="/:username" element={<Profile />} />
+                    <Route path="/my-supports" element={<MySupportRequests />} />
+                    <Route path="/my-complaints" element={<MyComplaintsRequests />} />
+                    <Route path="/admin" element={<Admin />} />
+                    <Route path="/admin/support" element={<AdminSupport />} />
+                    <Route path="/admin/support/:supportId" element={<AdminSupportDetail />} />
+                    <Route path="/admin/complaint/:complaintId" element={<AdminComplaintDetail />} />
+                    <Route path="/admin/complaints" element={<Complaints />} />
+                    <Route path="/admin/banned-users" element={<BannedUsers />} />
+                </Routes>
+        </BrowserRouter>
+    );
 }
 
 export default App;

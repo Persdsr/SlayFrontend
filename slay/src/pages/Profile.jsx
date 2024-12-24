@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { NavLink } from "react-router-dom";
+import {NavLink, useParams} from "react-router-dom";
 import TrainingCourseService from "../service/TrainingCourseService";
 import { format } from "date-fns";
 import { useForm } from "react-hook-form";
 import ComplaintCourseService from "../service/ComplaintCourseService";
+import {useAuthStore} from "../components/store/store";
 
 const Profile = () => {
     const [courses, setCourses] = useState([]);
@@ -18,17 +19,25 @@ const Profile = () => {
     const [showImageModal, setShowImageModal] = useState(false);
     const [selectedImage, setSelectedImage] = useState("");
 
+    const params = useParams()
+
+    const authStore = useAuthStore()
+
     const toggleMenu = (name) => {
         setMenuOpen(menuOpen === name ? null : name);
     };
 
     useEffect(() => {
         const fetchCourses = async () => {
+            if (!authStore?.userData?.username) {
+                return;
+            }
+
             try {
-                const response = await TrainingCourseService.getAuthorTrainingCourses("Persdsr");
+                const response = await TrainingCourseService.getAuthorTrainingCourses(params.username);
                 setCourses(response.data);
             } catch (error) {
-                console.log("Error fetching course:", error);
+                console.log("Error fetching courses:", error);
             }
 
             try {
@@ -40,7 +49,8 @@ const Profile = () => {
         };
 
         fetchCourses();
-    }, []);
+    }, [authStore?.userData?.username]);
+
 
     const deleteCourse = async (courseId) => {
         if (window.confirm("Вы уверены, что хотите удалить этот курс?")) {
@@ -134,11 +144,11 @@ const Profile = () => {
                 <div className="avatar-container">
                     <img className="profile-avatar" src="/рарпаапр.PNG" alt="User Avatar" />
                     <div className="profile-user-info">
-                        <span>Persdsr</span>
-                        <span className="profile-user-name">@Persdsr</span>
+                        <span>{authStore?.userData?.username}</span>
+                        <span className="profile-user-name">@{authStore?.userData?.username}</span>
                     </div>
                     <span className="profile-user-description">
-                        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Atque explicabo...
+                        {authStore?.userData?.description}
                     </span>
                 </div>
 

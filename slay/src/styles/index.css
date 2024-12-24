@@ -1133,6 +1133,8 @@ footer {
 .support-poster {
     width: 100%;
     height: 200px;
+    object-position: center 4%;
+    object-fit: cover;
 }
 
 .input-box:focus {
