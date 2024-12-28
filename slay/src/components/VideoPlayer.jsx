@@ -164,6 +164,7 @@ const VideoPlayer = ({ videoUrl, title }) => {
                 muted={playerState.muted}
                 width="100%"
                 height="100%"
+                max-height="100px"
             />
             <div className={`controls ${controlsVisible ? 'visible' : 'hidden'}`}>
                 <ControlIcons

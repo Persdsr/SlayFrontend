@@ -826,6 +826,7 @@ footer {
     bottom: 5px;
     left: 0;
     right: 0;
+
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -1227,6 +1228,11 @@ footer {
 .courses-catalog-container {
     margin: 30px 30px;
     min-height: 999px;
+}
+
+.courses-container {
+    display: flex;
+    flex-direction: row;
 }
 
 .course-poster {
@@ -1975,7 +1981,7 @@ footer {
 .support-message-sender-info img {
     width: 55px;
     height: 55px;
-    border-radius: 20px;
+    border-radius: 30px;
 }
 
 .support-message-author {

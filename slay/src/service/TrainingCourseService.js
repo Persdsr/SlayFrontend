@@ -3,11 +3,16 @@ import axios from "axios";
 export default class TrainingCourseService {
 
     static async getTrainingCourseById(id) {
-        return await axios.get("http://localhost:8080/api/training-course/detail/" + id);
+        return await axios.get("http://localhost:8080/api/training-course/detail/" + id,
+            {
+            headers: {
+            Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+        }}
+            );
     }
 
     static async getAuthorTrainingCourses(username) {
-        return await axios.get("http://localhost:8080/api/training-course/author/" + username);
+        return await axios.get("http://localhost:8080/api/user/" + username);
     }
 
     static async getSportCategoriesName() {
@@ -29,4 +34,6 @@ export default class TrainingCourseService {
     static async getAllCategoriesNames() {
         return await axios.get("http://localhost:8080/api/category/categories-name")
     }
+
+
 }

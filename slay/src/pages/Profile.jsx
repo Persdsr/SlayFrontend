@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import {NavLink, useParams} from "react-router-dom";
+import {Link, NavLink, useNavigate, useParams} from "react-router-dom";
 import TrainingCourseService from "../service/TrainingCourseService";
 import { format } from "date-fns";
 import { useForm } from "react-hook-form";
@@ -7,7 +7,7 @@ import ComplaintCourseService from "../service/ComplaintCourseService";
 import {useAuthStore} from "../components/store/store";
 
 const Profile = () => {
-    const [courses, setCourses] = useState([]);
+    const [data, setData] = useState([]);
     const [menuOpen, setMenuOpen] = useState("");
     const [editCourseId, setEditCourseId] = useState(null);
     const [editedDescription, setEditedDescription] = useState("");
@@ -18,7 +18,7 @@ const Profile = () => {
     const [requestResultText, setRequestResultText] = useState("");
     const [showImageModal, setShowImageModal] = useState(false);
     const [selectedImage, setSelectedImage] = useState("");
-
+    const navigate = useNavigate()
     const authStore = useAuthStore()
     const params = useParams()
 
@@ -27,29 +27,21 @@ const Profile = () => {
     };
 
     useEffect(() => {
-        const fetchCourses = async () => {
-            if (!authStore?.userData?.username) {
-                return;
-            }
-
+        const fetchUserData = async () => {
             try {
                 const response = await TrainingCourseService.getAuthorTrainingCourses(params.username);
-                setCourses(response.data);
+                if (!response.data || !response.data.author) {
+                    throw new Error("Пользователь не найден");
+                }
+                setData(response.data);
             } catch (error) {
-                console.log("Error fetching courses:", error);
-            }
-
-            try {
-                const response = await ComplaintCourseService.getComplaintCourseTypes();
-                setComplaintTypesMap(response);
-            } catch (error) {
-                console.log("Error fetching complaint names:", error);
+                console.error("Error fetching user data:", error);
+                navigate("/not-found");
             }
         };
 
-        fetchCourses();
-    }, [authStore?.userData?.username]);
-
+        fetchUserData();
+    }, [params.username, navigate]);
 
     const deleteCourse = async (courseId) => {
         if (window.confirm("Вы уверены, что хотите удалить этот курс?")) {
@@ -70,10 +62,10 @@ const Profile = () => {
     const saveChanges = async (courseId) => {
         try {
             await TrainingCourseService.updateTrainingCourseBybFields(courseId, { description: editedDescription });
-            const updatedCourses = courses.map((course) =>
+            const updatedCourses = data.map((course) =>
                 course.id === courseId ? { ...course, description: editedDescription } : course
             );
-            setCourses(updatedCourses);
+            setData(updatedCourses);
             setEditCourseId(null);
         } catch (error) {
             console.log("Error updating course:", error);
@@ -92,7 +84,7 @@ const Profile = () => {
 
     const onSubmit = async (data) => {
         const complaintBody = {
-            senderUsername: "Persdsr",
+            senderUsername: authStore.userData.username,
             reportedCourse: selectedCourseId,
             courseComplaintType: data.complaintRequestType.label,
             description: data.description,
@@ -120,7 +112,7 @@ const Profile = () => {
     return (
         <div className="profile-container">
             <div className="profile-setting-links">
-                <NavLink to="/Persdsr" className="admin-menu-link">
+                <NavLink to={`/profile/${authStore?.userData?.username}`} className="admin-menu-link">
                     <span role="img" aria-label="zxc">📞</span> Профиль
                 </NavLink>
                 <NavLink to="/settings" className="admin-menu-link">
@@ -141,22 +133,22 @@ const Profile = () => {
                     <button className="profile-follow">Follow</button>
                 </div>
                 <div className="avatar-container">
-                    <img className="profile-avatar" src="/рарпаапр.PNG" alt="User Avatar" />
+                    <img className="profile-avatar" src={data?.author?.avatar} alt="User Avatar" />
                     <div className="profile-user-info">
-                        <span>{authStore?.userData?.username}</span>
-                        <span className="profile-user-name">@{authStore?.userData?.username}</span>
+                        <span>{data?.author?.username}</span>
+                        <span className="profile-user-name">@{data?.author?.username}</span>
                     </div>
                     <span className="profile-user-description">
-                        {authStore?.userData?.description}
+                        {data?.author?.aboutMe}
                     </span>
                 </div>
 
                 <div className="profile-user-content">
                     <div className="profile-user-training-courses">
-                        {courses.map((course) => (
+                        {data?.courses?.map((course) => (
                             <div className="user-training-course-block" key={course.id}>
                                 <div className="user-training-course-info">
-                                    <img src="/рарпаапр.PNG" alt="" />
+                                    <img src={data?.author?.avatar} alt="" />
                                     <div>
                                         <span className="course-author-name">{course.author}</span>
                                         <span className="course-author-user-name">@{course.author}</span>
@@ -202,9 +194,9 @@ const Profile = () => {
                                     <img src={course.poster} alt="" />
                                     <div className="poster-overlay">
                                         <h2>{course.name}</h2>
-                                        <a href="course/detail/1">
+                                        <Link to={`/course/detail/${course.id}`}>
                                             <button className="purchase-button">Перейти к описанию</button>
-                                        </a>
+                                        </Link>
                                     </div>
                                 </div>
                             </div>
@@ -214,7 +206,7 @@ const Profile = () => {
             </div>
 
             <div className="profile-reviews-container">
-                {courses[0]?.reviews?.slice(0, 5).map((review, index) => (
+                {data[0]?.reviews?.slice(0, 5).map((review, index) => (
                     <div key={index} className="profile-review-block">
                         <div className="review-author-info">
                             <img src={review.author.avatar} alt="Author Avatar" />

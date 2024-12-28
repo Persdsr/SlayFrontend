@@ -219,7 +219,6 @@ const TrainingCourseDetail = () => {
 
             {isPurchased ?
                 <div className="course-steps-block">
-                    3232
                     {courseDetails?.trainingCourseSteps?.map((trainingCourseStep) =>
                         <div className="step-block" key={trainingCourseStep?.id}>
                             <h2 className="step-title"><h2 style={{
@@ -260,7 +259,7 @@ const TrainingCourseDetail = () => {
                 <div className="course-steps-block">
                     <div className="buy-btn-container">
                         <button className="btn-course-buy">
-                            Купить за 499P
+                            Купить за {courseDetails.price}$
                         </button>
                     </div>
                     <div className="course-blur-course-steps">

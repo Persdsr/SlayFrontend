@@ -16,7 +16,7 @@ export default class AdminService {
 
     static async getComplaintDetailById(complaintId) {
         const response = await axios.get("http://localhost:8080/api/complaint/" + complaintId)
-        return response.data;
+        return response.data.body;
     }
 
     static async getSupportRequestTypes() {

@@ -25,14 +25,14 @@ const CategoriesList = () => {
             {
                 categories.map((category) => (
                     category.trainingCourses.length > 0 ?
-                    <CategoryTagListItem category={category} />
+                        <CategoryTagListItem category={category} key={category.id} /> // Добавлен key
                         : ""
                 ))
             }
             {
                 tags.map((tag) => (
                     tag.trainingCourses.length > 0 ?
-                    <CategoryTagListItem category={tag} />
+                        <CategoryTagListItem category={tag} key={tag.id} /> // Добавлен key
                         : ""
                 ))
             }

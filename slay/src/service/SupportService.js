@@ -33,7 +33,7 @@ export default class SupportService {
             console.log("Response data:", response.data); // Лог для проверки формата данных
             return response.data ? response.data : []; // Возвращаем массив или пустой массив
         } catch (error) {
-            console.error("Error in getAllUserSupports:", error);
+            console.error("Error in fetching supports:", error);
             return []; // Возвращаем пустой массив при ошибке
         }
     }

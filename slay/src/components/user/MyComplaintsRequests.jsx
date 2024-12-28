@@ -6,6 +6,7 @@ import SupportItem from "../admin/SupportItem";
 import Filters from "../admin/Filters";
 import ComplaintService from "../../service/ComplaintService";
 import ComplaintItem from "../admin/ComplaintItem";
+import {useAuthStore} from "../store/store";
 
 const MyComplaintsRequests = () => {
     const [complaints, setComplaints] = useState([]);
@@ -17,11 +18,12 @@ const MyComplaintsRequests = () => {
     const [sortOrder, setSortOrder] = useState("desc");
     const itemsPerPage = 7;
     const [supportTypes, setSupportTypes] = useState([]);
+    const authStore = useAuthStore()
 
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const sortedData = await ComplaintService.getAllUserComplaints("Persdsr");
+                const sortedData = await ComplaintService.getAllUserComplaints(authStore.userData.username);
                 setComplaints(sortedData);
                 setFilteredSupports(sortedData);
 
@@ -33,7 +35,7 @@ const MyComplaintsRequests = () => {
         };
 
         fetchData();
-    }, []);
+    }, [authStore?.userData?.username]);
 
     useEffect(() => {
         let result = [...complaints];

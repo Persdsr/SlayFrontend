@@ -1,18 +1,18 @@
 import React from 'react';
 import {format} from "date-fns";
 
-const MessageSupportItem = ({message, index}) => {
+const MessageSupportItem = ({ message, index }) => {
     return (
         <div key={index} className="support-chat-message">
             <div className="support-message-sender-info">
-                <img src="/maxresdefault.png" alt=""/>
+                <img src={message.sender.avatar} alt="Avatar" />
                 <div>
                     <span className="support-message-author">
-                        {message.sender || "Unknown"}
+                        {message.sender.username || "Unknown"}
                     </span>
                     <span className="support-message-sender-createAt">
                         {message.createAt
-                            ? format(new Date(message.createAt), "dd.MM.yyyy")
+                            ? format(new Date(message.createAt), "dd.MM.yyyy HH:mm")
                             : "Неизвестно"}
                     </span>
                 </div>
@@ -20,17 +20,16 @@ const MessageSupportItem = ({message, index}) => {
             <span className="support-sender-message-text">
                 {message.message}
             </span>
-
-            {/* Если есть изображения, то отображаем их */}
             {message.images && message.images.length > 0 && (
                 <div className="support-message-images">
                     {message.images.map((imageUrl, index) => (
-                        <img key={index} src={imageUrl} alt={`message image ${index}`}/>
+                        <img key={index} src={imageUrl} alt={`message image ${index}`} />
                     ))}
                 </div>
             )}
         </div>
     );
 };
+
 
 export default MessageSupportItem;

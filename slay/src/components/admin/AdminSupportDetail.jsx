@@ -9,6 +9,7 @@ import AdminService from "../../service/AdminService";
 import FileService from "../../service/FileService";
 import SupportService from "../../service/SupportService";
 import MessageSupportItem from "./MessageSupportItem";
+import {useAuthStore} from "../store/store";
 
 const AdminSupportDetail = () => {
     const [support, setSupport] = useState([]);
@@ -19,6 +20,7 @@ const AdminSupportDetail = () => {
     const [uploadedFiles, setUploadedFiles] = useState([]);
     const [uploadProgress, setUploadProgress] = useState({});
     const navigate = useNavigate();
+    const authStore = useAuthStore()
 
     useEffect(() => {
         const fetchSupportDetail = async () => {
@@ -30,7 +32,9 @@ const AdminSupportDetail = () => {
                 console.error("Ошибка при загрузке данных:", error);
             }
         };
-
+        console.log(messages)
+        console.log(111)
+        //
         fetchSupportDetail();
     }, [params.supportId]);
 
@@ -81,20 +85,29 @@ const AdminSupportDetail = () => {
             return;
         }
 
+        const newMessage = {
+            message: data.message,
+            sender: {
+                username: authStore?.userData?.username,
+                avatar: authStore?.userData?.avatar,
+            },
+            createAt: new Date().toISOString(),
+            supportRequestId: params.supportId,
+            images: imageUrls,
+        };
+
+        // Отправляем сообщение через WebSocket
         client.publish({
             destination: "/app/chat.sendMessage",
-            body: JSON.stringify({
-                message: data.message,
-                sender: "Persdsr",
-                createAt: new Date().toISOString(),
-                supportRequestId: params.supportId,
-                images: imageUrls,
-            }),
+            body: JSON.stringify(newMessage),
         });
 
+        // Убираем локальное добавление сообщения, чтобы оно добавлялось только через WebSocket
         reset();
         setUploadedFiles([]);
     };
+
+
 
 
     const handleFileChange = (event) => {

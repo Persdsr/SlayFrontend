@@ -5,6 +5,7 @@ import AdminPanelLinks from "../admin/AdminPanelLinks";
 import SupportItem from "../admin/SupportItem";
 import Filters from "../admin/Filters";
 import UserRequestsToolbar from "../navbar/UserRequestsToolbar";
+import {useAuthStore} from "../store/store";
 
 const MySupportRequests = () => {
     const [supports, setSupports] = useState([]);
@@ -16,11 +17,12 @@ const MySupportRequests = () => {
     const [sortOrder, setSortOrder] = useState("desc");
     const itemsPerPage = 7;
     const [supportTypes, setSupportTypes] = useState([]);
+    const authStore = useAuthStore()
 
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const sortedData = await SupportService.getAllUserSupports("Persdsr");
+                const sortedData = await SupportService.getAllUserSupports(authStore?.userData?.username);
                 setSupports(sortedData);
                 setFilteredSupports(sortedData);
 
@@ -32,7 +34,7 @@ const MySupportRequests = () => {
         };
 
         fetchData();
-    }, []);
+    }, [authStore?.userData?.username]);
 
     useEffect(() => {
         let result = [...supports];

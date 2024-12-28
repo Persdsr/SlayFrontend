@@ -3,6 +3,7 @@ import { useForm } from "react-hook-form";
 import axios from "axios";
 import SupportService from "../service/SupportService";
 import AdminService from "../service/AdminService";
+import {useAuthStore} from "../components/store/store";
 
 const Support = () => {
     const { register, handleSubmit, reset } = useForm();
@@ -11,6 +12,7 @@ const Support = () => {
     const [requestResultText, setRequestResultText] = useState("");
 
     const [supportTypes, setSupportTypes] = useState([]);
+    const authStore = useAuthStore()
 
     useEffect(() => {
         const fetchRequestTypes = async () => {
@@ -25,6 +27,7 @@ const Support = () => {
 
         const supportBody = {
             email: data.email,
+            senderUsername: authStore?.userData?.username,
             requestType: data.requestType,
             subject: data.subject,
             description: data.description,

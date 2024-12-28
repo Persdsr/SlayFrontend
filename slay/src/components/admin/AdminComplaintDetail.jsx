@@ -19,12 +19,17 @@ const AdminComplaintDetail = () => {
             try {
                 const response = await AdminService.getComplaintDetailById(params?.complaintId)
                 setComplaint(response)
+                console.log(response.complaintType)
+
             } catch (error) {
                 console.error("Ошибка при загрузке данных:", error);
             }
 
             const types = await ComplaintService.getComplaintTypes();
             setComplaintTypes(types);
+            console.log(types)
+
+
         };
 
         fetchSupportDetail();
@@ -51,10 +56,10 @@ const AdminComplaintDetail = () => {
             <ul className="complaint-detail-info">
                 <li>
                     <h2 className="support-detail-title">Тип жалобы</h2>
-                    <span>{complaint.complaintType}</span>
+                    <span>{complaint.localComplaintType}</span>
                 </li>
                 <li>
-                    <h2 className="support-detail-title">Отправить</h2>
+                    <h2 className="support-detail-title">Отправитель</h2>
                     <span>{complaint.sender}</span>
                 </li>
                 <li>
@@ -75,16 +80,16 @@ const AdminComplaintDetail = () => {
 
                 {
                     (() => {
-                        if (complaint.complaintType === complaintTypes.USER_MESSAGE) {
+                        if (complaint?.localComplaintType === complaintTypes?.USER_MESSAGE) {
                             return (
-                                <p>1</p>
+                                <ComplaintCourseItem complaint={complaint}/>
                             )
-                        } else if (complaint.complaintType === complaintTypes.USER_PROFILE) {
+                        } else if (complaint?.localComplaintType === complaintTypes?.USER_PROFILE) {
                             return (
                                 <ComplaintUserItem complaint={complaint}/>
                             )
 
-                        } else if (complaint.complaintType === complaintTypes.COURSE) {
+                        } else if (complaint?.localComplaintType === complaintTypes?.COURSE) {
                             return (
                                 <ComplaintCourseItem complaint={complaint}/>
                             )
@@ -106,8 +111,7 @@ const AdminComplaintDetail = () => {
                 </a>
 
 
-                {complaint.complaintType === complaintTypes.USER_PROFILE && (
-
+                {complaintTypes.length > 0 && complaint.complaintType === complaintTypes.USER_PROFILE && (
                     <a onClick={closeComplaintAndBanUser}>
                         <button className="btn block-btn">
                             {complaint.banned
@@ -116,7 +120,6 @@ const AdminComplaintDetail = () => {
                         </button>
                     </a>
                 )}
-
             </div>
 
         </div>

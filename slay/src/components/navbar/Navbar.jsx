@@ -1,10 +1,12 @@
 import React, {useEffect, useState} from 'react';
 import TrainingCourseService from "../../service/TrainingCourseService";
 import {useAuthStore} from "../store/store";
+import {useNavigate} from "react-router-dom";
 
 const Navbar = () => {
     const [categories, setCategories] = useState([]);
     const authStore = useAuthStore(); // Подключение к состоянию авторизации
+    const navigate = useNavigate()
 
     useEffect(() => {
         const fetchCategories = async () => {
@@ -21,8 +23,9 @@ const Navbar = () => {
     }, []);
 
     const logout = () => {
-        localStorage.removeItem("accessToken"); // Удаление токена из хранилища
-        window.location.reload(); // Перезагрузка страницы
+        localStorage.removeItem("accessToken");
+        window.location.reload()
+        navigate("/")
     };
 
     return (
@@ -56,10 +59,10 @@ const Navbar = () => {
                 </li>
                 {
                     authStore?.userData?.username === "anonymousUser" ? (
-                        <li className="navbar-title"><a href="/login">Авторизация</a></li>
+                        <li className="navbar-title"><a href="/">Авторизация</a></li>
                     ) : (
                         <li className="navbar-title dropdown">
-                            <a href={`/${authStore?.userData?.username}`}>
+                            <a href={`/profile/${authStore?.userData?.username}`}>
                                 {authStore?.userData?.username || ""}
                             </a>
                             <ul className="dropdown-menu">

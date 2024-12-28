@@ -1,27 +1,23 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import CategoryTrainingCourseItem from "../../course/CategoryTrainingCourseItem";
 
-import ComplaintService from "../../../service/ComplaintService";
-import ComplaintCourseService from "../../../service/ComplaintCourseService";
-
-const ComplaintCourseItem = ({complaint}) => {
-    const [course, setCourse] = useState([])
+const ComplaintCourseItem = ({ complaint }) => {
+    const [course, setCourse] = useState(null); // Начальное состояние null
 
     useEffect(() => {
-
-        const fetchCourse = async () => {
-            const response = await ComplaintCourseService.getComplaintCourseDetailById(complaint.id)
-            setCourse(response.course)
-
+        if (complaint && complaint.course) {
+            setCourse(complaint.course); // Обновляем состояние, если данные есть
         }
-        fetchCourse()
+    }, [complaint]); // Зависимость от изменения complaint
 
-    }, []);
+    if (!course) {
+        return <div>Загрузка курса...</div>; // Показываем загрузку, если данные отсутствуют
+    }
 
     return (
         <div>
             <h2 className="complaint-detail-title">Курс</h2>
-            <CategoryTrainingCourseItem course={course}/>
+            <CategoryTrainingCourseItem course={course} />
         </div>
     );
 };

@@ -14,7 +14,7 @@ const CategoryTagListItem = ({category}) => {
             <div className="courses-container">
                 {
                     category.trainingCourses.map((course) => (
-                        <CategoryTrainingCourseItem course={course}/>
+                        <CategoryTrainingCourseItem course={course} key={course.id} /> // Добавлен key
                     ))
                 }
             </div>
