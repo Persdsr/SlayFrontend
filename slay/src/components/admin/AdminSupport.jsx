@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import AdminPanelLinks from "./AdminPanelLinks";
+import AdminPanelLinks from "../navbar/AdminPanelLinks";
 import axios from "axios";
 import { format } from "date-fns";
 import AdminService from "../../service/AdminService";
@@ -77,11 +77,11 @@ const AdminSupport = () => {
     const totalPages = Math.max(1, Math.ceil(filteredSupports.length / itemsPerPage));
 
     return (
-        <div className="admin-container">
+        <div className="content-container">
             <AdminPanelLinks />
 
-            <div className="admin-content">
-                <h2>Супорты</h2>
+            <div className="content-block">
+                <h2 className="admin-page-title">Supports</h2>
                 <div className="main-content">
                     <div className="support-list-container">
                         {currentItems.length > 0 ? (
@@ -90,6 +90,28 @@ const AdminSupport = () => {
                             ))
                         ) : (
                             <p>Нет данных для отображения.</p>
+                        )}
+
+                        {filteredSupports.length > 0 && (
+                            <div className="pagination">
+                                <button
+                                    className="pagination-btn"
+                                    onClick={() => setCurrentPage(currentPage - 1)}
+                                    disabled={currentPage === 1}
+                                >
+                                    &lt; Назад
+                                </button>
+                                <span className="page-info">
+                            Страница {currentPage} из {totalPages}
+                        </span>
+                                <button
+                                    className="pagination-btn"
+                                    onClick={() => setCurrentPage(currentPage + 1)}
+                                    disabled={currentPage === totalPages}
+                                >
+                                    Вперед &gt;
+                                </button>
+                            </div>
                         )}
                     </div>
 
@@ -105,29 +127,6 @@ const AdminSupport = () => {
                         types={supportTypes}
                     />
                 </div>
-
-                {/* Пагинация */}
-                {filteredSupports.length > 0 && (
-                    <div className="pagination">
-                        <button
-                            className="pagination-btn"
-                            onClick={() => setCurrentPage(currentPage - 1)}
-                            disabled={currentPage === 1}
-                        >
-                            &lt; Назад
-                        </button>
-                        <span className="page-info">
-                            Страница {currentPage} из {totalPages}
-                        </span>
-                        <button
-                            className="pagination-btn"
-                            onClick={() => setCurrentPage(currentPage + 1)}
-                            disabled={currentPage === totalPages}
-                        >
-                            Вперед &gt;
-                        </button>
-                    </div>
-                )}
             </div>
         </div>
     );

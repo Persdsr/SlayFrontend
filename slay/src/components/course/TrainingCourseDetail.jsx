@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import {Link, useParams} from 'react-router-dom';
 import TrainingCourseService from '../../service/TrainingCourseService';
 import VideoPlayer from '../VideoPlayer';
 import CourseStepDetailVideoPlayer from "./CourseStepDetailVideoPlayer";
@@ -58,6 +58,17 @@ const TrainingCourseDetail = () => {
         setMenuOpen(!menuOpen);
     };
 
+    const deleteCourse = async (courseId) => {
+        if (window.confirm("Вы уверены, что хотите удалить этот курс?")) {
+            try {
+                await TrainingCourseService.deleteCourseById(params.id);
+                window.location.reload();
+            } catch (error) {
+                console.log("Error delete course:", error);
+            }
+        }
+    };
+
     return (
         <div className="main">
             <h1 className="course-detail-title">{courseDetails?.name}</h1>
@@ -90,7 +101,7 @@ const TrainingCourseDetail = () => {
                             ></path>
                             <path d="m15 5 4 4"></path>
                         </svg>
-                        <p className="menu-label">Rename</p>
+                        <p className="menu-label">Redact</p>
                     </li>
                     <li className="menu-item">
                         <svg
@@ -114,7 +125,7 @@ const TrainingCourseDetail = () => {
                 </ul>
                 <div className="menu-separator"></div>
                 <ul className="menu-list">
-                    <li className="menu-item delete">
+                    <li onClick={() => deleteCourse(courseDetails.id)} className="menu-item delete">
                         <svg
 
                             className="menu-icon"
@@ -134,7 +145,11 @@ const TrainingCourseDetail = () => {
                             <line y2="17" y1="11" x2="10" x1="10"></line>
                             <line y2="17" y1="11" x2="14" x1="14"></line>
                         </svg>
-                        <p className="menu-label">Delete</p>
+                        <p
+                            className="menu-label"
+                        >
+                            Delete
+                        </p>
                     </li>
                 </ul>
             </div>
@@ -158,7 +173,7 @@ const TrainingCourseDetail = () => {
                         </svg>
                         <div className="author-name">
                             <span className="author-name-prefix">Author</span>
-                            <span className="card-author-name">{courseDetails?.author}</span>
+                            <span className="card-author-name"><Link to={`/profile/${courseDetails.author}`}>{courseDetails?.author}</Link></span>
                         </div>
                     </div>
                     <div className="tags">
@@ -227,6 +242,7 @@ const TrainingCourseDetail = () => {
                                 display: 'inline-block'
                             }}>#</h2>  {trainingCourseStep?.title}</h2>
 
+                            <span className="step-detail-description">{courseDetails.description}</span>
                             <Swiper
                                 spaceBetween={20}
                                 slidesPerView={1}
@@ -240,14 +256,16 @@ const TrainingCourseDetail = () => {
                                 allowTouchMove={false} // Отключает перетаскивание слайдов
                                 mousewheel={false}
                             >
+
                                 {trainingCourseStep?.trainingCourseStepDetails?.map((stepDetail, index) => (
                                     <SwiperSlide key={index}>
                                         <div className="step-detail-block">
+                                            <h2 className="step-detail-title">{stepDetail.title}</h2>
                                             <span className="step-detail-description">{stepDetail.description}</span>
                                             <CourseStepDetailVideoPlayer
-                                                title={courseDetails?.description}
-                                                videoUrl={stepDetail?.videos?.replace("download", "view")}
-                                            />
+                                                    title={courseDetails?.description}
+                                                    videoUrl={stepDetail?.videos?.replace("download", "view")}
+                                                />
                                         </div>
                                     </SwiperSlide>
                                 ))}

@@ -88,7 +88,7 @@ const Support = () => {
             />
             <h1 className="main-center-title">SUPPORT</h1>
 
-            <div className="support-container">
+            <div className="main-center-container">
                 {/* Блок результата запроса */}
                 {requestResultText && (
                     <div className="request-result-block">
@@ -97,25 +97,25 @@ const Support = () => {
                 )}
 
                 <form onSubmit={handleSubmit(onSubmit)} encType="multipart/form-data">
-                    <div className="input-support-wrapper">
+                    <div className="input-simple-wrapper">
                         <label htmlFor="email" className="support-label">
                             Эл.почта<span style={{color: "red", marginBottom: "5px"}}>*</span>
                         </label>
                         <input
                             type="email"
-                            className="support-input"
+                            className="simple-input"
                             name="email"
                             {...register("email")}
                         />
                     </div>
 
-                    <div className="input-support-wrapper">
+                    <div className="input-simple-wrapper">
                         <label htmlFor="requestType" className="support-label">
                             Тип поддержки<span style={{color: "red"}}>*</span>
                         </label>
                         <select
                             name="requestType"
-                            className="support-input"
+                            className="simple-input"
                             {...register("requestType")}
                         >
                             <option value="" disabled selected>
@@ -129,13 +129,13 @@ const Support = () => {
                         </select>
                     </div>
 
-                    <div className="input-support-wrapper">
+                    <div className="input-simple-wrapper">
                         <label htmlFor="subject" className="support-label">
                             Тема<span style={{color: "red", marginBottom: "5px"}}>*</span>
                         </label>
                         <input
                             type="text"
-                            className="support-input"
+                            className="simple-input"
                             name="subject"
                             {...register("subject")}
                         />
@@ -153,7 +153,7 @@ const Support = () => {
                         <div className="file-upload-block">
                             <label htmlFor="images" className="file-upload-label">
                                 <img
-                                    src="/icons8-image-100.png"
+                                    src="/icons8-white-image-100.png"
                                     alt="Загрузить изображение"
                                     className="file-upload-icon"
                                 />

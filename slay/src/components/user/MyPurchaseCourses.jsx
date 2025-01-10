@@ -1,15 +1,15 @@
 import React, {useEffect, useState} from 'react';
-import SupportService from "../../service/SupportService";
-import AdminService from "../../service/AdminService";
 import UserRequestsToolbar from "../navbar/UserRequestsToolbar";
-import SupportItem from "../admin/SupportItem";
+import ComplaintItem from "../admin/ComplaintItem";
 import Filters from "../admin/Filters";
 import ComplaintService from "../../service/ComplaintService";
-import ComplaintItem from "../admin/ComplaintItem";
 import {useAuthStore} from "../store/store";
+import UserService from "../../service/UserService";
+import UserLeftToolbar from "../navbar/UserLeftToolbar";
+import CategoryTrainingCourseItem from "../course/CategoryTrainingCourseItem";
 
-const MyComplaintsRequests = () => {
-    const [complaints, setComplaints] = useState([]);
+const MyPurchaseCourses = () => {
+    const [courses, setCourses] = useState([]);
     const [filteredSupports, setFilteredSupports] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [searchQuery, setSearchQuery] = useState("");
@@ -23,9 +23,10 @@ const MyComplaintsRequests = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const sortedData = await ComplaintService.getAllUserComplaints(authStore.userData.username);
-                setComplaints(sortedData);
-                setFilteredSupports(sortedData);
+                const sortedData = await UserService.getUserPurchaseCourses();
+                console.log(sortedData)
+                setCourses(sortedData.data);
+                setFilteredSupports(sortedData.data);
 
                 const types = await ComplaintService.getLocalComplaintTypes();
                 setSupportTypes(types);
@@ -38,7 +39,7 @@ const MyComplaintsRequests = () => {
     }, [authStore?.userData?.username]);
 
     useEffect(() => {
-        let result = [...complaints];
+        let result = [...courses];
 
         // Поиск
         if (searchQuery) {
@@ -47,68 +48,37 @@ const MyComplaintsRequests = () => {
             );
         }
 
-        // Фильтр по типу
-        if (filterType) {
-            result = result.filter((support) => support.complaintType === filterType);
-        }
-
-        // Фильтр по статусу (resolved)
-        if (resolvedFilter) {
-            const resolvedValue = resolvedFilter === "true";
-            result = result.filter((support) => support.resolved === resolvedValue);
-        }
-
-        // Сортировка по дате
-        result.sort((a, b) => {
-            if (sortOrder === "asc") {
-                return new Date(a.createdAt) - new Date(b.createdAt);
-            } else {
-                return new Date(b.createdAt) - new Date(a.createdAt);
-            }
-        });
-
         setFilteredSupports(result);
         setCurrentPage(1);
-    }, [searchQuery, filterType, resolvedFilter, sortOrder, complaints]);
+    }, [searchQuery, filterType, resolvedFilter, sortOrder, courses]);
 
     const indexOfLastItem = currentPage * itemsPerPage;
     const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-    const currentItems = filteredSupports?.slice(indexOfFirstItem, indexOfLastItem);
+    const myCourses = filteredSupports?.slice(indexOfFirstItem, indexOfLastItem);
 
     const totalPages = Math.max(1, Math.ceil(filteredSupports?.length / itemsPerPage));
-
     return (
         <div className="content-container">
 
-            <UserRequestsToolbar />
+            <UserLeftToolbar />
 
             <div className="content-block">
-                <h2>Супорты</h2>
+                <h2>My purchase courses</h2>
                 <div className="main-content">
-                    <div className="support-list-container">
-                        {currentItems?.length > 0 ? (
-                            currentItems.map((complaint) => (
-                                <ComplaintItem complaint={complaint}/>
-                            ))
-                        ) : (
-                            <p>Нет данных для отображения.</p>
-                        )}
+                    <div className="horizontal-courses-container">
+                        <div className="support-list-container">
+                            {myCourses?.length > 0 ? (
+                                myCourses.map((course) => (
+                                    <CategoryTrainingCourseItem course={course}/>
+                                ))
+                            ) : (
+                                <p>Нет данных для отображения.</p>
+                            )}
+                        </div>
                     </div>
 
-                    <Filters
-                        searchQuery={searchQuery}
-                        setSearchQuery={setSearchQuery}
-                        filterType={filterType}
-                        setFilterType={setFilterType}
-                        resolvedFilter={resolvedFilter}
-                        setResolvedFilter={setResolvedFilter}
-                        sortOrder={sortOrder}
-                        setSortOrder={setSortOrder}
-                        types={supportTypes}
-                    />
                 </div>
 
-                {/* Пагинация */}
                 {filteredSupports?.length > 0 && (
                     <div className="pagination">
                         <button
@@ -135,4 +105,4 @@ const MyComplaintsRequests = () => {
     );
 };
 
-export default MyComplaintsRequests;
+export default MyPurchaseCourses;

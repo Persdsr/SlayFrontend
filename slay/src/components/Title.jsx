@@ -96,7 +96,7 @@ const Title = () => {
                         <div className="modal-column">
                             {errors.username && <span className="error-message">*{errors.username}</span>}
 
-                            <div className="input-support-wrapper">
+                            <div className="input-simple-wrapper">
                                 <input type="text"
                                        className="input-box"
                                        placeholder="Имя пользователя"
@@ -144,7 +144,7 @@ const Title = () => {
                         </div>
                         <div className="auth-choise">
                             <span className="auth-choise-text">Есть аккаунт? <span
-                                style={{color: "blue", cursor: "pointer"}}
+                                style={{color: "#23c483", cursor: "pointer"}}
                                 onClick={() => (setRegisterOpen(false), setLoginOpen(true))}>Войти</span></span>
                         </div>
                         <button type="submit" className="modal-btn-confirm">Зарегистрироваться</button>
@@ -217,7 +217,7 @@ const Title = () => {
                         </div>
                         <div className="auth-choise">
                             <span className="auth-choise-text">Нет аккаунта? <span
-                                style={{color: "blue", cursor: "pointer"}}
+                                style={{color: "#23c483", cursor: "pointer"}}
                                 onClick={() => (setLoginOpen(false), setRegisterOpen(true))}>Создать</span></span>
                         </div>
                         <button type="submit" className="modal-btn-confirm">Войти</button>

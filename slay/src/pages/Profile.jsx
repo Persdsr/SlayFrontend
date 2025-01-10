@@ -5,10 +5,15 @@ import { format } from "date-fns";
 import { useForm } from "react-hook-form";
 import ComplaintCourseService from "../service/ComplaintCourseService";
 import {useAuthStore} from "../components/store/store";
+import UserService from "../service/UserService";
+import UserLeftToolbar from "../components/navbar/UserLeftToolbar";
+import ReviewService from "../service/ReviewService";
 
 const Profile = () => {
     const [data, setData] = useState([]);
+    const [loading, setLoading] = useState(true);
     const [menuOpen, setMenuOpen] = useState("");
+    const [menuReviewOpen, setMenuReviewOpen] = useState(null);
     const [editCourseId, setEditCourseId] = useState(null);
     const [editedDescription, setEditedDescription] = useState("");
     const [showComplaintModal, setShowComplaintModal] = useState(false);
@@ -21,23 +26,38 @@ const Profile = () => {
     const navigate = useNavigate()
     const authStore = useAuthStore()
     const params = useParams()
+    const [showUnfollowDialog, setShowUnfollowDialog] = useState(false);
+
+    const openUnfollowDialog = () => {
+        setShowUnfollowDialog(true);
+    };
+
+    const closeUnfollowDialog = () => {
+        setShowUnfollowDialog(false);
+    };
 
     const toggleMenu = (name) => {
         setMenuOpen(menuOpen === name ? null : name);
     };
 
+    const toggleReviewMenu = (reviewId) => {
+        setMenuReviewOpen(menuReviewOpen === reviewId ? null : reviewId);
+    };
+
+
+
     useEffect(() => {
         const fetchUserData = async () => {
-            try {
-                const response = await TrainingCourseService.getAuthorTrainingCourses(params.username);
+
+                const response = await TrainingCourseService.getAuthorTrainingCourses(params?.username);
                 if (!response.data || !response.data.author) {
                     throw new Error("Пользователь не найден");
                 }
                 setData(response.data);
-            } catch (error) {
-                console.error("Error fetching user data:", error);
-                navigate("/not-found");
-            }
+                console.log(response.data)
+                const responseComplaintTypes = await ComplaintCourseService.getComplaintCourseTypes()
+                setComplaintTypesMap(responseComplaintTypes)
+                setLoading(false);
         };
 
         fetchUserData();
@@ -54,6 +74,17 @@ const Profile = () => {
         }
     };
 
+    const deleteReview = async (reviewId) => {
+        if (window.confirm("Вы уверены, что хотите удалить этот курс?")) {
+            try {
+                await ReviewService.deleteReviewById(reviewId);
+                window.location.reload();
+            } catch (error) {
+                console.log("Error delete review:", error);
+            }
+        }
+    };
+
     const startEditing = (course) => {
         setEditCourseId(course.id);
         setEditedDescription(course.description);
@@ -62,11 +93,12 @@ const Profile = () => {
     const saveChanges = async (courseId) => {
         try {
             await TrainingCourseService.updateTrainingCourseBybFields(courseId, { description: editedDescription });
-            const updatedCourses = data.map((course) =>
+            const updatedCourses = data.courses.map((course) =>
                 course.id === courseId ? { ...course, description: editedDescription } : course
             );
             setData(updatedCourses);
             setEditCourseId(null);
+            window.location.reload()
         } catch (error) {
             console.log("Error updating course:", error);
         }
@@ -86,7 +118,7 @@ const Profile = () => {
         const complaintBody = {
             senderUsername: authStore.userData.username,
             reportedCourse: selectedCourseId,
-            courseComplaintType: data.complaintRequestType.label,
+            courseComplaintType: data.complaintRequestType,
             description: data.description,
         };
 
@@ -99,6 +131,32 @@ const Profile = () => {
         }
     };
 
+    const onFollowSubmit = async () => {
+
+        const formData = new FormData()
+        formData.append("author", data?.author?.username)
+        console.log(formData)
+        try {
+            const response = await UserService.followToUser(formData);
+            window.location.reload()
+        } catch (error) {
+            console.error("Ошибка отправки жалобы:", error);
+        }
+    }
+
+    const unFollowSubmit = async () => {
+
+        const formData = new FormData()
+        formData.append("author", data?.author?.username)
+        console.log(formData)
+        try {
+            const response = await UserService.unFollowToUser(formData);
+            window.location.reload()
+        } catch (error) {
+            console.error("Ошибка отправки жалобы:", error);
+        }
+    }
+
     const openImageModal = (imageSrc) => {
         setSelectedImage(imageSrc);
         setShowImageModal(true);
@@ -109,109 +167,179 @@ const Profile = () => {
         setSelectedImage("");
     };
 
+    if (loading) {
+        return <div className="loading-spinner"></div>;
+    }
+
     return (
         <div className="profile-container">
-            <div className="profile-setting-links">
-                <NavLink to={`/profile/${authStore?.userData?.username}`} className="admin-menu-link">
-                    <span role="img" aria-label="zxc">📞</span> Профиль
-                </NavLink>
-                <NavLink to="/settings" className="admin-menu-link">
-                    <span role="img" aria-label="setting">📝</span> Жалобы
-                </NavLink>
-                <NavLink to="/about" className="admin-menu-link">
-                    <span role="img" aria-label="password">🚫</span> Забаненные пользователи
-                </NavLink>
-            </div>
+            <UserLeftToolbar authStore={authStore} />
 
             <div className="profile-block">
                 <div className="banner-container">
                     <img
                         className="profile-banner"
-                        src="/Dizayn-bez-nazvaniya-_13_.png"
+                        src={data?.author?.banner}
                         alt="Profile Banner"
                     />
-                    <button className="profile-follow">Follow</button>
+                    {
+                        data.subscribed
+                            ?
+                            <div>
+                                <button
+                                    className="profile-unfollow-btn"
+                                    onClick={openUnfollowDialog}
+                                >
+                                    <img src="/add-user.png" className="icon-unfollow" alt=""/>
+                                    Вы подписаны
+                                </button>
+
+                                {showUnfollowDialog && (
+                                    <div className="dialog-overlay">
+                                        <div className="dialog-content">
+                                            <p>Вы уверены, что хотите отписаться?</p>
+                                            <div className="dialog-actions">
+                                                <form onSubmit={unFollowSubmit}>
+                                                    <button
+                                                        className="dialog-confirm-btn"
+                                                    >
+                                                        Отписаться
+                                                    </button>
+                                                </form>
+                                                <button
+                                                    className="dialog-cancel-btn"
+                                                    onClick={closeUnfollowDialog}
+                                                >
+                                                    Отмена
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                )}
+                            </div>
+                            :
+                            <form onSubmit={onFollowSubmit}>
+                                <button type={"submit"} className="profile-follow">Follow</button>
+                            </form>
+
+                    }
                 </div>
                 <div className="avatar-container">
-                    <img className="profile-avatar" src={data?.author?.avatar} alt="User Avatar" />
+                    <img className="profile-avatar" src={data?.author?.avatar} alt="User Avatar"/>
                     <div className="profile-user-info">
-                        <span>{data?.author?.username}</span>
+                        <span className="profile-user-info-name">{data?.author?.username}</span>
                         <span className="profile-user-name">@{data?.author?.username}</span>
                     </div>
                     <span className="profile-user-description">
                         {data?.author?.aboutMe}
                     </span>
                 </div>
-
-                <div className="profile-user-content">
-                    <div className="profile-user-training-courses">
-                        {data?.courses?.map((course) => (
-                            <div className="user-training-course-block" key={course.id}>
-                                <div className="user-training-course-info">
-                                    <img src={data?.author?.avatar} alt="" />
-                                    <div>
-                                        <span className="course-author-name">{course.author}</span>
-                                        <span className="course-author-user-name">@{course.author}</span>
-                                    </div>
-                                    <span className="user-training-course-createAt">
+                {
+                    data?.courses?.length > 0 ?
+                        <div className="profile-user-content">
+                            <div className="profile-user-training-courses">
+                                {data?.courses?.map((course) => (
+                                    <div className="user-training-course-block" key={course.id}>
+                                        <div className="user-training-course-info">
+                                            <img src={data?.author?.avatar} alt=""/>
+                                            <div>
+                                                <span className="course-author-name">{course?.author.username}</span>
+                                                <span className="course-author-user-name">@{course?.author.username}</span>
+                                            </div>
+                                            <span className="user-training-course-createAt">
                                         {format(new Date(course.createAt), "dd.MM.yyyy")}
                                     </span>
 
-                                    <div className="profile-menu-container">
-                                        <button
-                                            className={`profile-menu-trigger`}
-                                            onClick={() => toggleMenu(course.name)}
-                                        >
-                                            <span className="profile-menu-dot"></span>
-                                            <span className="profile-menu-dot"></span>
-                                            <span className="profile-menu-dot"></span>
-                                        </button>
-                                        {menuOpen === course.name && (
-                                            <ul className="profile-menu-dropdown">
-                                                <li onClick={() => deleteCourse(course.id)}>Удалить</li>
-                                                <li onClick={() => startEditing(course)}>Изменить</li>
-                                                <li onClick={() => openComplaintModal(course.id)}>Пожаловаться</li>
-                                            </ul>
-                                        )}
-                                    </div>
-                                </div>
+                                            <div className="profile-menu-container">
+                                                <button
+                                                    className={`profile-menu-trigger`}
+                                                    onClick={() => toggleMenu(course.name)}
+                                                >
+                                                    <span className="profile-menu-dot"></span>
+                                                    <span className="profile-menu-dot"></span>
+                                                    <span className="profile-menu-dot"></span>
+                                                </button>
+                                                {menuOpen === course.name && (
+                                                    <ul className="profile-menu-dropdown">
+                                                        <li onClick={() => deleteCourse(course.id)}>Удалить</li>
+                                                        <li onClick={() => startEditing(course)}>Изменить</li>
+                                                        <li onClick={() => openComplaintModal(course.id)}>Пожаловаться</li>
+                                                    </ul>
+                                                )}
+                                            </div>
+                                        </div>
 
-                                {editCourseId === course.id ? (
-                                    <div className="user-training-course-edit">
+                                        {editCourseId === course.id ? (
+                                            <div className="user-training-course-edit">
                                         <textarea
                                             value={editedDescription}
                                             onChange={(e) => setEditedDescription(e.target.value)}
                                         />
-                                        <button onClick={() => saveChanges(course.id)}>Сохранить</button>
-                                    </div>
-                                ) : (
-                                    <span className="user-training-course-description">
+                                                <button onClick={() => saveChanges(course.id)}>Сохранить</button>
+                                            </div>
+                                        ) : (
+                                            <span className="user-training-course-description">
                                         {course.description}
                                     </span>
-                                )}
+                                        )}
 
-                                <div className="user-training-course-poster-block">
-                                    <img src={course.poster} alt="" />
-                                    <div className="poster-overlay">
-                                        <h2>{course.name}</h2>
-                                        <Link to={`/course/detail/${course.id}`}>
-                                            <button className="purchase-button">Перейти к описанию</button>
-                                        </Link>
+                                        <div className="user-training-course-poster-block">
+                                            <img src={course.poster} alt=""/>
+                                            <div className="poster-overlay">
+                                                <h2>{course.name}</h2>
+                                                <Link to={`/course/detail/${course.id}`}>
+                                                    <button className="purchase-button">Перейти к описанию</button>
+                                                </Link>
+                                            </div>
+                                        </div>
                                     </div>
-                                </div>
+                                ))}
                             </div>
-                        ))}
-                    </div>
-                </div>
+                        </div>
+                        : <h1 className="no-course-title">No courses</h1>
+                }
             </div>
 
             <div className="profile-reviews-container">
-                {data[0]?.reviews?.slice(0, 5).map((review, index) => (
+                {data?.reviews?.map((review, index) => (
                     <div key={index} className="profile-review-block">
                         <div className="review-author-info">
-                            <img src={review.author.avatar} alt="Author Avatar" />
-                            <span>{review.author.username}</span>
+                            <img className="review-author-avatar" src={review?.author?.avatar} alt="Author Avatar"/>
+                            <div className="review-info">
+                                <span>{review?.author?.username}</span>
+                                <div className="star-container">
+                                    {Array.from({length: review.rating}).map((_, index) => (
+                                        <img
+                                            key={index}
+                                            className="star-review"
+                                            src="/star.png"
+                                            alt="Star"
+                                        />
+                                    ))}
+                                </div>
+                            </div>
+                            <div className="review-menu">
+                                <div className="profile-menu-container">
+                                    <button
+                                        className={`profile-menu-trigger`}
+                                        onClick={() => toggleReviewMenu(review?.id)}
+                                    >
+                                        <span className="profile-menu-dot"></span>
+                                        <span className="profile-menu-dot"></span>
+                                        <span className="profile-menu-dot"></span>
+                                    </button>
+                                    {menuReviewOpen === review?.id && (
+                                        <ul className="profile-menu-dropdown">
+                                            <li onClick={() => deleteReview(review?.id)}>Удалить</li>
+                                            <li onClick={() => console.log("Изменить отзыв", review?.id)}>Изменить</li>
+                                           {/* <li onClick={() => openComplaintModal(review.id)}>Пожаловаться</li>*/}
+                                        </ul>
+                                    )}
+                                </div>
+                            </div>
+
                         </div>
+
                         <div className="review-content">
                             <span className="profile-review-description">{review.text}</span>
                         </div>
@@ -256,20 +384,20 @@ const Profile = () => {
                         <div className="modal-body">
                             <form onSubmit={handleSubmit(onSubmit)}>
 
-                                <div className="input-support-wrapper">
+                                <div className="input-simple-wrapper">
                                     <label htmlFor="requestType" className="support-label">
                                         Тип поддержки<span style={{color: "red"}}>*</span>
                                     </label>
                                     <select
                                         name="requestType"
-                                        className="support-input"
+                                        className="simple-input"
                                         {...register("complaintRequestType")}
                                     >
                                         <option value="" disabled selected>
                                             Выберите тип поддержки
                                         </option>
                                         {Object.entries(complaintTypesMap).map(([value, label]) => (
-                                            <option value={label}>
+                                            <option value={value}>
                                                 {label}
                                             </option>
                                         ))}

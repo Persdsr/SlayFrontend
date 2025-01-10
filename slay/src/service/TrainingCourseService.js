@@ -12,7 +12,12 @@ export default class TrainingCourseService {
     }
 
     static async getAuthorTrainingCourses(username) {
-        return await axios.get("http://localhost:8080/api/user/" + username);
+        return await axios.get("http://localhost:8080/api/user/" + username,
+            {
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+                }}
+            );
     }
 
     static async getSportCategoriesName() {

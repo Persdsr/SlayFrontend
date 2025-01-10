@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import AdminService from "../../service/AdminService";
 import SupportService from "../../service/SupportService";
-import AdminPanelLinks from "../admin/AdminPanelLinks";
+import AdminPanelLinks from "../navbar/AdminPanelLinks";
 import SupportItem from "../admin/SupportItem";
 import Filters from "../admin/Filters";
 import UserRequestsToolbar from "../navbar/UserRequestsToolbar";
@@ -78,11 +78,11 @@ const MySupportRequests = () => {
     const totalPages = Math.max(1, Math.ceil(filteredSupports?.length / itemsPerPage));
 
     return (
-        <div className="admin-container">
+        <div className="content-container">
 
             <UserRequestsToolbar />
 
-            <div className="admin-content">
+            <div className="content-block">
                 <h2>Супорты</h2>
                 <div className="main-content">
                     <div className="support-list-container">

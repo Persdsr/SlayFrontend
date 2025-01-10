@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import AdminPanelLinks from "./AdminPanelLinks";
+import AdminPanelLinks from "../navbar/AdminPanelLinks";
 import ComplaintItem from "./ComplaintItem";
 import ComplaintService from "../../service/ComplaintService";
 
@@ -30,10 +30,10 @@ const BannedUsers = () => {
     };
 
     return (
-        <div className="admin-container">
+        <div className="content-container">
             <AdminPanelLinks />
 
-            <div className="admin-content">
+            <div className="content-block">
                 <h2>Заблокированные пользователи</h2>
                 <div className="search-container">
                     <input

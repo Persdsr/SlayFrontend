@@ -43,7 +43,7 @@ const AdminSupportDetail = () => {
             webSocketFactory: () => new SockJS("http://localhost:8080/ws"),
             onConnect: () => {
                 console.log("Connected to WebSocket");
-                stompClient.subscribe("/topic/public", (message) => {
+                stompClient.subscribe(`/topic/support/${params.supportId}`, (message) => {
                     const newMessage = JSON.parse(message.body);
                     setMessages((prevMessages) => [...prevMessages, newMessage]);
                 });
@@ -144,7 +144,7 @@ const AdminSupportDetail = () => {
                 </li>
                 <li>
                     <h2 className="support-detail-title">Тип запроса</h2>
-                    <span>{support.requestType}</span>
+                    <span className="support-detail-span">{support.requestType}</span>
                 </li>
                 <li>
                     <h2 className="support-detail-title">Создан</h2>
@@ -166,9 +166,8 @@ const AdminSupportDetail = () => {
                     ))}
                 </div>
                 <form onSubmit={handleSubmit(sendMessage)}>
-                    <input
-                        type="text"
-                        className="support-message-input"
+                    <textarea
+                        className="support-message-textarea"
                         name="message"
                         required
                         placeholder="Введите сообщение"

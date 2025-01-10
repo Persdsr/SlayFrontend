@@ -6,30 +6,30 @@ const AdminPanelLinks = () => {
         <div className="toolbar-list-menu">
             <NavLink
                 to="/admin/support"
-                className="admin-menu-link"
+                className="left-menu-link"
             >
-                    <span role="img" aria-label="support">
-                        📞
+                    <span className="nav-span">
+                        📞 Поддержка
                     </span>{" "}
-                Поддержка
+
             </NavLink>
             <NavLink
                 to="/admin/complaints"
-                className="admin-menu-link"
+                className="left-menu-link"
             >
-                    <span role="img" aria-label="complaints">
-                        📝
+                    <span className="nav-span">
+                        📝 Жалобы
                     </span>{" "}
-                Жалобы
+
             </NavLink>
             <NavLink
                 to="/admin/banned-users"
-                className="admin-menu-link"
+                className="left-menu-link"
             >
-                    <span role="img" aria-label="banned">
-                        🚫
+                    <span className="nav-span">
+                        🚫 Забаненные пользователи
                     </span>{" "}
-                Забаненные пользователи
+
             </NavLink>
         </div>
     );

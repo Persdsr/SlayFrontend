@@ -1,9 +1,10 @@
 import React from 'react';
 import {format} from "date-fns";
+import {Link} from "react-router-dom";
 
 const SupportItem = ({support}) => {
     return (
-        <a href={`support/${support.id}`} key={support.id}>
+        <Link to={`/support/${support.id}`} key={support.id}>
             <div
                 className={support.resolved ? "support-info-resolved-block" : "support-info-block"}>
                 <div className="support-sender-info">
@@ -22,7 +23,7 @@ const SupportItem = ({support}) => {
                     }
                 </div>
             </div>
-        </a>
+        </Link>
     );
 };
 

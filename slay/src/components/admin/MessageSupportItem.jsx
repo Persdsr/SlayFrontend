@@ -5,7 +5,7 @@ const MessageSupportItem = ({ message, index }) => {
     return (
         <div key={index} className="support-chat-message">
             <div className="support-message-sender-info">
-                <img src={message.sender.avatar} alt="Avatar" />
+                <img src={message.sender.avatar || "/defaultAvatar.jpg"} alt="Avatar" />
                 <div>
                     <span className="support-message-author">
                         {message.sender.username || "Unknown"}

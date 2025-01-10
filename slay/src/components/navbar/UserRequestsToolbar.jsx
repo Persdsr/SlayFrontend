@@ -4,23 +4,20 @@ import {NavLink} from "react-router-dom";
 const UserRequestsToolbar = () => {
     return (
         <div className="toolbar-list-menu">
-            <NavLink
+            <NavLink className="left-menu-link"
                 to="/my-supports"
-                className="admin-menu-link"
             >
-                    <span role="img" aria-label="support">
-                        📞
+                    <span className="nav-span">
+                        📞 Supports
                     </span>{" "}
-                Supports
+
             </NavLink>
-            <NavLink
+            <NavLink className="left-menu-link"
                 to="/my-complaints"
-                className="admin-menu-link"
             >
-                    <span role="img" aria-label="complaints">
-                        📝
+                    <span className="nav-span">
+                        📝 Complaints
                     </span>{" "}
-                Complaints
             </NavLink>
 
         </div>

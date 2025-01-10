@@ -19,6 +19,10 @@ import MyComplaintsRequests from "./components/user/MyComplaintsRequests";
 import axios from "axios";
 import { useAuthStore } from "./components/store/store";
 import NotFound from "./pages/NotFound";
+import UserSettings from "./pages/UserSettings";
+import MyPurchaseCourses from "./components/user/MyPurchaseCourses";
+import Messages from "./components/user/Messages";
+import MessageDetail from "./components/user/MessageDetail";
 
 function App() {
     const authStore = useAuthStore();
@@ -47,9 +51,13 @@ function App() {
                 <Route path="/create-course" element={<CreateTrainingCourse />} />
                 <Route path="/courses" element={<CoursesCatalog />} />
                 <Route path="/support" element={<Support />} />
+                <Route path="/settings" element={<UserSettings />} />
                 <Route path="/about" element={<About />} />
                 <Route path="/my-supports" element={<MySupportRequests />} />
+                <Route path="/messages" element={<Messages />} />
+                <Route path="/message/:chatId" element={<MessageDetail />} />
                 <Route path="/my-complaints" element={<MyComplaintsRequests />} />
+                <Route path="/purchase-courses" element={<MyPurchaseCourses />} />
                 <Route path="/admin" element={<Admin />} />
                 <Route path="/admin/support" element={<AdminSupport />} />
                 <Route path="/support/:supportId" element={<AdminSupportDetail />} />

@@ -36,7 +36,7 @@ const Navbar = () => {
                     <ul className="dropdown-menu">
                         {
                             categories?.map((category) => (
-                                <li key={category}><a className="navbar-title" href={category}>{category}</a></li>
+                                <li key={category.name}><a className="navbar-title" href={category.name}>{category.name}</a></li>
                             ))
                         }
                     </ul>

@@ -80,7 +80,7 @@ const ControlIcons = ({ title, playandpause, playing, rewind, fastForward, mutin
             {/* Top Controls */}
             <Grid container direction='row' alignItems='center' justifyContent='start' style={{padding: 16 }}>
                 <Grid item>
-                    <Typography variant='h5' style={{color:'white'}}>{"Трейлер - " + title}</Typography>
+                    <Typography variant='h5' style={{color:'white'}}>{}</Typography>
                 </Grid>
             </Grid>
 
