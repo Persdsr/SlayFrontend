@@ -172,26 +172,28 @@ const Profile = () => {
     }
 
     return (
-        <div className="profile-container">
+        <div className="content-container">
             <UserLeftToolbar authStore={authStore} />
 
             <div className="profile-block">
                 <div className="banner-container">
+
                     <img
                         className="profile-banner"
-                        src={data?.author?.banner}
+                        src={data?.author?.banner ? data.author.banner : "/white-background.jpeg"}
                         alt="Profile Banner"
                     />
                     {
+
                         data.subscribed
                             ?
-                            <div>
+                            <div className="profile-btns">
+                                <button on className="profile-write">Send message</button>
                                 <button
                                     className="profile-unfollow-btn"
                                     onClick={openUnfollowDialog}
                                 >
-                                    <img src="/add-user.png" className="icon-unfollow" alt=""/>
-                                    Вы подписаны
+                                    Followed
                                 </button>
 
                                 {showUnfollowDialog && (
@@ -225,7 +227,7 @@ const Profile = () => {
                     }
                 </div>
                 <div className="avatar-container">
-                    <img className="profile-avatar" src={data?.author?.avatar} alt="User Avatar"/>
+                <img className="profile-avatar" src={data?.author?.avatar} alt="User Avatar"/>
                     <div className="profile-user-info">
                         <span className="profile-user-info-name">{data?.author?.username}</span>
                         <span className="profile-user-name">@{data?.author?.username}</span>

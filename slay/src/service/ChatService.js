@@ -10,7 +10,6 @@ export default class ChatService {
                         Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
                     }}
                 );
-            console.log('Успех:', response);
             return response.data;
         } catch (err) {
             console.log(err.response.data.message);
@@ -26,7 +25,21 @@ export default class ChatService {
                         Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
                     }}
             );
-            console.log('Успех:', response);
+            return response.data;
+        } catch (err) {
+            console.log(err.response.data.message);
+
+        }
+    }
+
+    static async deleteMessageById(messageId) {
+        try {
+            const response = await axios.delete('http://localhost:8080/api/chat/message' + messageId,
+                {
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+                    }}
+            );
             return response.data;
         } catch (err) {
             console.log(err.response.data.message);

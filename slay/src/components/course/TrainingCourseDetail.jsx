@@ -1,13 +1,13 @@
-import React, { useEffect, useState } from 'react';
-import {Link, useParams} from 'react-router-dom';
+import React, {useEffect, useState} from 'react';
+import {Link, useNavigate, useParams} from 'react-router-dom';
 import TrainingCourseService from '../../service/TrainingCourseService';
 import VideoPlayer from '../VideoPlayer';
 import CourseStepDetailVideoPlayer from "./CourseStepDetailVideoPlayer";
-import { Swiper, SwiperSlide } from 'swiper/react';
+import {Swiper, SwiperSlide} from 'swiper/react';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
-import { Navigation, Pagination } from 'swiper/modules';
+import {Navigation, Pagination} from 'swiper/modules';
 
 const TrainingCourseDetail = () => {
     const params = useParams();
@@ -17,6 +17,7 @@ const TrainingCourseDetail = () => {
     const [videosCount, setVideosCount] = useState(0);
     let [isPurchased, setPurchased] = useState(false)
     const [menuOpen, setMenuOpen] = useState(false); // Стейт для управления состоянием меню
+    const navigate = useNavigate();
 
     useEffect(() => {
         const fetchCourse = async () => {
@@ -31,12 +32,12 @@ const TrainingCourseDetail = () => {
                 setCreateAt(formatDate(response.data.body.createAt));
 
 
-               /* const countVideos = response.data.trainingCourseSteps.reduce((acc, step) => {
-                    return acc + step.trainingCourseStepDetails.filter(detail => detail.videos).length;
-                }, 0);
+                /* const countVideos = response.data.trainingCourseSteps.reduce((acc, step) => {
+                     return acc + step.trainingCourseStepDetails.filter(detail => detail.videos).length;
+                 }, 0);
 
-                setVideosCount(countVideos);
-*/
+                 setVideosCount(countVideos);
+ */
             } catch (error) {
                 console.error('Error fetching course:', error);
             }
@@ -62,7 +63,7 @@ const TrainingCourseDetail = () => {
         if (window.confirm("Вы уверены, что хотите удалить этот курс?")) {
             try {
                 await TrainingCourseService.deleteCourseById(params.id);
-                window.location.reload();
+                navigate("/")
             } catch (error) {
                 console.log("Error delete course:", error);
             }
@@ -101,7 +102,7 @@ const TrainingCourseDetail = () => {
                             ></path>
                             <path d="m15 5 4 4"></path>
                         </svg>
-                        <p className="menu-label">Redact</p>
+                        <p onClick={() => navigate(`/redact-course/${params.id}`)} className="menu-label">Redact</p>
                     </li>
                     <li className="menu-item">
                         <svg
@@ -156,7 +157,15 @@ const TrainingCourseDetail = () => {
 
             {/* Основная информация курса */}
             <div className="course-detail-info">
-                <VideoPlayer title={courseDetails?.name} videoUrl={videoUrl.replace("download", "view")}/>
+                {
+                    courseDetails?.trailer
+                        ? <VideoPlayer title={courseDetails?.name} videoUrl={videoUrl?.replace("download", "view")}/>
+                        : <div className="trailer-no-video-block">
+                            <span>
+                                No video
+                            </span>
+                        </div>
+                }
                 <div className="card-author">
                     <header className="card-header">
                         <p>{createAt}</p>
@@ -173,13 +182,14 @@ const TrainingCourseDetail = () => {
                         </svg>
                         <div className="author-name">
                             <span className="author-name-prefix">Author</span>
-                            <span className="card-author-name"><Link to={`/profile/${courseDetails.author}`}>{courseDetails?.author}</Link></span>
+                            <span className="card-author-name"><Link
+                                to={`/profile/${courseDetails.author}`}>{courseDetails?.author}</Link></span>
                         </div>
                     </div>
                     <div className="tags">
-                        {courseDetails?.categories?.map((category) => (
-                            <a className="card-author-tag" href="#" key={category}>
-                                {category}
+                        {courseDetails?.tags?.map((tag) => (
+                            <a className="card-author-tag" href="#" key={tag.name}>
+                                {tag.name}
                             </a>
                         ))}
                     </div>
@@ -259,13 +269,21 @@ const TrainingCourseDetail = () => {
 
                                 {trainingCourseStep?.trainingCourseStepDetails?.map((stepDetail, index) => (
                                     <SwiperSlide key={index}>
+
                                         <div className="step-detail-block">
                                             <h2 className="step-detail-title">{stepDetail.title}</h2>
                                             <span className="step-detail-description">{stepDetail.description}</span>
-                                            <CourseStepDetailVideoPlayer
-                                                    title={courseDetails?.description}
-                                                    videoUrl={stepDetail?.videos?.replace("download", "view")}
-                                                />
+                                            {
+                                                stepDetail?.videos
+                                                    ? <CourseStepDetailVideoPlayer
+                                                        title={courseDetails?.description}
+                                                        videoUrl={stepDetail?.videos?.replace("download", "view")}
+                                                    />
+                                                    : <div className="no-video-block">
+                                                        <span>No video</span>
+                                                    </div>
+                                            }
+
                                         </div>
                                     </SwiperSlide>
                                 ))}
@@ -293,9 +311,9 @@ const TrainingCourseDetail = () => {
                                 <span
                                     className="step-detail-description not-clickable">{courseDetails?.trainingCourseCroppedStep?.description}</span>
                             </div>
-                            <div className="course-steps-video not-clickable" >
+                            <div className="course-steps-video not-clickable">
                                 <VideoPlayer title={courseDetails?.name}
-                                             videoUrl={videoUrl.replace("download", "view")}/>
+                                             videoUrl={videoUrl?.replace("download", "view")}/>
                             </div>
                         </div>
 

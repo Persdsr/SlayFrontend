@@ -3,14 +3,18 @@ import {useForm, useFieldArray, FormProvider} from "react-hook-form";
 import CreatableSelect from "react-select/creatable";
 import {useAuthStore} from "../store/store";
 import TrainingCourseService from "../../service/TrainingCourseService";
+import {useParams} from "react-router-dom";
 import VideoPlayer from "../VideoPlayer";
 import axios from "axios";
+
+
 
 const CourseStepDetailFormField = ({prefix, register, control, watch, setValue, uploadedFiles, setUploadedFiles, handleFileChange}) => {
     const {fields, append, remove} = useFieldArray({
         control,
         name: `${prefix}.trainingCourseStepDetails`,
     });
+
 
     return (
         <div>
@@ -52,31 +56,41 @@ const CourseStepDetailFormField = ({prefix, register, control, watch, setValue, 
                             />
                         </label>
                     </div>
-                    <h2 className="main-center-title">Video</h2>
+                  {/*  <h2 className="main-center-title">Video</h2>*/}
                     <div className="input-simple-wrapper">
                         <label className="file-input-label">
                             <input
                                 type="file"
-                                {...register(`${prefix}.trainingCourseStepDetails[${detailIndex}].videos`)}
+                                accept="video/*"
                                 className="file-input"
+                                {...register(`${prefix}.trainingCourseStepDetails[${detailIndex}].videos`)}
                                 onChange={(e) => {
-                                    handleFileChange(e);
                                     const file = e.target.files[0];
+                                    handleFileChange(e)
                                     if (file) {
+                                        // Сохраняем файл для отправки на сервер
                                         setValue(`${prefix}.trainingCourseStepDetails[${detailIndex}].videos`, file);
+                                        // Создаём URL для отображения
+                                        const objectUrl = URL.createObjectURL(file);
+                                        setValue(`${prefix}.trainingCourseStepDetails[${detailIndex}].videoPreview`, objectUrl);
+
                                     }
                                 }}
                             />
-                            {(() => {
-                                const file = watch(`${prefix}.trainingCourseStepDetails[${detailIndex}].videos`);
-                                return file instanceof File ? (
-                                    <VideoPlayer videoUrl={URL.createObjectURL(file)} />
-                                ) : (
-                                    <span className="placeholder">Choose a file or drag it here</span>
-                                );
-                            })()}
+                            {watch(`${prefix}.trainingCourseStepDetails[${detailIndex}].videoPreview`) ||
+                            watch(`${prefix}.trainingCourseStepDetails[${detailIndex}].videos`) ? (
+                                <VideoPlayer
+                                    title="Video Preview"
+                                    videoUrl={
+                                        typeof watch(`${prefix}.trainingCourseStepDetails[${detailIndex}].videos`) === "string" && watch(`${prefix}.trainingCourseStepDetails[${detailIndex}].videos`)
+                                            ? watch(`${prefix}.trainingCourseStepDetails[${detailIndex}].videos`).replace("download", "view")
+                                            : watch(`${prefix}.trainingCourseStepDetails[${detailIndex}].videoPreview`)
+                                    }
+                                />
+                            ) : (
+                                <span className="placeholder">Choose a file or drag it here</span>
+                            )}
                         </label>
-
                     </div>
                 </div>
             ))}
@@ -165,25 +179,12 @@ const CourseStepFormField = ({control, register, watch, setValue, uploadedFiles,
     );
 };
 
-const CreateTrainingCourse = () => {
+const RedactTrainingCourse = () => {
     const useAuth = useAuthStore()
     const [categories, setCategories] = useState([])
     const [tags, setTags] = useState([])
+    const params = useParams()
     const [uploadedFiles, setUploadedFiles] = useState([]);
-
-    useEffect(() => {
-        const fetchData = async () => {
-            const categoriesResponse = await TrainingCourseService.getAllCategoriesWitTags()
-            setCategories(categoriesResponse.data.categories || [])
-            const formattedTags = categoriesResponse.data.tags.map((tag) => ({
-                value: tag, // Уникальное значение
-                label: tag, // Отображаемое название
-            }));
-            setTags(formattedTags);
-        }
-
-        fetchData()
-    }, []);
 
     const methods = useForm({
         defaultValues: {
@@ -279,7 +280,7 @@ const CreateTrainingCourse = () => {
             );
 
         } catch (error) {
-           return []
+            return [];
         }
     };
 
@@ -288,11 +289,14 @@ const CreateTrainingCourse = () => {
         setUploadedFiles((prev) => [...prev, ...files]);
     };
 
+
     const onSubmit = async (data) => {
         const formData = new FormData();
         const filesUrls = await uploadFiles();
         console.log("FILES URLS: ")
         console.log(filesUrls)
+        console.log("UPLOADED FILES: ")
+        console.log(uploadedFiles)
 
         formData.append("data", JSON.stringify({
             name: data.name,
@@ -301,37 +305,35 @@ const CreateTrainingCourse = () => {
             authorUsername: useAuth?.userData?.username,
             category: data.category,
             tags: data.tags,
-            trainingCourseSteps: data.trainingCourseSteps.map((step) => ({
+            trainingCourseSteps: data.trainingCourseSteps.map((step, stepIndex) => ({
                 title: step.title,
                 description: step.description,
-                trainingCourseStepDetails: step.trainingCourseStepDetails.map((detail) => ({
+                trainingCourseStepDetails: step.trainingCourseStepDetails.map((detail, detailIndex) => ({
                     title: detail.title,
                     description: detail.description,
-                    video: detail.videos.name
+                    video:  detail?.videos?.name ? "http://localhost:8080/download/" + detail?.videos?.name : watch(`trainingCourseSteps[${stepIndex}].trainingCourseStepDetails[${detailIndex}].videos`)
                 })),
             })),
         }));
 
-        if (data.poster) formData.append("poster", data.poster[0]);
-        if (data.trailer) formData.append("trailer", data.trailer[0]);
+        /*for (let [key, value] of formData.entries()) {
+            console.log(key, value);
+        }*/
+        if (data.poster) formData.append("poster", data.poster);
+        if (data.trailer) formData.append("trailer", data.trailer);
 
-        data.trainingCourseSteps.forEach((step) => {
-            step.trainingCourseStepDetails.forEach((detail) => {
-                if (detail.video) formData.append(`videos`, detail.video[0]);
-            });
-        });
+
 
         try {
-            const response = await fetch('http://localhost:8080/api/training-course/create', {
-                method: 'POST',
+            const response = await fetch(`http://localhost:8080/api/training-course/update/${params.courseId}`, {
+                method: 'PUT',
                 body: formData,
             });
-            console.log(data)
             const text = await response.text();
 
             if (response.ok) {
                 console.log('Response:', text);
-                alert('Course created successfully!');
+                alert('Course updated successfully!');
             } else {
                 console.error('Server error:', text);
                 alert(`Error: ${text}`);
@@ -340,6 +342,55 @@ const CreateTrainingCourse = () => {
             console.error('Error submitting form:', err);
         }
     };
+
+    useEffect(() => {
+        const fetchData = async () => {
+            const courseResponse = await TrainingCourseService.getTrainingCourseById(params.courseId);
+            const categoriesResponse = await TrainingCourseService.getAllCategoriesWitTags();
+            const courseDetail = courseResponse?.data.body;
+
+            setValue("name", courseDetail?.name || "");
+            setValue("description", courseDetail?.description || "");
+            setValue("price", courseDetail?.price || "");
+            setValue("category", courseDetail?.category || "");
+            setValue("tags", courseDetail?.tags || []);
+            setValue("poster", courseDetail?.poster || null);
+            setValue("trailer", courseDetail?.trailer || null);
+
+            if (courseDetail?.trainingCourseSteps?.length) {
+                const steps = courseDetail.trainingCourseSteps.map((step) => ({
+                    title: step.title || '',
+                    description: step.description || '',
+                    trainingCourseStepDetails: step.trainingCourseStepDetails?.length
+                        ? step.trainingCourseStepDetails.map((detail) => ({
+                            title: detail.title || '',
+                            description: detail.description || '',
+                            videos: detail.videos,
+                        }))
+                        : [{ title: '', description: '', videos: null }],
+                }));
+                setValue("trainingCourseSteps", steps);
+            } else {
+                setValue("trainingCourseSteps", [
+                    {
+                        title: '',
+                        description: '',
+                        trainingCourseStepDetails: [{ title: '', description: '', videos: null }],
+                    },
+                ]);
+            }
+
+            setCategories(categoriesResponse?.data.categories || []);
+            const formattedTags = categoriesResponse.data.tags.map((tag) => ({
+                value: tag, // Уникальное значение
+                label: tag, // Отображаемое название
+            }));
+            setTags(formattedTags);
+
+
+        };
+        fetchData();
+    }, [setValue, params.courseId]);
 
     return (
         <div className="main-center-container">
@@ -382,13 +433,26 @@ const CreateTrainingCourse = () => {
                                         type="file"
                                         {...register('poster')}
                                         className="file-input"
+                                        onChange={(e) => {
+                                            const file = e.target.files[0];
+                                            if (file) {
+                                                // Сохраняем файл для отправки на сервер
+                                                setValue(`poster`, file);
+                                                // Создаём URL для отображения
+                                                const objectUrl = URL.createObjectURL(file);
+                                                setValue(`posterPreview`, objectUrl);
+                                            }
+                                        }}
                                     />
-                                    {watch("poster")?.[0] ? (
+                                    {watch(`posterPreview`) ||
+                                    watch(`poster`) ? (
                                         <img
-                                            src={URL.createObjectURL(watch("poster")[0])}
-                                            alt="Uploaded Poster"
                                             style={{width: '350px'}}
-
+                                            src={
+                                                typeof watch("poster") === "string" && watch("poster")
+                                                    ? watch("poster")
+                                                    : watch("posterPreview")
+                                            }
                                         />
                                     ) : (
                                         <span className="placeholder">Choose a file or drag it here</span>
@@ -401,13 +465,29 @@ const CreateTrainingCourse = () => {
                                 <label className="file-input-label">
                                     <input
                                         type="file"
-                                        {...register('trailer')}
+                                        accept="video/*"
                                         className="file-input"
+                                        {...register(`trailer`)}
+                                        onChange={(e) => {
+                                            const file = e.target.files[0];
+                                            if (file) {
+                                                // Сохраняем файл для отправки на сервер
+                                                setValue(`trailer`, file);
+                                                // Создаём URL для отображения
+                                                const objectUrl = URL.createObjectURL(file);
+                                                setValue(`trailerPreview`, objectUrl);
+                                            }
+                                        }}
                                     />
-                                    {watch("trailer")?.[0] ? (
+                                    {watch(`trailerPreview`) ||
+                                    watch(`trailer`) ? (
                                         <VideoPlayer
-                                            videoUrl={URL.createObjectURL(watch("trailer")[0])}
-
+                                            title="Video Preview"
+                                            videoUrl={
+                                                typeof watch("trailer") === "string" && watch("trailer")
+                                                    ? watch("trailer").replace("download", "view")
+                                                    : watch("trailerPreview")
+                                            }
                                         />
                                     ) : (
                                         <span className="placeholder">Choose a file or drag it here</span>
@@ -447,19 +527,22 @@ const CreateTrainingCourse = () => {
                                 isMulti
                                 setValue={setValue}
                                 options={tags}
-                                onChange={(selectedOptions) => setValue('tags', selectedOptions.map(option => option.value))}
+                                onChange={(selectedOptions) =>
+                                    setValue('tags', selectedOptions.map(option => option.value))
+                            }
                                 value={watch('tags')?.map(tag => ({value: tag.name, label: tag.name})) || []}
                             />
                         </div>
 
                         <div className="form-course-create-container">
-                            <CourseStepFormField setValue={setValue}
-                                                 watch={watch}
-                                                 control={control}
-                                                 register={register}
-                                                 handleFileChange={handleFileChange}
-                                                 uploadedFiles={uploadedFiles}
-                                                 setUploadedFiles={setUploadedFiles}
+                            <CourseStepFormField
+                                setValue={setValue}
+                                watch={watch}
+                                control={control}
+                                register={register}
+                                handleFileChange={handleFileChange}
+                                uploadedFiles={uploadedFiles}
+                                setUploadedFiles={setUploadedFiles}
                             />
 
                         </div>
@@ -474,4 +557,4 @@ const CreateTrainingCourse = () => {
 };
 
 
-export default CreateTrainingCourse;
+export default RedactTrainingCourse;

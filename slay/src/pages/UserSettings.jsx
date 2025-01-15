@@ -22,7 +22,9 @@ const UserSettings = () => {
         form.append("banner", formData.banner.length > 0 ? formData.banner[0] : data.banner);
 
         const response = await UserService.updateUserData(form);
-
+        if (response.status === 200) {
+            window.location.reload()
+        }
     };
 
     const cancelSetting =() => {
@@ -45,7 +47,7 @@ const UserSettings = () => {
     }
 
     return (
-        <div className="profile-container">
+        <div className="content-container">
             <UserLeftToolbar authStore={authStore} />
 
             <div className="profile-block">
@@ -101,7 +103,7 @@ const UserSettings = () => {
                                     if (e.target.files && e.target.files[0]) {
                                     setData({
                                     ...data,
-                                    banner: URL.createObjectURL(e.target.files[0]),
+                                    banner: URL.createObjectURL(e.target.files[0] ? e.target.files[0] : "/white-background.jpeg"),
                                 });
                                 }
                                 }

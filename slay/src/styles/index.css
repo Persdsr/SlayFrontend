@@ -809,6 +809,17 @@ footer {
     margin: 12px auto;
 }
 
+.no-video-block {
+    position: relative;
+    height: 100%;
+    text-align: center;
+    color: white;
+    font-family: var(--main-font-family);
+    font-size: 22px;
+    font-weight: 600;
+    margin-top: 100px;
+}
+
 .video-container {
     width: 80%;
     overflow: hidden;
@@ -1513,6 +1524,10 @@ footer {
     border: #55595c 1px solid;
 }
 
+.media-input-block {
+    margin-bottom: 30px;
+}
+
 .support-area {
     width: 100%;
     max-width: 100%;
@@ -1662,12 +1677,13 @@ footer {
 }
 
 .content-container {
-    display: flex; /* Flexbox контейнер */
-    flex-direction: row; /* Ряд */
+    width: 80%;
+    margin: 40px auto;
+    min-height: 300px;
+    display: flex;
+    flex-direction: row;
     align-items: flex-start; /* Выравнивание по верхнему краю */
-    width: 100%;
     max-width: 1500px; /* Ограничиваем ширину контейнера */
-    margin: 0 auto; /* Центрируем */
     padding: 20px;
     box-sizing: border-box; /* Учитываем padding */
 
@@ -2034,7 +2050,7 @@ footer {
 .support-message-images img {
     max-width: 330px;
     height: auto;
-    margin: 10px;
+    margin-right: 10px;
 }
 
 .icon-btn {
@@ -2224,14 +2240,6 @@ footer {
     max-width: 220px;
 }
 
-.profile-container {
-    width: 80%;
-    margin: 40px auto;
-    min-height: 300px;
-    display: flex;
-    flex-direction: row;
-}
-
 .profile-block {
     width: 50%;
     margin-left: 100px;
@@ -2241,6 +2249,7 @@ footer {
 
 .profile-block h2 {
     color: white;
+    text-transform: uppercase;
     font-family: var(--main-font-family);
 }
 
@@ -2292,7 +2301,7 @@ footer {
     flex-direction: column;
     align-items: center;
     position: relative;
-    top: -75px;
+    top: -110px;
 }
 
 .profile-avatar {
@@ -2303,7 +2312,7 @@ footer {
     border-radius: 50%;
     object-fit: cover;
     background-color: white;
-    z-index: 5; /* На случай перекрытия другими элементами */
+    z-index: 1;
 }
 
 .profile-user-info {
@@ -2391,7 +2400,7 @@ footer {
     position: relative;
     height: 700px;
     width: 100%;
-    margin-top: 20px;
+    margin-top: 12px;
     overflow: hidden;
     margin-bottom: 40px;
 }
@@ -2789,9 +2798,14 @@ footer {
 }
 
 .image-modal-content img {
-    max-width: 90%;
+    max-width: 62%;
     max-height: 90%;
     border-radius: 10px;
+}
+
+.image-modal-content {
+    display: flex;
+    justify-content: center;
 }
 
 .profile-review-block .review-content {
@@ -2834,25 +2848,41 @@ footer {
     border-color: #aaa;
 }
 
+.profile-btns {
+    display: flex;
+    flex-direction: row;
+    z-index: 2;
+    gap: 4px;
+}
+
 .profile-unfollow-btn {
     background-color: #e0e0e0;
     border: none;
     font-family: "Oswald", sans-serif;
     font-size: 16px;
     font-weight: 600;
-    border-radius: 10px;
-    padding: 5px 10px;
+    border-radius: 20px;
+    padding: 10px 15px;
     height: 40px;
-    width: 170px;
+
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
     transition: background-color 0.3s ease;
-    position: absolute; /* Для размещения поверх баннера */
-    bottom: -40px; /* Чуть ниже баннера */
-    right: 0;
-    z-index: 10; /* Обеспечивает "верхний" слой */
+}
+
+.profile-write {
+    cursor: pointer;
+    border-radius: 20px;
+    background-color: var(--main-color);
+    border: none;
+    padding: 8px 15px;
+    font-size: 16px;
+    color: white;
+
+    font-weight: 500;
+    font-family: var(--main-font-family);
 }
 
 .profile-unfollow-btn:hover {
@@ -2967,6 +2997,7 @@ footer {
 .profile-photo-block-modern {
     display: flex;
     margin-bottom: 30px;
+    gap: 13px;
     flex-direction: column;
 }
 
@@ -3160,6 +3191,7 @@ footer {
     display: none; /* Скрываем поле выбора файла */
 }
 
+
 .no-course-title {
     margin: 0 auto;
     color: white;
@@ -3191,7 +3223,17 @@ footer {
     font-size: 16px;
 }
 
+.file-input-label img {
+    width: 450px;
+}
 
+.file-input-label video {
+    width: 450px;
+}
+
+.file-input-label .playerDiv {
+    width: 450px;
+}
 
 .file-input-label:hover {
     border-color: var(--main-color);
@@ -3225,6 +3267,17 @@ footer {
     font-size: 16px;
 }
 
+.trailer-no-video-block {
+    width: 450px;
+    position: relative;
+    height: 100%;
+    text-align: center;
+    color: white;
+    font-family: var(--main-font-family);
+    font-size: 22px;
+    font-weight: 600;
+}
+
 .submit-button:hover {
     background-color: #23c483;
 }
@@ -3241,11 +3294,17 @@ footer {
     margin-bottom: 20px;
 }
 
+.tags-select-block {
+    margin-bottom: 40px;
+}
+
 .btn-add-detail {
     width: 125px;
     margin-top: 12px;
     text-align: center;
     height: 38px;
+    left: 40%;
+    position: relative;
     font-size: 14px;
     font-weight: 700;
     color: white;
@@ -3254,6 +3313,10 @@ footer {
     border: none;
     border-radius: 5px;
     cursor: pointer;
+}
+
+.center-title {
+    justify-content: center;
 }
 
 .btn-add-step {
@@ -3273,7 +3336,7 @@ footer {
 .remove-course-files-button {
     position: absolute;
     top: -5px;
-    right: 5px;
+    right: 0;
     background: transparent;
     border: none;
     color: #ff0000;
@@ -3287,15 +3350,32 @@ footer {
 }
 
 .category-selection {
-    margin: 20px 0;
+    margin-top: 20px;
     text-align: center;
+}
+
+.label-input-name {
+    color: white;
+    font-size: 18px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    font-family: var(--main-font-family);
+}
+
+.step-title-name {
+    display: flex;
+    flex-direction: row;
+    margin-top: 20px;
 }
 
 .category-label {
     display: block;
+    text-align: center;
     margin-bottom: 20px;
-    font-weight: bold;
+    font-weight: 700;
     font-size: 24px;
+    text-transform: uppercase;
+    font-family: var(--main-font-family);
     color: white;
 }
 
@@ -3303,6 +3383,7 @@ footer {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
+    margin-bottom: 70px;
     gap: 20px; /* Расстояние между блоками */
 }
 
@@ -3336,9 +3417,12 @@ footer {
 }
 
 .category-select-name {
-    font-size: 14px;
-    font-weight: 500;
     color: white;
+    text-transform: uppercase;
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    font-family: var(--main-font-family);
 }
 
 .chats-container {
@@ -3458,6 +3542,10 @@ footer {
     border-radius: 20px;
 }
 
+.message-block:hover .message-trash-icon {
+    display: inline-block;
+}
+
 .message-info {
     display: flex;
     flex-direction: column;
@@ -3492,6 +3580,20 @@ footer {
     z-index: 10;
 }
 
+.message-info-options {
+    display: flex;
+}
+
+.message-trash-icon {
+    margin: 4px 4px 0 0;
+    display: none;
+    cursor: pointer;
+    white-space: nowrap;
+    margin-left: auto;
+    width: 20px;
+    height: 20px;
+}
+
 .message-input {
     width: 100%;
     min-height: 40px; /* Минимальная высота текстового поля */
@@ -3508,29 +3610,6 @@ footer {
     scrollbar-width: thin; /* Для Firefox — делаем скролл минимальным */
     scrollbar-color: transparent transparent; /* Прозрачный скролл для Firefox */
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 .file-upload-icon-wrapper {

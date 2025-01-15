@@ -32,9 +32,7 @@ const AdminSupportDetail = () => {
                 console.error("Ошибка при загрузке данных:", error);
             }
         };
-        console.log(messages)
-        console.log(111)
-        //
+
         fetchSupportDetail();
     }, [params.supportId]);
 
@@ -177,7 +175,7 @@ const AdminSupportDetail = () => {
                         <div className="file-upload-block">
                             <label htmlFor="images" className="file-upload-label">
                                 <img
-                                    src="/icons8-image-100.png"
+                                    src="/icons8-white-image-100.png"
                                     alt="Загрузить изображение"
                                     className="file-upload-icon"
                                 />

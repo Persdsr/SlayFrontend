@@ -24,6 +24,8 @@ const MessageDetail = () => {
     const [uploadedFiles, setUploadedFiles] = useState([]);
     const [uploadProgress, setUploadProgress] = useState({});
     const navigate = useNavigate();
+    const [selectedImage, setSelectedImage] = useState("");
+    const [showImageModal, setShowImageModal] = useState(false);
     const authStore = useAuthStore()
 
 
@@ -47,8 +49,6 @@ const MessageDetail = () => {
                 const responseChatDetail = await ChatService.getChatDetailById(params.chatId);
                 setChatDetail(responseChatDetail);
                 setMessages(responseChatDetail.messages || []); // Обновляем сообщения текущего чата
-                console.log(1111)
-                console.log(responseChatDetail)
             } catch (error) {
                 console.error("Error fetching chat detail:", error);
             }
@@ -107,6 +107,18 @@ const MessageDetail = () => {
             return [];
         }
     };
+
+    const closeImageModal = () => {
+        setShowImageModal(false);
+        setSelectedImage("");
+    };
+
+    const openImageModal = (imageSrc) => {
+        setSelectedImage(imageSrc);
+        setShowImageModal(true);
+    };
+
+
 
     const sendMessage = async (data) => {
         const filesUrls = await uploadFiles();
@@ -182,7 +194,7 @@ const MessageDetail = () => {
                                                         return isVideo ? (
                                                             <VideoPlayer title={fileUrl?.name} videoUrl={fileUrl.replace("download", "view")}/>
                                                         ) : (
-                                                            <img key={index} src={fileUrl} alt={`message media ${index}`} style={{ maxWidth: "300px", marginTop: "10px" }} />
+                                                            <img key={index} src={fileUrl} onClick={() => openImageModal(fileUrl)} alt={`message media ${index}`} style={{ maxWidth: "300px", marginTop: "10px" }} />
                                                         );
                                                     })}
                                                 </div>
@@ -201,6 +213,7 @@ const MessageDetail = () => {
                                         src="/add-file.png"
                                         alt="Загрузить файлы"
                                         className="file-upload-icon"
+
                                         style={{cursor: "pointer"}}
                                     />
                                 </label>
@@ -281,6 +294,13 @@ const MessageDetail = () => {
 
 
             </div>
+            {showImageModal && (
+                <div className="review-modal-overlay" onClick={closeImageModal}>
+                    <div className="image-modal-content">
+                        <img src={selectedImage} alt="Selected Review"/>
+                    </div>
+                </div>
+            )}
         </div>
     );
 };

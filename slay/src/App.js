@@ -23,6 +23,7 @@ import UserSettings from "./pages/UserSettings";
 import MyPurchaseCourses from "./components/user/MyPurchaseCourses";
 import Messages from "./components/user/Messages";
 import MessageDetail from "./components/user/MessageDetail";
+import RedactTrainingCourse from "./components/course/RedactTrainingCourse";
 
 function App() {
     const authStore = useAuthStore();
@@ -49,6 +50,7 @@ function App() {
                 <Route path="/" element={<Main />} />
                 <Route path="/course/detail/:id" element={<TrainingCourseDetail />} />
                 <Route path="/create-course" element={<CreateTrainingCourse />} />
+                <Route path="/redact-course/:courseId" element={<RedactTrainingCourse />} />
                 <Route path="/courses" element={<CoursesCatalog />} />
                 <Route path="/support" element={<Support />} />
                 <Route path="/settings" element={<UserSettings />} />
