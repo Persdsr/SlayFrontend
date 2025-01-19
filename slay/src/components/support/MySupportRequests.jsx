@@ -2,8 +2,8 @@ import React, {useEffect, useState} from 'react';
 import AdminService from "../../service/AdminService";
 import SupportService from "../../service/SupportService";
 import AdminPanelLinks from "../navbar/AdminPanelLinks";
-import SupportItem from "../admin/SupportItem";
-import Filters from "../admin/Filters";
+import SupportItem from "./SupportItem";
+import Filters from "../filter/Filters";
 import UserRequestsToolbar from "../navbar/UserRequestsToolbar";
 import {useAuthStore} from "../store/store";
 

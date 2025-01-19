@@ -6,7 +6,7 @@ import TrainingCourseService from "../../service/TrainingCourseService";
 import {useParams} from "react-router-dom";
 import VideoPlayer from "../VideoPlayer";
 import axios from "axios";
-
+import colourStyles from "./CustomSelectStyles";
 
 
 const CourseStepDetailFormField = ({prefix, register, control, watch, setValue, uploadedFiles, setUploadedFiles, handleFileChange}) => {
@@ -261,28 +261,6 @@ const RedactTrainingCourse = () => {
 
     const {handleSubmit, control, register, watch, setValue} = methods;
 
-    const uploadFiles = async () => {
-        const formData = new FormData();
-
-        uploadedFiles.forEach((file) => {
-            formData.append("files", file);
-        });
-
-        try {
-            return await axios.post(
-                "http://localhost:8080/api/files/upload",
-                formData,
-                {
-                    headers: {
-                        Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-                    },
-                }
-            );
-
-        } catch (error) {
-            return [];
-        }
-    };
 
     const handleFileChange = (event) => {
         const files = Array.from(event.target.files);
@@ -292,11 +270,7 @@ const RedactTrainingCourse = () => {
 
     const onSubmit = async (data) => {
         const formData = new FormData();
-        const filesUrls = await uploadFiles();
-        console.log("FILES URLS: ")
-        console.log(filesUrls)
-        console.log("UPLOADED FILES: ")
-        console.log(uploadedFiles)
+
 
         formData.append("data", JSON.stringify({
             name: data.name,
@@ -304,7 +278,7 @@ const RedactTrainingCourse = () => {
             price: data.price,
             authorUsername: useAuth?.userData?.username,
             category: data.category,
-            tags: data.tags,
+            tags: data.tags.map((tag) => tag.value),
             trainingCourseSteps: data.trainingCourseSteps.map((step, stepIndex) => ({
                 title: step.title,
                 description: step.description,
@@ -319,6 +293,13 @@ const RedactTrainingCourse = () => {
         /*for (let [key, value] of formData.entries()) {
             console.log(key, value);
         }*/
+
+        if (uploadedFiles.length > 0) {
+            uploadedFiles.forEach((file) => {
+                formData.append("files", file);
+            });
+        }
+
         if (data.poster) formData.append("poster", data.poster);
         if (data.trailer) formData.append("trailer", data.trailer);
 
@@ -353,9 +334,14 @@ const RedactTrainingCourse = () => {
             setValue("description", courseDetail?.description || "");
             setValue("price", courseDetail?.price || "");
             setValue("category", courseDetail?.category || "");
-            setValue("tags", courseDetail?.tags || []);
+            setValue(
+                "tags",
+                courseDetail?.tags.map((tag) => ({ value: tag.name, label: tag.name })) || []
+            );
             setValue("poster", courseDetail?.poster || null);
             setValue("trailer", courseDetail?.trailer || null);
+
+            console.log(courseDetail)
 
             if (courseDetail?.trainingCourseSteps?.length) {
                 const steps = courseDetail.trainingCourseSteps.map((step) => ({
@@ -525,12 +511,12 @@ const RedactTrainingCourse = () => {
                             <CreatableSelect
                                 styles={customStyles}
                                 isMulti
-                                setValue={setValue}
                                 options={tags}
-                                onChange={(selectedOptions) =>
-                                    setValue('tags', selectedOptions.map(option => option.value))
+                                onChange={(selectedOptions) => {
+                                    console.log(watch("tags"))
+                                    setValue('tags', selectedOptions)}
                             }
-                                value={watch('tags')?.map(tag => ({value: tag.name, label: tag.name})) || []}
+                                value={watch('tags') || []}
                             />
                         </div>
 
@@ -547,7 +533,7 @@ const RedactTrainingCourse = () => {
 
                         </div>
 
-                        <button className="support-btn" type="submit">Submit</button>
+                        <button className="support-btn" type="submit">Save changes</button>
 
                     </div>
                 </form>

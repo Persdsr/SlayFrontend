@@ -17,10 +17,13 @@ const ChatMenuBlock = ({chats}) => {
                                          className="chat-member-avatar" alt=""/>
                                     <div>
                                         <span className="chat-members-username">{member?.username}</span>
-                                        <span className="chat-last-message">{member?.username === authStore?.userData?.username
-                                            ? `${member?.username}: ${chat.lastMessage.slice(0, 20)}`
-                                            :  `You: ${chat.lastMessage.slice(0, 20)}`
+                                        <span className="chat-last-message">{
+                                            chat.lastMessage ?
 
+                                            member?.username === authStore?.userData?.username
+                                            ? `${member?.username}: ${chat?.lastMessage?.slice(0, 20)}`
+                                            :  `You: ${chat?.lastMessage?.slice(0, 20)}`
+                                            : ""
                                         }</span>
                                     </div>
                                 </div>

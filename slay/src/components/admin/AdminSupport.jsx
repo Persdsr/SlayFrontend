@@ -3,8 +3,8 @@ import AdminPanelLinks from "../navbar/AdminPanelLinks";
 import axios from "axios";
 import { format } from "date-fns";
 import AdminService from "../../service/AdminService";
-import Filters from "./Filters";
-import SupportItem from "./SupportItem";
+import Filters from "../filter/Filters";
+import SupportItem from "../support/SupportItem";
 
 const AdminSupport = () => {
     const [supports, setSupports] = useState([]);

@@ -58,7 +58,7 @@ const Navbar = () => {
                     </ul>
                 </li>
                 {
-                    authStore?.userData?.username === "anonymousUser" ? (
+                    authStore?.authenticated === false ? (
                         <li className="navbar-title"><a href="/">Авторизация</a></li>
                     ) : (
                         <li className="navbar-title dropdown">

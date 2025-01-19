@@ -11,7 +11,7 @@ const Main = () => {
     return (
         <div>
             {
-                authStore?.userData?.username === "anonymousUser" ?
+                authStore?.authenticated === false ?
                     <div>
                         <Title/>
 

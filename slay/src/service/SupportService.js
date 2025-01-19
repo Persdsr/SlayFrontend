@@ -3,6 +3,16 @@ import {useNavigate} from "react-router-dom";
 
 export default class SupportService {
 
+    static async getSupportDetailById(supportId) {
+        const response = await axios.get("http://localhost:8080/api/support/" + supportId,
+            {
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+                }
+            })
+        return response.data;
+    }
+
     static async deleteSupport(supportId) {
         axios
             .patch(`http://localhost:8080/api/support/${supportId}`)

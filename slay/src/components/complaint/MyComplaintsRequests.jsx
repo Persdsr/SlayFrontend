@@ -1,15 +1,16 @@
 import React, {useEffect, useState} from 'react';
+import SupportService from "../../service/SupportService";
+import AdminService from "../../service/AdminService";
 import UserRequestsToolbar from "../navbar/UserRequestsToolbar";
-import ComplaintItem from "../admin/ComplaintItem";
-import Filters from "../admin/Filters";
+import SupportItem from "../support/SupportItem";
+import Filters from "../filter/Filters";
 import ComplaintService from "../../service/ComplaintService";
+import ComplaintItem from "./ComplaintItem";
 import {useAuthStore} from "../store/store";
-import UserService from "../../service/UserService";
-import UserLeftToolbar from "../navbar/UserLeftToolbar";
-import CategoryTrainingCourseItem from "../course/CategoryTrainingCourseItem";
+import {useNavigate} from "react-router-dom";
 
-const MyPurchaseCourses = () => {
-    const [courses, setCourses] = useState([]);
+const MyComplaintsRequests = () => {
+    const [complaints, setComplaints] = useState([]);
     const [filteredSupports, setFilteredSupports] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [searchQuery, setSearchQuery] = useState("");
@@ -19,19 +20,19 @@ const MyPurchaseCourses = () => {
     const itemsPerPage = 7;
     const [supportTypes, setSupportTypes] = useState([]);
     const authStore = useAuthStore()
+    const navigate = useNavigate()
 
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const sortedData = await UserService.getUserPurchaseCourses();
-                console.log(sortedData)
-                setCourses(sortedData.data);
-                setFilteredSupports(sortedData.data);
+                const sortedData = await ComplaintService.getAllUserComplaints();
+                setComplaints(sortedData);
+                setFilteredSupports(sortedData);
 
                 const types = await ComplaintService.getLocalComplaintTypes();
                 setSupportTypes(types);
             } catch (error) {
-                console.error("Error fetching data:", error);
+                navigate("/*")
             }
         };
 
@@ -39,7 +40,7 @@ const MyPurchaseCourses = () => {
     }, [authStore?.userData?.username]);
 
     useEffect(() => {
-        let result = [...courses];
+        let result = [...complaints];
 
         // Поиск
         if (searchQuery) {
@@ -48,37 +49,68 @@ const MyPurchaseCourses = () => {
             );
         }
 
+        // Фильтр по типу
+        if (filterType) {
+            result = result.filter((support) => support.complaintType === filterType);
+        }
+
+        // Фильтр по статусу (resolved)
+        if (resolvedFilter) {
+            const resolvedValue = resolvedFilter === "true";
+            result = result.filter((support) => support.resolved === resolvedValue);
+        }
+
+        // Сортировка по дате
+        result.sort((a, b) => {
+            if (sortOrder === "asc") {
+                return new Date(a.createdAt) - new Date(b.createdAt);
+            } else {
+                return new Date(b.createdAt) - new Date(a.createdAt);
+            }
+        });
+
         setFilteredSupports(result);
         setCurrentPage(1);
-    }, [searchQuery, filterType, resolvedFilter, sortOrder, courses]);
+    }, [searchQuery, filterType, resolvedFilter, sortOrder, complaints]);
 
     const indexOfLastItem = currentPage * itemsPerPage;
     const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-    const myCourses = filteredSupports?.slice(indexOfFirstItem, indexOfLastItem);
+    const currentItems = filteredSupports?.slice(indexOfFirstItem, indexOfLastItem);
 
     const totalPages = Math.max(1, Math.ceil(filteredSupports?.length / itemsPerPage));
+
     return (
         <div className="content-container">
 
-            <UserLeftToolbar />
+            <UserRequestsToolbar />
 
             <div className="content-block">
-                <h2>My purchase courses</h2>
+                <h2>Супорты</h2>
                 <div className="main-content">
-                    <div className="horizontal-courses-container">
-                        <div className="support-list-container">
-                            {myCourses?.length > 0 ? (
-                                myCourses.map((course) => (
-                                    <CategoryTrainingCourseItem course={course}/>
-                                ))
-                            ) : (
-                                <p>Нет данных для отображения.</p>
-                            )}
-                        </div>
+                    <div className="support-list-container">
+                        {currentItems?.length > 0 ? (
+                            currentItems.map((complaint) => (
+                                <ComplaintItem complaint={complaint}/>
+                            ))
+                        ) : (
+                            <p>Нет данных для отображения.</p>
+                        )}
                     </div>
 
+                    <Filters
+                        searchQuery={searchQuery}
+                        setSearchQuery={setSearchQuery}
+                        filterType={filterType}
+                        setFilterType={setFilterType}
+                        resolvedFilter={resolvedFilter}
+                        setResolvedFilter={setResolvedFilter}
+                        sortOrder={sortOrder}
+                        setSortOrder={setSortOrder}
+                        types={supportTypes}
+                    />
                 </div>
 
+                {/* Пагинация */}
                 {filteredSupports?.length > 0 && (
                     <div className="pagination">
                         <button
@@ -105,4 +137,4 @@ const MyPurchaseCourses = () => {
     );
 };
 
-export default MyPurchaseCourses;
+export default MyComplaintsRequests;

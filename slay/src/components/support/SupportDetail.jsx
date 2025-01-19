@@ -11,7 +11,7 @@ import SupportService from "../../service/SupportService";
 import MessageSupportItem from "./MessageSupportItem";
 import {useAuthStore} from "../store/store";
 
-const AdminSupportDetail = () => {
+const SupportDetail = () => {
     const [support, setSupport] = useState([]);
     const [messages, setMessages] = useState([]);
     const [client, setClient] = useState(null);
@@ -25,7 +25,7 @@ const AdminSupportDetail = () => {
     useEffect(() => {
         const fetchSupportDetail = async () => {
             try {
-                const response = await AdminService.getSupportDetailById(params?.supportId)
+                const response = await SupportService.getSupportDetailById(params?.supportId)
                 setSupport(response);
                 setMessages(response.messages || []); // Инициализация сообщений
             } catch (error) {
@@ -76,7 +76,7 @@ const AdminSupportDetail = () => {
     };
 
     const sendMessage = async (data) => {
-        const imageUrls = await uploadFiles();
+        const imageUrls = await uploadFiles(); // Функция для загрузки файлов через REST API
 
         if (!client) {
             console.error("WebSocket клиент не подключен");
@@ -91,16 +91,16 @@ const AdminSupportDetail = () => {
             },
             createAt: new Date().toISOString(),
             supportRequestId: params.supportId,
-            images: imageUrls,
+            images: imageUrls, // Ссылки на загруженные файлы
         };
 
-        // Отправляем сообщение через WebSocket
+        // Отправляем данные через WebSocket
         client.publish({
             destination: "/app/chat.sendMessage",
             body: JSON.stringify(newMessage),
         });
 
-        // Убираем локальное добавление сообщения, чтобы оно добавлялось только через WebSocket
+        // Сброс состояния формы
         reset();
         setUploadedFiles([]);
     };
@@ -240,4 +240,4 @@ const AdminSupportDetail = () => {
     );
 };
 
-export default AdminSupportDetail;
+export default SupportDetail;

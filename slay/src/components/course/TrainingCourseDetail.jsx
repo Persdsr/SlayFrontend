@@ -31,13 +31,6 @@ const TrainingCourseDetail = () => {
                 setVideoUrl(response.data.body.trailer);
                 setCreateAt(formatDate(response.data.body.createAt));
 
-
-                /* const countVideos = response.data.trainingCourseSteps.reduce((acc, step) => {
-                     return acc + step.trainingCourseStepDetails.filter(detail => detail.videos).length;
-                 }, 0);
-
-                 setVideosCount(countVideos);
- */
             } catch (error) {
                 console.error('Error fetching course:', error);
             }
@@ -155,7 +148,6 @@ const TrainingCourseDetail = () => {
                 </ul>
             </div>
 
-            {/* Основная информация курса */}
             <div className="course-detail-info">
                 {
                     courseDetails?.trailer

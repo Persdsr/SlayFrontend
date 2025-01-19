@@ -1,8 +1,9 @@
 import React, {useEffect, useState} from "react";
 import AdminPanelLinks from "../navbar/AdminPanelLinks";
 import ComplaintService from "../../service/ComplaintService";
-import Filters from "./Filters";
-import ComplaintItem from "./ComplaintItem";
+import Filters from "../filter/Filters";
+import ComplaintItem from "../complaint/ComplaintItem";
+import {useNavigate} from "react-router-dom";
 
 
 const Admin = () => {
@@ -14,17 +15,23 @@ const Admin = () => {
     const [resolvedFilter, setResolvedFilter] = useState("false");
     const [sortOrder, setSortOrder] = useState("desc");
     const itemsPerPage = 7;
+    const navigate = useNavigate()
     const [complaintTypes, setComplaintTypes] = useState([]);
 
     useEffect(() => {
         const fetchSupports = async () => {
+            try {
+                const sortedData = await ComplaintService.getAllSortedByDateComplaint()
+                setComplaints(sortedData);
+                setFilteredSupports(sortedData);
 
-            const sortedData = await ComplaintService.getAllSortedByDateComplaint()
-            setComplaints(sortedData);
-            setFilteredSupports(sortedData);
+                const types = await ComplaintService.getLocalComplaintTypes();
+                setComplaintTypes(types);
+            }
+            catch (e) {
+                navigate("/*")
+            }
 
-            const types = await ComplaintService.getLocalComplaintTypes();
-            setComplaintTypes(types);
         }
 
         fetchSupports();
@@ -56,9 +63,9 @@ const Admin = () => {
         // Сортировка по дате
         result.sort((a, b) => {
             if (sortOrder === "asc") {
-                return new Date(a.createAt) - new Date(b.createAt);
+                return new Date(a.createdAt) - new Date(b.createdAt);
             } else {
-                return new Date(b.createAt) - new Date(a.createAt);
+                return new Date(b.createdAt) - new Date(a.createdAt);
             }
         });
 

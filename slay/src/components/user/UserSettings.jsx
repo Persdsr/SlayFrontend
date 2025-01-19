@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { NavLink } from "react-router-dom";
-import { useAuthStore } from "../components/store/store";
+import { useAuthStore } from "../store/store";
 import { useForm } from "react-hook-form";
-import UserService from "../service/UserService";
-import UserLeftToolbar from "../components/navbar/UserLeftToolbar";
+import UserService from "../../service/UserService";
+import UserLeftToolbar from "../navbar/UserLeftToolbar";
 
 const UserSettings = () => {
     const authStore = useAuthStore();
@@ -115,7 +115,7 @@ const UserSettings = () => {
 
                     <div className="form-group-simple">
                         <label>name</label>
-                        <input type="text" {...register("name")} />
+                        <input type="text" required={true} {...register("name")} />
                     </div>
 
                     <div className="form-group-simple">

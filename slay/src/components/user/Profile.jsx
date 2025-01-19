@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from "react";
 import {Link, NavLink, useNavigate, useParams} from "react-router-dom";
-import TrainingCourseService from "../service/TrainingCourseService";
+import TrainingCourseService from "../../service/TrainingCourseService";
 import { format } from "date-fns";
 import { useForm } from "react-hook-form";
-import ComplaintCourseService from "../service/ComplaintCourseService";
-import {useAuthStore} from "../components/store/store";
-import UserService from "../service/UserService";
-import UserLeftToolbar from "../components/navbar/UserLeftToolbar";
-import ReviewService from "../service/ReviewService";
+import ComplaintCourseService from "../../service/ComplaintCourseService";
+import {useAuthStore} from "../store/store";
+import UserService from "../../service/UserService";
+import UserLeftToolbar from "../navbar/UserLeftToolbar";
+import ReviewService from "../../service/ReviewService";
 
 const Profile = () => {
     const [data, setData] = useState([]);
@@ -92,7 +92,7 @@ const Profile = () => {
 
     const saveChanges = async (courseId) => {
         try {
-            await TrainingCourseService.updateTrainingCourseBybFields(courseId, { description: editedDescription });
+            await TrainingCourseService.updateTrainingCourseByFields(courseId, { description: editedDescription });
             const updatedCourses = data.courses.map((course) =>
                 course.id === courseId ? { ...course, description: editedDescription } : course
             );
@@ -188,7 +188,7 @@ const Profile = () => {
                         data.subscribed
                             ?
                             <div className="profile-btns">
-                                <button on className="profile-write">Send message</button>
+                                <button className="profile-write">Send message</button>
                                 <button
                                     className="profile-unfollow-btn"
                                     onClick={openUnfollowDialog}

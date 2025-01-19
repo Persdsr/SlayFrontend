@@ -1,11 +1,11 @@
 import React, {useEffect, useState} from "react";
 import { useForm } from "react-hook-form";
 import axios from "axios";
-import SupportService from "../service/SupportService";
-import AdminService from "../service/AdminService";
-import {useAuthStore} from "../components/store/store";
+import SupportService from "../../service/SupportService";
+import AdminService from "../../service/AdminService";
+import {useAuthStore} from "../store/store";
 
-const Support = () => {
+const CreateSupport = () => {
     const { register, handleSubmit, reset } = useForm();
     const [uploadedFiles, setUploadedFiles] = useState([]);
     const [uploadProgress, setUploadProgress] = useState({});
@@ -208,4 +208,4 @@ const Support = () => {
     );
 };
 
-export default Support;
+export default CreateSupport;

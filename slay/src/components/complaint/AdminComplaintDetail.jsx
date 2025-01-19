@@ -1,12 +1,12 @@
 import React, {useEffect, useState} from 'react';
 import {format} from "date-fns";
-import MessageSupportItem from "./MessageSupportItem";
+import MessageSupportItem from "../support/MessageSupportItem";
 import AdminService from "../../service/AdminService";
 import {useNavigate, useParams} from "react-router-dom";
 import SupportService from "../../service/SupportService";
 import ComplaintService from "../../service/ComplaintService";
-import ComplaintCourseItem from "./complaint/ComplaintCourseItem";
-import ComplaintUserItem from "./complaint/ComplaintUserItem";
+import ComplaintCourseItem from "./ComplaintCourseItem";
+import ComplaintUserItem from "./ComplaintUserItem";
 
 const AdminComplaintDetail = () => {
     const [complaint, setComplaint] = useState([]);
@@ -17,12 +17,12 @@ const AdminComplaintDetail = () => {
     useEffect(() => {
         const fetchSupportDetail = async () => {
             try {
-                const response = await AdminService.getComplaintDetailById(params?.complaintId)
+                const response = await ComplaintService.getComplaintDetailById(params?.complaintId)
                 setComplaint(response)
                 console.log(response.complaintType)
 
             } catch (error) {
-                console.error("Ошибка при загрузке данных:", error);
+                navigate("/*")
             }
 
             const types = await ComplaintService.getComplaintTypes();
@@ -39,17 +39,9 @@ const AdminComplaintDetail = () => {
         if (window.confirm("Вы уверены, что хотите закрыть/открыть запрос?")) {
             await ComplaintService.changeResolvedStatusComplaint(params.complaintId)
 
-            window.location.reload();
+            window.location.reload()
         }
     };
-
-    const closeComplaintAndBanUser = async () => {
-        if (window.confirm("Вы уверены, что хотите закрыть/открыть запрос?")) {
-            await ComplaintService.changeResolvedStatusComplaintAndBlockUser(params.complaintId, true)
-
-            window.location.reload();
-        }
-    }
 
     return (
         <div className="complaint-container">
@@ -111,15 +103,6 @@ const AdminComplaintDetail = () => {
                 </a>
 
 
-                {complaintTypes.length > 0 && complaint.complaintType === complaintTypes.USER_PROFILE && (
-                    <a onClick={closeComplaintAndBanUser}>
-                        <button className="btn block-btn">
-                            {complaint.banned
-                                ? "Разблокировать пользователя"
-                                : "Закрыть запрос и заблокировать пользователя"}
-                        </button>
-                    </a>
-                )}
             </div>
 
         </div>

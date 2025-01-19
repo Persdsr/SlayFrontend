@@ -260,29 +260,6 @@ const CreateTrainingCourse = () => {
 
     const {handleSubmit, control, register, watch, setValue} = methods;
 
-    const uploadFiles = async () => {
-        const formData = new FormData();
-
-        uploadedFiles.forEach((file) => {
-            formData.append("files", file);
-        });
-
-        try {
-            return await axios.post(
-                "http://localhost:8080/api/files/upload",
-                formData,
-                {
-                    headers: {
-                        Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-                    },
-                }
-            );
-
-        } catch (error) {
-           return []
-        }
-    };
-
     const handleFileChange = (event) => {
         const files = Array.from(event.target.files);
         setUploadedFiles((prev) => [...prev, ...files]);
@@ -290,9 +267,6 @@ const CreateTrainingCourse = () => {
 
     const onSubmit = async (data) => {
         const formData = new FormData();
-        const filesUrls = await uploadFiles();
-        console.log("FILES URLS: ")
-        console.log(filesUrls)
 
         formData.append("data", JSON.stringify({
             name: data.name,
@@ -300,7 +274,7 @@ const CreateTrainingCourse = () => {
             price: data.price,
             authorUsername: useAuth?.userData?.username,
             category: data.category,
-            tags: data.tags,
+            tags: data.tags.map((tag) => tag.value),
             trainingCourseSteps: data.trainingCourseSteps.map((step) => ({
                 title: step.title,
                 description: step.description,
@@ -312,6 +286,12 @@ const CreateTrainingCourse = () => {
             })),
         }));
 
+        if (uploadedFiles.length > 0) {
+            uploadedFiles.forEach((file) => {
+                formData.append("files", file);
+            });
+        }
+
         if (data.poster) formData.append("poster", data.poster[0]);
         if (data.trailer) formData.append("trailer", data.trailer[0]);
 
@@ -321,20 +301,21 @@ const CreateTrainingCourse = () => {
             });
         });
 
-        try {
-            const response = await fetch('http://localhost:8080/api/training-course/create', {
-                method: 'POST',
-                body: formData,
-            });
-            console.log(data)
-            const text = await response.text();
+        console.log(data.files)
 
-            if (response.ok) {
-                console.log('Response:', text);
+        try {
+            const response = await axios.post('http://localhost:8080/api/training-course', formData,
+                {
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+                    },
+                })
+            if (response.status === 200) {
+                console.log('Response:', response);
                 alert('Course created successfully!');
             } else {
-                console.error('Server error:', text);
-                alert(`Error: ${text}`);
+                console.error('Server error:', response);
+                alert(`Error: }`);
             }
         } catch (err) {
             console.error('Error submitting form:', err);
@@ -352,7 +333,7 @@ const CreateTrainingCourse = () => {
                                 Название курса<span style={{color: "red", marginBottom: "5px"}}>*</span>
                             </label>
 
-                            <input className="simple-input" {...register('name', {required: 'Name is required'})} />
+                            <input className="simple-input" {...register('name', {required: 'Name is required', minLength:3, maxLength: 100})} />
                         </div>
 
                         <div className="input-simple-wrapper">
@@ -445,10 +426,12 @@ const CreateTrainingCourse = () => {
                             <CreatableSelect
                                 styles={customStyles}
                                 isMulti
-                                setValue={setValue}
                                 options={tags}
-                                onChange={(selectedOptions) => setValue('tags', selectedOptions.map(option => option.value))}
-                                value={watch('tags')?.map(tag => ({value: tag.name, label: tag.name})) || []}
+                                onChange={(selectedOptions) => {
+                                    setValue('tags', selectedOptions)
+                                }
+                            }
+
                             />
                         </div>
 

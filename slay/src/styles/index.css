@@ -1990,6 +1990,7 @@ footer {
 .support-message-sender-info img {
     width: 55px;
     height: 55px;
+    object-fit: cover;
     border-radius: 30px;
 }
 
@@ -2274,6 +2275,7 @@ footer {
 .profile-banner {
     width: 100%;
     height: 240px;
+    object-fit: cover;
     border-radius: 10px;
     margin-bottom: 5px;
 }
@@ -2350,6 +2352,7 @@ footer {
 .user-training-course-info img {
     width: 55px;
     height: 55px;
+    object-fit: cover;
     border-radius: 70px;
 }
 
@@ -3103,7 +3106,7 @@ footer {
 .banner-wrapper {
     position: relative;
 
-    border-radius: 10%;
+    border-radius: 10px;
     overflow: hidden;
     cursor: pointer;
 }
@@ -3119,6 +3122,7 @@ footer {
 .profile-banner-settings {
     width: 100%;
     height: 240px;
+    object-fit: cover;
 }
 
 .avatar-wrapper:hover .profile-avatar-settings {
@@ -3156,7 +3160,7 @@ footer {
     align-items: center;
     opacity: 0;
     transition: opacity 0.3s ease;
-    border-radius: 10%;
+    border-radius: 10px;
 }
 
 .modern-form {
@@ -3476,6 +3480,7 @@ footer {
     border-radius: 40px;
     width: 60px;
     height: 60px;
+    object-fit: cover;
 }
 
 .chat-block {
@@ -3556,6 +3561,7 @@ footer {
 .message-avatar {
     width: 50px;
     height: 50px;
+    object-fit: cover;
     border-radius: 30px;
     flex-shrink: 0;
 }

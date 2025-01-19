@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 
-import ComplaintUserService from "../../../service/ComplaintUserService";
+import ComplaintUserService from "../../service/ComplaintUserService";
 
 const ComplaintUserItem = ({complaint}) => {
     const [user, setUser] = useState([])

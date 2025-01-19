@@ -3,16 +3,36 @@ import axios from "axios";
 export default class ComplaintService {
 
     static async getAllSortedByDateComplaint() {
-        const response = await axios.get("http://localhost:8080/api/complaint");
+        const response = await axios.get("http://localhost:8080/api/complaint",
+            {
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+                }}
+            );
         return response.data.sort((a, b) =>
             new Date(b.createAt) - new Date(a.createAt)
         );
 
     }
 
+    static async getComplaintDetailById(complaintId) {
+        const response = await axios.get("http://localhost:8080/api/complaint/" + complaintId,
+            {
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+                }
+            })
+        return response.data.body;
+    }
+
     static async getComplaintTypes() {
         try {
-            const response = await axios.get("http://localhost:8080/api/complaint/complaint-types")
+            const response = await axios.get("http://localhost:8080/api/complaint/complaint-types",
+                {
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+                    }
+                })
             return response.data
         } catch (e) {
             console.log("Error fetching complaint types " + e)
@@ -21,7 +41,12 @@ export default class ComplaintService {
 
     static async getLocalComplaintTypes() {
         try {
-            const response = await axios.get("http://localhost:8080/api/complaint/local-complaint-types")
+            const response = await axios.get("http://localhost:8080/api/complaint/local-complaint-types",
+                {
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+                    }
+                })
             return response.data
         } catch (e) {
             console.log("Error fetching complaint types " + e)
@@ -30,7 +55,15 @@ export default class ComplaintService {
 
     static async changeResolvedStatusComplaint(complaintId) {
         axios
-            .patch(`http://localhost:8080/api/complaint/${complaintId}`)
+            .patch(
+                `http://localhost:8080/api/complaint/${complaintId}`,
+                {}, // Пустое тело, так как данные не передаются
+                {
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+                    },
+                }
+            )
             .then((response) => {
                 console.log(response.data);
             })
@@ -40,32 +73,25 @@ export default class ComplaintService {
             });
     }
 
-    static async changeResolvedStatusComplaintAndBlockUser(complaintId, resolveStatus) {
-        try {
-            const response = await axios.patch(
-                `http://localhost:8080/api/complaint-user/resolve-ban/${complaintId}`,
-                null,
-                {
-                    params: {
-                        resolveBanStatus: resolveStatus, // Передача параметра в запрос
-                    },
-                }
-            );
-            console.log(response.data);
-        } catch (error) {
-            console.error("Ошибка при изменении статуса блокировки:", error);
-            alert("Произошла ошибка при изменении статуса блокировки.");
-        }
-    }
-
     static async getComplaintBannedUsers() {
-        const response = await axios.get(`http://localhost:8080/api/complaint-user/banned-users`)
+        const response = await axios.get(`http://localhost:8080/api/complaint-user/banned-users`,
+            {
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+                }
+            })
         return response.data
     }
 
-    static async getAllUserComplaints(username) {
+    static async getAllUserComplaints() {
         try {
-            const response = await axios.get(`http://localhost:8080/api/complaint/user/${username}`);
+            const response = await axios.get(`http://localhost:8080/api/complaint/user`,
+                {
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+                    }
+                }
+                );
             console.log("Response data:", response.data);
             return response.data ? response.data : [];
         } catch (error) {

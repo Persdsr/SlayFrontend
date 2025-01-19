@@ -19,7 +19,8 @@ export default class ComplaintCourseService {
             complaintBody, // Передаем объект как есть
             {
                 headers: {
-                    "Content-Type": "application/json", // Указываем тип данных
+                    "Content-Type": "application/json",
+                Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
                 },
             }
         );

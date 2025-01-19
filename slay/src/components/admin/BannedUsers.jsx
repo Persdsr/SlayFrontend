@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import AdminPanelLinks from "../navbar/AdminPanelLinks";
-import ComplaintItem from "./ComplaintItem";
+import ComplaintItem from "../complaint/ComplaintItem";
 import ComplaintService from "../../service/ComplaintService";
 
 const BannedUsers = () => {
