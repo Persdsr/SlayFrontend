@@ -167,9 +167,6 @@ const MessageDetail = () => {
             <div className="content-block">
                 <div className="chats-container">
                     <div className="chats-menu">
-                        <div className="search-chats-block">
-                            <input type="text"/>
-                        </div>
                         <ChatMenuBlock chats={chats}/>
                     </div>
                     <div className="chat-content">
@@ -188,8 +185,8 @@ const MessageDetail = () => {
                                             {message?.files && message?.files?.length > 0 && (
                                                 <div className="support-message-images">
                                                     {message.files.map((fileUrl, index) => {
-                                                        const fileExtension = fileUrl.split('.').pop().toLowerCase(); // Получаем расширение файла
-                                                        const isVideo = ['mp4', 'webm', 'ogg'].includes(fileExtension); // Список расширений для видео
+                                                        const fileExtension = fileUrl.split('.').pop().toLowerCase();
+                                                        const isVideo = ['mp4', 'webm', 'ogg'].includes(fileExtension);
 
                                                         return isVideo ? (
                                                             <VideoPlayer title={fileUrl?.name} videoUrl={fileUrl.replace("download", "view")}/>
@@ -207,7 +204,6 @@ const MessageDetail = () => {
                         <div className="input-message-block">
                             <form style={{width: "100%", display: "flex", alignItems: "center"}}
                                   onSubmit={handleSubmit(sendMessage)}>
-                                {/* Иконка загрузки файлов */}
                                 <label htmlFor="files" className="file-upload-icon-wrapper">
                                     <img
                                         src="/add-file.png"

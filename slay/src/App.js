@@ -13,14 +13,14 @@ import AdminSupport from "./components/admin/AdminSupport";
 import Complaints from "./components/admin/AdminComplaints";
 import BannedUsers from "./components/admin/BannedUsers";
 import SupportDetail from "./components/support/SupportDetail";
-import AdminComplaintDetail from "./components/complaint/AdminComplaintDetail";
+import ComplaintDetail from "./components/complaint/ComplaintDetail";
 import MySupportRequests from "./components/support/MySupportRequests";
 import MyComplaintsRequests from "./components/complaint/MyComplaintsRequests";
 import axios from "axios";
 import { useAuthStore } from "./components/store/store";
 import NotFound from "./pages/NotFound";
 import UserSettings from "./components/user/UserSettings";
-import MyPurchaseCourses from "./components/course/MyPurchaseCourses";
+import MyPurchaseCourses from "./components/user/MyPurchaseCourses";
 import Messages from "./components/user/Messages";
 import MessageDetail from "./components/user/MessageDetail";
 import RedactTrainingCourse from "./components/course/RedactTrainingCourse";
@@ -74,7 +74,7 @@ function App() {
                 <Route path="/admin" element={<Admin />} />
                 <Route path="/admin/support" element={<AdminSupport />} />
                 <Route path="/support/:supportId" element={<SupportDetail />} />
-                <Route path="/complaint/:complaintId" element={<AdminComplaintDetail />} />
+                <Route path="/complaint/:complaintId" element={<ComplaintDetail />} />
                 <Route path="/admin/complaints" element={<Complaints />} />
                 <Route path="/admin/banned-users" element={<BannedUsers />} />
                 <Route path="/profile/:username" element={<Profile />} /> {/* Должен быть в самом низу */}

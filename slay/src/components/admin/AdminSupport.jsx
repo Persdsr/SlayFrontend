@@ -5,6 +5,7 @@ import { format } from "date-fns";
 import AdminService from "../../service/AdminService";
 import Filters from "../filter/Filters";
 import SupportItem from "../support/SupportItem";
+import {useNavigate} from "react-router-dom";
 
 const AdminSupport = () => {
     const [supports, setSupports] = useState([]);
@@ -16,6 +17,7 @@ const AdminSupport = () => {
     const [sortOrder, setSortOrder] = useState("desc");
     const itemsPerPage = 7;
     const [supportTypes, setSupportTypes] = useState([]);
+    const navigate = useNavigate()
 
     useEffect(() => {
         const fetchData = async () => {
@@ -27,7 +29,7 @@ const AdminSupport = () => {
                 const types = await AdminService.getSupportRequestTypes();
                 setSupportTypes(types);
             } catch (error) {
-                console.error("Error fetching data:", error);
+                navigate("/*")
             }
         };
 

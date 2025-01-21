@@ -8,6 +8,8 @@ import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import {Navigation, Pagination} from 'swiper/modules';
+import ComplaintCourseService from "../../service/ComplaintCourseService";
+import {useForm} from "react-hook-form";
 
 const TrainingCourseDetail = () => {
     const params = useParams();
@@ -16,8 +18,34 @@ const TrainingCourseDetail = () => {
     let [createAt, setCreateAt] = useState('');
     const [videosCount, setVideosCount] = useState(0);
     let [isPurchased, setPurchased] = useState(false)
-    const [menuOpen, setMenuOpen] = useState(false); // Стейт для управления состоянием меню
+    const [menuOpen, setMenuOpen] = useState(false);
     const navigate = useNavigate();
+    const [showMessageDialog, setShowMessageDialog] = useState(false);
+    const {register, handleSubmit} = useForm()
+
+    const openMessageDialog = () => {
+        setShowMessageDialog(true);
+    };
+
+    const closeMessageDialog = () => {
+        setShowMessageDialog(false);
+    };
+
+    const onSubmit = async (data) => {
+        const messageBody = {
+            message: data.message,
+            receiver: courseDetails.author
+        };
+
+        console.log(messageBody)
+
+        try {
+            const responseChatId = await ComplaintCourseService.createChatAndFirstMessage(messageBody);
+            navigate(`/message/${responseChatId}`)
+        } catch (error) {
+            console.error("Ошибка отправки сообщения:", error);
+        }
+    };
 
     useEffect(() => {
         const fetchCourse = async () => {
@@ -52,7 +80,7 @@ const TrainingCourseDetail = () => {
         setMenuOpen(!menuOpen);
     };
 
-    const deleteCourse = async (courseId) => {
+    const deleteCourse = async () => {
         if (window.confirm("Вы уверены, что хотите удалить этот курс?")) {
             try {
                 await TrainingCourseService.deleteCourseById(params.id);
@@ -177,9 +205,18 @@ const TrainingCourseDetail = () => {
                             <span className="card-author-name"><Link
                                 to={`/profile/${courseDetails.author}`}>{courseDetails?.author}</Link></span>
                         </div>
+                        {
+                            isPurchased
+                            ? courseDetails?.chatting
+                                    ? ""
+                                    : <button onClick={openMessageDialog} className="btn-add-step">Send message</button>
+
+                                : ""
+                        }
                     </div>
+
                     <div className="tags">
-                        {courseDetails?.tags?.map((tag) => (
+                    {courseDetails?.tags?.map((tag) => (
                             <a className="card-author-tag" href="#" key={tag.name}>
                                 {tag.name}
                             </a>
@@ -187,6 +224,41 @@ const TrainingCourseDetail = () => {
                     </div>
                 </div>
             </div>
+
+            {showMessageDialog && (
+                <div className="modal-overlay">
+                    <div className="modal-content">
+                        <div className="modal-header">
+                            <h2>Send message to <span>{courseDetails?.author}</span></h2>
+                            <span className="close-button" onClick={closeMessageDialog}>
+                                ✖
+                            </span>
+                        </div>
+                        <div className="modal-body">
+                            <form onSubmit={handleSubmit(onSubmit)}>
+
+
+                                <label htmlFor="description" className="support-label">
+                                    message<span style={{color: "red", marginBottom: "5px"}}>*</span>
+                                </label>
+                                <textarea
+                                    {...register("message")}
+                                    className="support-area"
+                                    name="message"
+                                />
+
+
+                                <div className="modal-footer">
+                                    <div className="support-btn-block">
+                                        <button className="support-btn">Отправить</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+
+                    </div>
+                </div>
+            )}
 
             <div className="course-detail-material">
                 <h1 className="course-detail-title">Информация</h1>

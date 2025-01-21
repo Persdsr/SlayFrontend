@@ -39,7 +39,13 @@ export default class SupportService {
 
     static async getAllUserSupports(username) {
         try {
-            const response = await axios.get(`http://localhost:8080/api/support/user/${username}`);
+            const response = await axios.get(`http://localhost:8080/api/support/user/${username}`,
+                {
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+                    }
+                }
+                );
             console.log("Response data:", response.data); // Лог для проверки формата данных
             return response.data ? response.data : []; // Возвращаем массив или пустой массив
         } catch (error) {

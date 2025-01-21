@@ -8,7 +8,7 @@ import ComplaintService from "../../service/ComplaintService";
 import ComplaintCourseItem from "./ComplaintCourseItem";
 import ComplaintUserItem from "./ComplaintUserItem";
 
-const AdminComplaintDetail = () => {
+const ComplaintDetail = () => {
     const [complaint, setComplaint] = useState([]);
     const params = useParams()
     const navigate = useNavigate();
@@ -109,4 +109,4 @@ const AdminComplaintDetail = () => {
     );
 };
 
-export default AdminComplaintDetail;
+export default ComplaintDetail;

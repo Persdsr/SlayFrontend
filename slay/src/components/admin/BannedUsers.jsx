@@ -2,17 +2,22 @@ import React, { useEffect, useState } from "react";
 import AdminPanelLinks from "../navbar/AdminPanelLinks";
 import ComplaintItem from "../complaint/ComplaintItem";
 import ComplaintService from "../../service/ComplaintService";
+import {useNavigate} from "react-router-dom";
 
 const BannedUsers = () => {
     const [currentItems, setCurrentItems] = useState([]);
     const [filteredItems, setFilteredItems] = useState([]);
     const [searchQuery, setSearchQuery] = useState("");
+    const navigate = useNavigate()
 
     useEffect(() => {
         const fetchBannedUsers = async () => {
             const response = await ComplaintService.getComplaintBannedUsers();
-            setCurrentItems(response);
-            setFilteredItems(response); // Изначально показываем все данные
+            setCurrentItems(response.data);
+            setFilteredItems(response.data)
+            if (response.status > 300) {
+                navigate("/*")
+            }
         };
 
         fetchBannedUsers();

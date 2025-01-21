@@ -26,7 +26,16 @@ const Profile = () => {
     const navigate = useNavigate()
     const authStore = useAuthStore()
     const params = useParams()
+    const [showMessageDialog, setShowMessageDialog] = useState(false);
     const [showUnfollowDialog, setShowUnfollowDialog] = useState(false);
+
+    const openMessageDialog = () => {
+        setShowMessageDialog(true);
+    };
+
+    const closeMessageDialog = () => {
+        setShowMessageDialog(false);
+    };
 
     const openUnfollowDialog = () => {
         setShowUnfollowDialog(true);
@@ -45,19 +54,20 @@ const Profile = () => {
     };
 
 
-
     useEffect(() => {
         const fetchUserData = async () => {
 
+            try {
                 const response = await TrainingCourseService.getAuthorTrainingCourses(params?.username);
-                if (!response.data || !response.data.author) {
-                    throw new Error("Пользователь не найден");
-                }
                 setData(response.data);
                 console.log(response.data)
                 const responseComplaintTypes = await ComplaintCourseService.getComplaintCourseTypes()
                 setComplaintTypesMap(responseComplaintTypes)
                 setLoading(false);
+            } catch (e) {
+                navigate("/*")
+            }
+
         };
 
         fetchUserData();
@@ -131,6 +141,22 @@ const Profile = () => {
         }
     };
 
+    const onMessageSubmit = async (messageData) => {
+        const messageBody = {
+            message: messageData.message,
+            receiver: data.author.username
+        };
+
+        console.log(messageBody)
+
+        try {
+            const responseChatId = await ComplaintCourseService.createChatAndFirstMessage(messageBody);
+            navigate(`/message/${responseChatId}`)
+        } catch (error) {
+            console.error("Ошибка отправки сообщения:", error);
+        }
+    };
+
     const onFollowSubmit = async () => {
 
         const formData = new FormData()
@@ -188,7 +214,21 @@ const Profile = () => {
                         data.subscribed
                             ?
                             <div className="profile-btns">
-                                <button className="profile-write">Send message</button>
+                                {
+                                    data.buyer
+                                        ?
+                                        data.chatId
+                                            ? <button onClick={
+                                                () => navigate(`/message/${data.chatId}`)
+                                            }
+                                                      className="profile-write">Send message</button>
+                                            : <button onClick={
+                                                openMessageDialog
+                                            }
+                                                      className="profile-write">Send message</button>
+                                        : ""
+                                }
+
                                 <button
                                     className="profile-unfollow-btn"
                                     onClick={openUnfollowDialog}
@@ -220,12 +260,64 @@ const Profile = () => {
                                 )}
                             </div>
                             :
-                            <form onSubmit={onFollowSubmit}>
-                                <button type={"submit"} className="profile-follow">Follow</button>
-                            </form>
-
+                            <div className="profile-btns">
+                                {
+                                    data.buyer
+                                        ?
+                                        data.chatId
+                                            ? <button onClick={
+                                                () => navigate(`/message/${data.chatId}`)
+                                            }
+                                                      className="profile-write">Send message</button>
+                                            : <button onClick={
+                                                openMessageDialog
+                                            }
+                                                      className="profile-write">Send message</button>
+                                        : ""
+                                }
+                                <form onSubmit={onFollowSubmit}>
+                                    <button type={"submit"} className="profile-follow">Follow</button>
+                                </form>
+                            </div>
                     }
+
                 </div>
+
+                {showMessageDialog && (
+                    <div className="modal-overlay">
+                        <div className="modal-content">
+                            <div className="modal-header">
+                                <h2>Send message to <span>{data?.author.username}</span></h2>
+                                <span className="close-button" onClick={closeMessageDialog}>
+                                ✖
+                            </span>
+                            </div>
+                            <div className="modal-body">
+                                <form onSubmit={handleSubmit(onMessageSubmit)}>
+
+
+                                    <label htmlFor="description" className="support-label">
+                                        message<span style={{color: "red", marginBottom: "5px"}}>*</span>
+                                    </label>
+                                    <textarea
+                                        {...register("message")}
+                                        className="support-area"
+                                        name="message"
+                                    />
+
+
+                                    <div className="modal-footer">
+                                        <div className="support-btn-block">
+                                            <button className="support-btn">Отправить</button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+
+                        </div>
+                    </div>
+                )}
+
                 <div className="avatar-container">
                 <img className="profile-avatar" src={data?.author?.avatar} alt="User Avatar"/>
                     <div className="profile-user-info">

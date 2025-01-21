@@ -27,7 +27,7 @@ const SupportDetail = () => {
             try {
                 const response = await SupportService.getSupportDetailById(params?.supportId)
                 setSupport(response);
-                setMessages(response.messages || []); // Инициализация сообщений
+                setMessages(response.messages || []);
             } catch (error) {
                 console.error("Ошибка при загрузке данных:", error);
             }

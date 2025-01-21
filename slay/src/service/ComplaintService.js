@@ -74,13 +74,12 @@ export default class ComplaintService {
     }
 
     static async getComplaintBannedUsers() {
-        const response = await axios.get(`http://localhost:8080/api/complaint-user/banned-users`,
+        return await axios.get(`http://localhost:8080/api/complaint-user/banned-users`,
             {
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
                 }
             })
-        return response.data
     }
 
     static async getAllUserComplaints() {

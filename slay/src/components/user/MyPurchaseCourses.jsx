@@ -6,7 +6,7 @@ import ComplaintService from "../../service/ComplaintService";
 import {useAuthStore} from "../store/store";
 import UserService from "../../service/UserService";
 import UserLeftToolbar from "../navbar/UserLeftToolbar";
-import CategoryTrainingCourseItem from "./CategoryTrainingCourseItem";
+import CategoryTrainingCourseItem from "../course/CategoryTrainingCourseItem";
 
 const MyPurchaseCourses = () => {
     const [courses, setCourses] = useState([]);

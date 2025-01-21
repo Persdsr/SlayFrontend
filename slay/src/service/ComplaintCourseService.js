@@ -26,4 +26,17 @@ export default class ComplaintCourseService {
         );
         return response.data;
     }
+
+    static async createChatAndFirstMessage(messageBody) {
+        const response = await axios.post(
+            "http://localhost:8080/api/chat",
+            messageBody,
+            {
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+                },
+            }
+        );
+        return response.data;
+    }
 }
