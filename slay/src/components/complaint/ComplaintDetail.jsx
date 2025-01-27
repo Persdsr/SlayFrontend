@@ -19,7 +19,7 @@ const ComplaintDetail = () => {
             try {
                 const response = await ComplaintService.getComplaintDetailById(params?.complaintId)
                 setComplaint(response)
-                console.log(response.complaintType)
+                console.log(response)
 
             } catch (error) {
                 navigate("/*")
@@ -27,7 +27,6 @@ const ComplaintDetail = () => {
 
             const types = await ComplaintService.getComplaintTypes();
             setComplaintTypes(types);
-            console.log(types)
 
 
         };
@@ -35,7 +34,7 @@ const ComplaintDetail = () => {
         fetchSupportDetail();
     }, [params.supportId]);
 
-    const changeComplaintResolvedStatus = async() => {
+    const changeComplaintResolvedStatus = async () => {
         if (window.confirm("Вы уверены, что хотите закрыть/открыть запрос?")) {
             await ComplaintService.changeResolvedStatusComplaint(params.complaintId)
 
@@ -89,7 +88,7 @@ const ComplaintDetail = () => {
                     })()
                 }
                 <h2 className="complaint-detail-title">Описание жалобы</h2>
-                <span>
+                <span style={{color: "white"}}>
                 {complaint.description}
             </span>
             </div>

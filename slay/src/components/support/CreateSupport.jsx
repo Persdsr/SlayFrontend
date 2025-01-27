@@ -16,7 +16,7 @@ const CreateSupport = () => {
 
     useEffect(() => {
         const fetchRequestTypes = async () => {
-            const response = await AdminService.getSupportRequestTypes()
+            const response = await SupportService.getSupportRequestTypes()
             setSupportTypes(response);
         }
         fetchRequestTypes()
@@ -44,29 +44,7 @@ const CreateSupport = () => {
             });
         }
 
-        axios
-            .post("http://localhost:8080/api/support", formData, {
-                onUploadProgress: (progressEvent) => {
-                    const progress = Math.round(
-                        (progressEvent.loaded * 100) / progressEvent.total
-                    );
-                    setUploadProgress((prev) => ({
-                        ...prev,
-                        total: progress,
-                    }));
-                },
-            })
-            .then((response) => {
-                setUploadedFiles([]);
-                setUploadProgress({});
-                reset()
-                window.scrollTo({ top: 0, behavior: "smooth" }); // Прокрутка наверх
-                setRequestResultText(response.data); // Успешный ответ
-            })
-            .catch((error) => {
-                setRequestResultText("Произошла ошибка при отправке. Попробуйте снова."); // Ошибка
-                console.error("Ошибка:", error);
-            });
+        SupportService.sendSupport(formData, setUploadProgress, setUploadedFiles, reset, setRequestResultText)
 
     };
 

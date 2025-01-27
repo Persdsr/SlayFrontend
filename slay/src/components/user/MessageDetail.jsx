@@ -13,6 +13,7 @@ import {Client} from "@stomp/stompjs";
 import SockJS from "sockjs-client";
 import axios from "axios";
 import VideoPlayer from "../VideoPlayer";
+import {format} from "date-fns";
 
 const MessageDetail = () => {
     const [chats, setChats] = useState([]);
@@ -27,8 +28,6 @@ const MessageDetail = () => {
     const [selectedImage, setSelectedImage] = useState("");
     const [showImageModal, setShowImageModal] = useState(false);
     const authStore = useAuthStore()
-
-
 
     useEffect(() => {
         const fetchChats = async () => {
@@ -48,7 +47,7 @@ const MessageDetail = () => {
             try {
                 const responseChatDetail = await ChatService.getChatDetailById(params.chatId);
                 setChatDetail(responseChatDetail);
-                setMessages(responseChatDetail.messages || []); // Обновляем сообщения текущего чата
+                setMessages(responseChatDetail.messages || []);
             } catch (error) {
                 console.error("Error fetching chat detail:", error);
             }
@@ -65,7 +64,6 @@ const MessageDetail = () => {
             onConnect: () => {
                 console.log("Connected to WebSocket");
 
-                // Отписываемся от старого топика и подписываемся на новый
                 const subscription = stompClient.subscribe(`/topic/chat/${params.chatId}`, (message) => {
                     const newMessage = JSON.parse(message.body);
                         setMessages((prevMessages) => [...prevMessages, newMessage]);
@@ -81,10 +79,8 @@ const MessageDetail = () => {
         stompClient.activate();
         setClient(stompClient);
 
-        // Отключаем клиент при размонтировании компонента
         return () => stompClient.deactivate();
-    }, [params.chatId]); // Подписка пересоздается при изменении ID чата
-
+    }, [params.chatId]);
     const uploadFiles = async () => {
         const formData = new FormData();
 
@@ -116,9 +112,7 @@ const MessageDetail = () => {
     const openImageModal = (imageSrc) => {
         setSelectedImage(imageSrc);
         setShowImageModal(true);
-    };
-
-
+    }
 
     const sendMessage = async (data) => {
         const filesUrls = await uploadFiles();
@@ -134,19 +128,17 @@ const MessageDetail = () => {
                 username: authStore?.userData?.username,
                 avatar: authStore?.userData?.avatar,
             },
-            createAt: new Date().toISOString(),
             chatId: params.chatId,
             files: filesUrls,
         };
 
-        // Отправляем сообщение через WebSocket
         client.publish({
             destination: "/app/chat.sendUserMessage",
             body: JSON.stringify(newMessage),
         });
 
-        reset(); // Очищаем форму
-        setUploadedFiles([]); // Сбрасываем файлы
+        reset();
+        setUploadedFiles([]);
     };
 
 
@@ -158,6 +150,7 @@ const MessageDetail = () => {
     const removeFile = (index) => {
         setUploadedFiles((prev) => prev.filter((_, i) => i !== index));
     };
+
 
     return (
         <div className="content-container">
@@ -182,21 +175,12 @@ const MessageDetail = () => {
                                         <div className="message-info">
                                             <span className="message-sender-username">{message.sender.username}</span>
                                             <span className="message-text">{message.message}</span>
-                                            {message?.files && message?.files?.length > 0 && (
-                                                <div className="support-message-images">
-                                                    {message.files.map((fileUrl, index) => {
-                                                        const fileExtension = fileUrl.split('.').pop().toLowerCase();
-                                                        const isVideo = ['mp4', 'webm', 'ogg'].includes(fileExtension);
-
-                                                        return isVideo ? (
-                                                            <VideoPlayer title={fileUrl?.name} videoUrl={fileUrl.replace("download", "view")}/>
-                                                        ) : (
-                                                            <img key={index} src={fileUrl} onClick={() => openImageModal(fileUrl)} alt={`message media ${index}`} style={{ maxWidth: "300px", marginTop: "10px" }} />
-                                                        );
-                                                    })}
-                                                </div>
-                                            )}
                                         </div>
+                                        <span className="message-createdAt">
+            {/*{message?.createdAt
+                ? format(new Date(message.createdAt), "yyyy-MM-dd HH:mm:ss")
+                : "-"}*/}
+        </span>
                                     </div>
                                 ))}
                             </div>
@@ -222,7 +206,6 @@ const MessageDetail = () => {
                                     onChange={handleFileChange}
                                 />
 
-                                {/* Поле ввода сообщения */}
                                 <Controller
                                     name="message"
                                     control={control}
@@ -239,7 +222,6 @@ const MessageDetail = () => {
 
                                             />
 
-                                            {/* Иконка отправки сообщения */}
                                             <button
                                                 type="submit"
                                                 className="send-message-button"

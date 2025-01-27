@@ -12,7 +12,7 @@ const Messages = () => {
         const fetchData = async () => {
             try {
                 const response = await ChatService.getChats();
-                setChats(response); // Загружаем все чаты
+                setChats(response);
             } catch (error) {
                 console.error("Error fetching data:", error);
             }
@@ -27,11 +27,10 @@ const Messages = () => {
             <div className="content-block">
                 <div className="chats-container">
                     <div className="chats-menu">
-                        {/* Передаем все чаты */}
                         <ChatMenuBlock chats={chats} />
                     </div>
                     <div className="chat-content">
-                        <h2>Выберите чат для общения</h2>
+                        <h2>Select a chat for communication</h2>
                     </div>
                 </div>
             </div>

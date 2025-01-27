@@ -17,9 +17,11 @@ const SupportItem = ({support}) => {
                     </div>
                 </div>
                 <div className="support-detail">
-                    {support?.messages[0]
-                        ? <p>{support?.messages[0].message.slice(0, 150)}...</p>
-                        : "-"
+                    {support?.messages.length
+                        ?
+                        <p>{support?.messages[support.messages.length - 1].message ? support?.messages[support.messages.length - 1].message.slice(0, 150) + ".." : "Изображение"}
+                        </p>
+                : "-"
                     }
                 </div>
             </div>

@@ -6,6 +6,7 @@ import AdminService from "../../service/AdminService";
 import Filters from "../filter/Filters";
 import SupportItem from "../support/SupportItem";
 import {useNavigate} from "react-router-dom";
+import SupportService from "../../service/SupportService";
 
 const AdminSupport = () => {
     const [supports, setSupports] = useState([]);
@@ -26,7 +27,7 @@ const AdminSupport = () => {
                 setSupports(sortedData);
                 setFilteredSupports(sortedData);
 
-                const types = await AdminService.getSupportRequestTypes();
+                const types = await SupportService.getSupportRequestTypes();
                 setSupportTypes(types);
             } catch (error) {
                 navigate("/*")

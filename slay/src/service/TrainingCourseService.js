@@ -20,7 +20,6 @@ export default class TrainingCourseService {
             );
     }
 
-
     static async getSportCategoriesName() {
         return await axios.get("http://localhost:8080/api/category/categories-name");
     }
@@ -49,6 +48,14 @@ export default class TrainingCourseService {
 
     static async getAllCategoriesWitTags() {
         return await axios.get("http://localhost:8080/api/category/categories-tags")
+    }
+
+    static async getTagsCoursesAndAuthorName(searchQuery) {
+        return await axios.get("http://localhost:8080/api/training-course/search", {
+            params: {
+                searchQuery: searchQuery
+            }
+        })
     }
 
 

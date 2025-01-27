@@ -3,7 +3,7 @@ import ReactPlayer from 'react-player';
 import screenfull from 'screenfull';
 import ControlIcons from './course/ControlIcons';
 
-const VideoPlayer = ({ videoUrl, title }) => {
+const VideoPlayer = ({ videoUrl, title, topTitle }) => {
     const [playerState, setPlayerState] = useState({
         playing: false,
         muted: false,
@@ -169,6 +169,7 @@ const VideoPlayer = ({ videoUrl, title }) => {
             <div className={`controls ${controlsVisible ? 'visible' : 'hidden'}`}>
                 <ControlIcons
                     title={title}
+                    topTitle={topTitle}
                     playandpause={handlePlayPause}
                     playing={playerState.playing}
                     fastForward={handleFastForward}
@@ -184,7 +185,7 @@ const VideoPlayer = ({ videoUrl, title }) => {
                     onSeek={handlePlayerSeek}
                     onSeekMouseUp={handlePlayerMouseSeekUp}
                     onSeekMouseDown={handlePlayerMouseSeekDown}
-                    onSeekMouseMove={handlePlayerMouseSeekMove} // Новый обработчик
+                    onSeekMouseMove={handlePlayerMouseSeekMove}
                     playedTime={playedTime}
                     fullMovieTime={fullMovieTime}
                     seeking={playerState.seeking}

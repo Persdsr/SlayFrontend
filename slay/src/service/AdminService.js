@@ -15,18 +15,4 @@ export default class AdminService {
     }
 
 
-    static async getSupportRequestTypes() {
-        try {
-            const response = await axios.get("http://localhost:8080/api/support/support-request-types",
-                {
-                    headers: {
-                        Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-                    }
-                });
-            return response.data;
-        } catch (error) {
-            console.error("Error fetching support types:", error);
-            throw error;
-        }
-    }
 }

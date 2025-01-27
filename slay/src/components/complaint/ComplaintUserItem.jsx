@@ -10,7 +10,7 @@ const ComplaintUserItem = ({complaint}) => {
         const fetchCourse = async () => {
             const response = await ComplaintUserService.getComplaintUserById(complaint.id)
             setUser(response.reportedUser)
-
+            console.log("ALOO")
         }
         fetchCourse()
 
@@ -19,7 +19,7 @@ const ComplaintUserItem = ({complaint}) => {
         <div className="complaint-user-container">
             <h2 className="complaint-detail-title">Пользователь</h2>
             <span>{user.username}</span>
-            <a className="check-profile" href={`/${user.username}`}>Посмотреть профиль</a>
+            <a className="check-profile" href={`/profile/${user.username}`}>Посмотреть профиль</a>
         </div>
     );
 };

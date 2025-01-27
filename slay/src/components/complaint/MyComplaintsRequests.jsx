@@ -95,6 +95,27 @@ const MyComplaintsRequests = () => {
                         ) : (
                             <p>Нет данных для отображения.</p>
                         )}
+                        {filteredSupports?.length > 0 && (
+                            <div className="pagination">
+                                <button
+                                    className="pagination-btn"
+                                    onClick={() => setCurrentPage(currentPage - 1)}
+                                    disabled={currentPage === 1}
+                                >
+                                    &lt; Назад
+                                </button>
+                                <span className="page-info">
+                            Страница {currentPage} из {totalPages}
+                        </span>
+                                <button
+                                    className="pagination-btn"
+                                    onClick={() => setCurrentPage(currentPage + 1)}
+                                    disabled={currentPage === totalPages}
+                                >
+                                    Вперед &gt;
+                                </button>
+                            </div>
+                        )}
                     </div>
 
                     <Filters
@@ -110,28 +131,8 @@ const MyComplaintsRequests = () => {
                     />
                 </div>
 
-                {/* Пагинация */}
-                {filteredSupports?.length > 0 && (
-                    <div className="pagination">
-                        <button
-                            className="pagination-btn"
-                            onClick={() => setCurrentPage(currentPage - 1)}
-                            disabled={currentPage === 1}
-                        >
-                            &lt; Назад
-                        </button>
-                        <span className="page-info">
-                            Страница {currentPage} из {totalPages}
-                        </span>
-                        <button
-                            className="pagination-btn"
-                            onClick={() => setCurrentPage(currentPage + 1)}
-                            disabled={currentPage === totalPages}
-                        >
-                            Вперед &gt;
-                        </button>
-                    </div>
-                )}
+
+
             </div>
         </div>
     );

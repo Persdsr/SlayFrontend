@@ -10,18 +10,31 @@ import 'swiper/css/pagination';
 import {Navigation, Pagination} from 'swiper/modules';
 import ComplaintCourseService from "../../service/ComplaintCourseService";
 import {useForm} from "react-hook-form";
+import {useAuthStore} from "../store/store";
 
 const TrainingCourseDetail = () => {
     const params = useParams();
     const [courseDetails, setCourseDetails] = useState([]);
     const [videoUrl, setVideoUrl] = useState('');
     let [createAt, setCreateAt] = useState('');
-    const [videosCount, setVideosCount] = useState(0);
     let [isPurchased, setPurchased] = useState(false)
     const [menuOpen, setMenuOpen] = useState(false);
+    const [showComplaintModal, setShowComplaintModal] = useState(false);
+    const [complaintTypesMap, setComplaintTypesMap] = useState([]);
     const navigate = useNavigate();
     const [showMessageDialog, setShowMessageDialog] = useState(false);
-    const {register, handleSubmit} = useForm()
+    const {register, handleSubmit, reset} = useForm()
+    const authStore = useAuthStore()
+    const [requestResultText, setRequestResultText] = useState("");
+
+    const openComplaintModal = (courseId) => {
+        setShowComplaintModal(true);
+    };
+
+    const closeComplaintModal = () => {
+        setShowComplaintModal(false);
+        reset();
+    };
 
     const openMessageDialog = () => {
         setShowMessageDialog(true);
@@ -43,7 +56,24 @@ const TrainingCourseDetail = () => {
             const responseChatId = await ComplaintCourseService.createChatAndFirstMessage(messageBody);
             navigate(`/message/${responseChatId}`)
         } catch (error) {
-            console.error("Ошибка отправки сообщения:", error);
+                console.error("Error:", error);
+        }
+    };
+
+    const onComplaintSubmit = async (data) => {
+        const complaintBody = {
+            senderUsername: authStore.userData.username,
+            reportedCourse: params.id,
+            courseComplaintType: data.complaintRequestType,
+            description: data.description,
+        };
+
+        try {
+            const response = await ComplaintCourseService.createComplaintCourse(complaintBody);
+            setRequestResultText("Сomplaint has been successfully sent, you can close the window!");
+            reset();
+        } catch (error) {
+            console.error("Error:", error);
         }
     };
 
@@ -52,7 +82,9 @@ const TrainingCourseDetail = () => {
             try {
                 const response = await TrainingCourseService.getTrainingCourseById(params.id);
                 setPurchased(!response.data.body.trainingCourseCroppedStep)
-                console.log(isPurchased)
+
+                const responseComplaintTypes = await ComplaintCourseService.getComplaintCourseTypes()
+                setComplaintTypesMap(responseComplaintTypes)
 
                 setCourseDetails(response.data.body);
                 console.log(response.data.body)
@@ -75,13 +107,12 @@ const TrainingCourseDetail = () => {
         return `${days}-${month}-${year}`;
     }
 
-    // Функция для переключения состояния меню
     const toggleMenu = () => {
         setMenuOpen(!menuOpen);
     };
 
     const deleteCourse = async () => {
-        if (window.confirm("Вы уверены, что хотите удалить этот курс?")) {
+        if (window.confirm("Are you sure you want to delete this course?")) {
             try {
                 await TrainingCourseService.deleteCourseById(params.id);
                 navigate("/")
@@ -95,15 +126,16 @@ const TrainingCourseDetail = () => {
         <div className="main">
             <h1 className="course-detail-title">{courseDetails?.name}</h1>
 
-            {/* Кнопка для открытия меню */}
             <button className="menu-toggle-btn" onClick={toggleMenu}>
                 <span className="dot"></span>
                 <span className="dot"></span>
                 <span className="dot"></span>
             </button>
 
-            {/* Меню */}
             <div className={`menu-card ${menuOpen ? 'open' : ''}`}>
+                {
+                    authStore?.userData?.roles.includes("ADMIN", "MODERATOR") || authStore?.userData?.username === courseDetails.author
+                        ?
                 <ul className="menu-list">
                     <li className="menu-item">
                         <svg
@@ -123,63 +155,73 @@ const TrainingCourseDetail = () => {
                             ></path>
                             <path d="m15 5 4 4"></path>
                         </svg>
+
                         <p onClick={() => navigate(`/redact-course/${params.id}`)} className="menu-label">Redact</p>
                     </li>
-                    <li className="menu-item">
-                        <svg
-                            className="menu-icon"
-                            strokeLinejoin="round"
-                            strokeLinecap="round"
-                            strokeWidth="2"
-                            stroke="#7e8590"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            height="24"
-                            width="24"
-                        >
-                            <path d="M2 21a8 8 0 0 1 13.292-6"></path>
-                            <circle r="5" cy="8" cx="10"></circle>
-                            <path d="M19 16v6"></path>
-                            <path d="M22 19h-6"></path>
-                        </svg>
-                        <p className="menu-label">Add Member</p>
-                    </li>
+
                 </ul>
+                        : "" }
                 <div className="menu-separator"></div>
-                <ul className="menu-list">
-                    <li onClick={() => deleteCourse(courseDetails.id)} className="menu-item delete">
-                        <svg
+                 <ul className="menu-list">
+                     {
+                         authStore?.userData?.roles.includes("ADMIN", "MODERATOR") || authStore?.userData?.username === courseDetails.author
+                             ?
+                            <li onClick={() => deleteCourse(courseDetails.id)} className="menu-item delete">
+                                <svg
+                                    className="menu-icon"
+                                    strokeLinejoin="round"
+                                    strokeLinecap="round"
+                                    strokeWidth="2"
+                                    stroke="#7e8590"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                    height="24"
+                                    width="24"
 
-                            className="menu-icon"
-                            strokeLinejoin="round"
-                            strokeLinecap="round"
-                            strokeWidth="2"
-                            stroke="#7e8590"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            height="24"
-                            width="24"
+                                >
+                                    <path d="M3 6h18"></path>
+                                    <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path>
+                                    <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path>
+                                    <line y2="17" y1="11" x2="10" x1="10"></line>
+                                    <line y2="17" y1="11" x2="14" x1="14"></line>
+                                </svg>
+                                <p
+                                    className="menu-label"
+                                >
+                                    Delete
+                                </p>
+                            </li>
+                            : ""
 
-                        >
-                            <path d="M3 6h18"></path>
-                            <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path>
-                            <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path>
-                            <line y2="17" y1="11" x2="10" x1="10"></line>
-                            <line y2="17" y1="11" x2="14" x1="14"></line>
-                        </svg>
-                        <p
-                            className="menu-label"
-                        >
-                            Delete
-                        </p>
-                    </li>
-                </ul>
+                            }
+                            <li onClick={() => openComplaintModal()} className="menu-item delete">
+                                <svg
+                                    className="menu-icon"
+                                    strokeLinejoin="round"
+                                    strokeLinecap="round"
+                                    strokeWidth="2"
+                                    stroke="#7e8590"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                    height="24"
+                                    width="24"
+                                >
+                                    <path d="M2 21a8 8 0 0 1 13.292-6"></path>
+                                    <circle r="5" cy="8" cx="10"></circle>
+                                    <path d="M19 16v6"></path>
+                                    <path d="M22 19h-6"></path>
+                                </svg>
+                                <p className="menu-label">Report</p>
+                            </li>
+                        </ul>
+
+
             </div>
 
             <div className="course-detail-info">
                 {
                     courseDetails?.trailer
-                        ? <VideoPlayer title={courseDetails?.name} videoUrl={videoUrl?.replace("download", "view")}/>
+                        ? <VideoPlayer topTitle={`Trailer - ${courseDetails?.name}`} videoUrl={videoUrl?.replace("download", "view")}/>
                         : <div className="trailer-no-video-block">
                             <span>
                                 No video
@@ -209,7 +251,10 @@ const TrainingCourseDetail = () => {
                             isPurchased
                             ? courseDetails?.chatting
                                     ? ""
-                                    : <button onClick={openMessageDialog} className="btn-add-step">Send message</button>
+                                    :
+                                    !authStore?.userData?.username === courseDetails.author ?
+                                        <button onClick={openMessageDialog} className="btn-add-step">Send message</button>
+                                    : ""
 
                                 : ""
                         }
@@ -217,9 +262,9 @@ const TrainingCourseDetail = () => {
 
                     <div className="tags">
                     {courseDetails?.tags?.map((tag) => (
-                            <a className="card-author-tag" href="#" key={tag.name}>
+                            <Link className="card-author-tag" to={`/search/${tag.name}`} key={tag.name}>
                                 {tag.name}
-                            </a>
+                            </Link>
                         ))}
                     </div>
                 </div>
@@ -250,7 +295,7 @@ const TrainingCourseDetail = () => {
 
                                 <div className="modal-footer">
                                     <div className="support-btn-block">
-                                        <button className="support-btn">Отправить</button>
+                                        <button className="support-btn">Send</button>
                                     </div>
                                 </div>
                             </form>
@@ -261,7 +306,7 @@ const TrainingCourseDetail = () => {
             )}
 
             <div className="course-detail-material">
-                <h1 className="course-detail-title">Информация</h1>
+                <h1 className="course-detail-title">Information</h1>
                 <div className="material-info">
                     <div className="material-block">
                         <div className="material-info-block">
@@ -274,13 +319,13 @@ const TrainingCourseDetail = () => {
                             <div className="circle">
                                 <img src="/dnevnikvideo.png" alt="" className="material-icon"/>
                             </div>
-                            <span className="material-description">{`Материал из ` + videosCount + " видео"}</span>
+                            <span className="material-description">{`Материал из ` + courseDetails.videoCount + " видео"}</span>
                         </div>
                         <div className="material-info-block">
                             <div className="circle">
                                 <img src="/gym100.png" alt="" className="material-icon"/>
                             </div>
-                            <span className="material-description">Course buyers: 3</span>
+                            <span className="material-description">Course buyers: {courseDetails.courseBuyers}</span>
                         </div>
                     </div>
                     <div className="material-block">
@@ -313,7 +358,8 @@ const TrainingCourseDetail = () => {
                             <h2 className="step-title"><h2 style={{
                                 fontSize: '38px',
                                 color: "#23c483",
-                                display: 'inline-block'
+                                display: 'inline-block',
+                                fontFamily: "sans-serif"
                             }}>#</h2>  {trainingCourseStep?.title}</h2>
 
                             <span className="step-detail-description">{courseDetails.description}</span>
@@ -326,8 +372,8 @@ const TrainingCourseDetail = () => {
                                 modules={[Navigation, Pagination]}
                                 className="step-slider"
 
-                                simulateTouch={false}  // Отключает возможность перемещения слайдов на мобильных устройствах
-                                allowTouchMove={false} // Отключает перетаскивание слайдов
+                                simulateTouch={false}
+                                allowTouchMove={false}
                                 mousewheel={false}
                             >
 
@@ -384,6 +430,66 @@ const TrainingCourseDetail = () => {
                     </div>
                 </div>
             }
+
+            {showComplaintModal && (
+                <div className="modal-overlay">
+                    <div className="modal-content">
+                        <div className="modal-header">
+                            <h2>Report</h2>
+                            <span className="close-button" onClick={closeComplaintModal}>
+                                ✖
+                            </span>
+                        </div>
+                        {requestResultText && (
+                            <div className="request-result-block">
+                                <span className="request-result-text">{requestResultText}</span>
+                            </div>
+                        )}
+
+                        <div className="modal-body">
+                            <form onSubmit={handleSubmit(onComplaintSubmit)}>
+
+                                <div className="input-simple-wrapper">
+                                    <label htmlFor="requestType" className="support-label">
+                                        Report type<span style={{color: "red"}}>*</span>
+                                    </label>
+                                    <select
+                                        name="requestType"
+                                        className="simple-input"
+                                        {...register("complaintRequestType")}
+                                    >
+                                        <option value="" disabled selected>
+                                            Pick support type
+                                        </option>
+                                        {Object.entries(complaintTypesMap).map(([value, label]) => (
+                                            <option value={value}>
+                                                {label}
+                                            </option>
+                                        ))}
+                                    </select>
+                                </div>
+
+                                <label htmlFor="description" className="support-label">
+                                    Description<span style={{color: "red", marginBottom: "5px"}}>*</span>
+                                </label>
+                                <textarea
+                                    {...register("description")}
+                                    className="support-area"
+                                    name="description"
+                                />
+
+
+                                <div className="modal-footer">
+                                    <div className="support-btn-block">
+                                        <button className="support-btn">Send</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+
+                    </div>
+                </div>
+            )}
 
         </div>
     );

@@ -209,6 +209,7 @@ const Profile = () => {
                         src={data?.author?.banner ? data.author.banner : "/white-background.jpeg"}
                         alt="Profile Banner"
                     />
+
                     {
 
                         data.subscribed
@@ -281,6 +282,7 @@ const Profile = () => {
                             </div>
                     }
 
+
                 </div>
 
                 {showMessageDialog && (
@@ -321,12 +323,16 @@ const Profile = () => {
                 <div className="avatar-container">
                 <img className="profile-avatar" src={data?.author?.avatar} alt="User Avatar"/>
                     <div className="profile-user-info">
-                        <span className="profile-user-info-name">{data?.author?.username}</span>
+                        <span className="profile-user-info-name">{data?.author?.name}</span>
                         <span className="profile-user-name">@{data?.author?.username}</span>
                     </div>
                     <span className="profile-user-description">
                         {data?.author?.aboutMe}
                     </span>
+                </div>
+                <div className="profile-chanel-info">
+                    <span data-tooltip="Followers"><img src="/followers%20(2).png" alt=""/>{data.author.followersCount}</span>
+                    <span data-tooltip="Reviews"><img src="/reviews-icon.png" alt=""/>{data.reviewsCount}</span>
                 </div>
                 {
                     data?.courses?.length > 0 ?
@@ -355,9 +361,9 @@ const Profile = () => {
                                                 </button>
                                                 {menuOpen === course.name && (
                                                     <ul className="profile-menu-dropdown">
-                                                        <li onClick={() => deleteCourse(course.id)}>Удалить</li>
-                                                        <li onClick={() => startEditing(course)}>Изменить</li>
-                                                        <li onClick={() => openComplaintModal(course.id)}>Пожаловаться</li>
+                                                        <li onClick={() => deleteCourse(course.id)}>Delete</li>
+                                                        <li onClick={() => startEditing(course)}>Redact</li>
+                                                        <li onClick={() => openComplaintModal(course.id)}>Report</li>
                                                     </ul>
                                                 )}
                                             </div>
@@ -369,7 +375,7 @@ const Profile = () => {
                                             value={editedDescription}
                                             onChange={(e) => setEditedDescription(e.target.value)}
                                         />
-                                                <button onClick={() => saveChanges(course.id)}>Сохранить</button>
+                                                <button onClick={() => saveChanges(course.id)}>Save</button>
                                             </div>
                                         ) : (
                                             <span className="user-training-course-description">
@@ -382,7 +388,7 @@ const Profile = () => {
                                             <div className="poster-overlay">
                                                 <h2>{course.name}</h2>
                                                 <Link to={`/course/detail/${course.id}`}>
-                                                    <button className="purchase-button">Перейти к описанию</button>
+                                                    <button className="purchase-button">Go to description</button>
                                                 </Link>
                                             </div>
                                         </div>
@@ -424,8 +430,8 @@ const Profile = () => {
                                     </button>
                                     {menuReviewOpen === review?.id && (
                                         <ul className="profile-menu-dropdown">
-                                            <li onClick={() => deleteReview(review?.id)}>Удалить</li>
-                                            <li onClick={() => console.log("Изменить отзыв", review?.id)}>Изменить</li>
+                                            <li onClick={() => deleteReview(review?.id)}>Delete</li>
+                                            <li onClick={() => console.log("Изменить отзыв", review?.id)}>Redact</li>
                                            {/* <li onClick={() => openComplaintModal(review.id)}>Пожаловаться</li>*/}
                                         </ul>
                                     )}
@@ -464,7 +470,7 @@ const Profile = () => {
                 <div className="modal-overlay">
                     <div className="modal-content">
                         <div className="modal-header">
-                            <h2>Подать жалобу</h2>
+                            <h2>Report</h2>
                             <span className="close-button" onClick={closeComplaintModal}>
                                 ✖
                             </span>
@@ -480,7 +486,7 @@ const Profile = () => {
 
                                 <div className="input-simple-wrapper">
                                     <label htmlFor="requestType" className="support-label">
-                                        Тип поддержки<span style={{color: "red"}}>*</span>
+                                        Report type<span style={{color: "red"}}>*</span>
                                     </label>
                                     <select
                                         name="requestType"
@@ -488,7 +494,7 @@ const Profile = () => {
                                         {...register("complaintRequestType")}
                                     >
                                         <option value="" disabled selected>
-                                            Выберите тип поддержки
+                                            Pick support type
                                         </option>
                                         {Object.entries(complaintTypesMap).map(([value, label]) => (
                                             <option value={value}>
@@ -499,7 +505,7 @@ const Profile = () => {
                                 </div>
 
                                 <label htmlFor="description" className="support-label">
-                                    Описание<span style={{color: "red", marginBottom: "5px"}}>*</span>
+                                    Description<span style={{color: "red", marginBottom: "5px"}}>*</span>
                                 </label>
                                 <textarea
                                     {...register("description")}
@@ -510,7 +516,7 @@ const Profile = () => {
 
                                 <div className="modal-footer">
                                     <div className="support-btn-block">
-                                        <button className="support-btn">Отправить</button>
+                                        <button className="support-btn">Send</button>
                                     </div>
                                 </div>
                             </form>

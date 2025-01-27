@@ -12,20 +12,29 @@ const Title = () => {
 
     const {register, handleSubmit} = useForm()
 
-    const onSubmit = (data) => {
-        axios.post('http://localhost:8080/api/auth/signup',
+    const onSubmit = async (data) => {
+
+        const { password, confirmPassword } = data;
+
+        if (password !== confirmPassword) {
+            const errorMessage = document.getElementById("error-message");
+            errorMessage.classList.remove("hidden");
+            setErrorMessage("Passwords do not match");
+            return;
+        }
+
+        const response = await axios.post('http://localhost:8080/api/auth/signup',
             data
         )
-            .then((response) => {
-                console.log('Успех:', response);
-            })
-            .catch((err) => {
-                console.log(err.response.data.message);
-                const errorMessage = document.getElementById('error-message');
-                errorMessage.classList.remove('hidden'); // Убираем класс hidden
-                setErrorMessage(err.response.data.message)
-            });
-
+        if (response.data.success === false) {
+            console.log(response.data.message);
+            const errorMessage = document.getElementById('error-message');
+            errorMessage.classList.remove('hidden');
+            setErrorMessage(response.data.message)
+        } else {
+            setRegisterOpen(false)
+            setLoginOpen(true)
+        }
     }
 
     const onSubmitLogin = (data) => {
@@ -40,7 +49,7 @@ const Title = () => {
             .catch((err) => {
                 console.log(err.response.data.message);
                 const errorMessage = document.getElementById('error-message');
-                errorMessage.classList.remove('hidden'); // Убираем класс hidden
+                errorMessage.classList.remove('hidden');
                 setErrorMessage(err.response.data.message)
             });
 
@@ -62,7 +71,7 @@ const Title = () => {
             </div>
 
             <div className="title-poster-block">
-                <img src="/maxresdefault.png" alt="" className="title-poster"/>
+                <img src="/logo-man.png" alt="" className="title-poster"/>
             </div>
 
             <div className="title-detail-block">
@@ -137,6 +146,7 @@ const Title = () => {
                                        className="input-box"
                                        placeholder="confirmPassword"
                                        name="confirmPassword"
+                                       {...register("confirmPassword")}
 
                                 />
                                 <span className="underline"></span>
@@ -150,10 +160,6 @@ const Title = () => {
                         <button type="submit" className="modal-btn-confirm">Зарегистрироваться</button>
                     </form>
 
-                    {/*<div className="modal-inline">
-                            <input className="input-modal-field" type="text" placeholder="name" required/>
-                            <input className="input-modal-field" type="email" placeholder="email" required/>
-                        </div>*/}
 
                     <div className="modal-info">
                         <div className="modal-poster">

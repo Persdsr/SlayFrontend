@@ -22,11 +22,11 @@ const MySupportRequests = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const sortedData = await SupportService.getAllUserSupports(authStore?.userData?.username);
+                const sortedData = await SupportService.getAllUserSupports(authStore?.userData.username);
                 setSupports(sortedData);
                 setFilteredSupports(sortedData);
 
-                const types = await AdminService.getSupportRequestTypes();
+                const types = await SupportService.getSupportRequestTypes();
                 setSupportTypes(types);
             } catch (error) {
                 console.error("Error fetching data:", error);
@@ -93,6 +93,27 @@ const MySupportRequests = () => {
                         ) : (
                             <p>Нет данных для отображения.</p>
                         )}
+                        {filteredSupports?.length > 0 && (
+                            <div className="pagination">
+                                <button
+                                    className="pagination-btn"
+                                    onClick={() => setCurrentPage(currentPage - 1)}
+                                    disabled={currentPage === 1}
+                                >
+                                    &lt; Назад
+                                </button>
+                                <span className="page-info">
+                            Страница {currentPage} из {totalPages}
+                        </span>
+                                <button
+                                    className="pagination-btn"
+                                    onClick={() => setCurrentPage(currentPage + 1)}
+                                    disabled={currentPage === totalPages}
+                                >
+                                    Вперед &gt;
+                                </button>
+                            </div>
+                        )}
                     </div>
 
                     <Filters
@@ -108,28 +129,6 @@ const MySupportRequests = () => {
                     />
                 </div>
 
-                {/* Пагинация */}
-                {filteredSupports?.length > 0 && (
-                    <div className="pagination">
-                        <button
-                            className="pagination-btn"
-                            onClick={() => setCurrentPage(currentPage - 1)}
-                            disabled={currentPage === 1}
-                        >
-                            &lt; Назад
-                        </button>
-                        <span className="page-info">
-                            Страница {currentPage} из {totalPages}
-                        </span>
-                        <button
-                            className="pagination-btn"
-                            onClick={() => setCurrentPage(currentPage + 1)}
-                            disabled={currentPage === totalPages}
-                        >
-                            Вперед &gt;
-                        </button>
-                    </div>
-                )}
             </div>
         </div>
     );

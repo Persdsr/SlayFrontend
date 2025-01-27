@@ -53,10 +53,8 @@ const UserSettings = () => {
             <div className="profile-block">
                 <form onSubmit={handleSubmit(onSubmit)} className="modern-form">
                     <div className="profile-photo-block-modern">
-                        <div>
 
-                        </div>
-                        <h2 className="">Avatar</h2>
+                        <h2>Avatar</h2>
                         <label className="avatar-wrapper">
                             <img
                                 src={data.avatar}
@@ -86,7 +84,7 @@ const UserSettings = () => {
                         <h2>Banner</h2>
                         <label className="banner-wrapper">
                             <img
-                                src={data.banner}
+                                src={data.banner ? data.banner : "/white-background.jpeg"}
                                 alt="Profile banner"
                                 className="profile-banner-settings"
                             />

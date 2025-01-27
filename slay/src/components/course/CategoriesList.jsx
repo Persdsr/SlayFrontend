@@ -1,38 +1,55 @@
 import React, { useEffect, useState } from 'react';
 import TrainingCourseService from "../../service/TrainingCourseService";
 import CategoryTagListItem from "./CategoryTagListItem";
+import {useForm} from "react-hook-form";
+import {useNavigate} from "react-router-dom";
 
 const CategoriesList = () => {
     const [categories, setCategories] = useState([])
     const [tags, setTags] = useState([])
+    const navigate = useNavigate()
+    const {register, handleSubmit} = useForm()
+
 
     useEffect(() => {
         const fetchCategoriesWithCourses = async () => {
             const response = await TrainingCourseService.getCategoriesWithCourses();
             setCategories(response.data.categories);
             setTags(response.data.tags);
+
         };
 
         fetchCategoriesWithCourses();
     }, []);
 
+    const onSubmit = (data) => {
+        navigate(`/search/${data.searchQuery}`);
+    }
+
     return (
         <div>
-            <button className="icon-btn add-btn">
-                <div className="add-icon"></div>
-                <div className="btn-txt">Создать курс</div>
-            </button>
+            <form onSubmit={handleSubmit(onSubmit)}>
+                <div className="search-input-wrapper">
+                    <button type={"button"} className="search-icon">
+                        <img width="30px" height="30px" src="/search.svg" alt=""/>
+                    </button>
+
+                    <input {...register("searchQuery")} placeholder="search.." className="search-course-input"
+                           type="text"/>
+
+                </div>
+            </form>
             {
                 categories.map((category) => (
                     category.trainingCourses.length > 0 ?
-                        <CategoryTagListItem category={category} key={category.id} /> // Добавлен key
+                        <CategoryTagListItem data={category.trainingCourses} title={category.name} key={category.id}/> // Добавлен key
                         : ""
                 ))
             }
             {
                 tags.map((tag) => (
                     tag.trainingCourses.length > 0 ?
-                        <CategoryTagListItem category={tag} key={tag.id} /> // Добавлен key
+                        <CategoryTagListItem data={tag.trainingCourses} title={tag.name} key={tag.id}/> // Добавлен key
                         : ""
                 ))
             }

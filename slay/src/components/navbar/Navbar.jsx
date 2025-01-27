@@ -15,7 +15,7 @@ const Navbar = () => {
                 setCategories(response.data);
                 console.log(response.data);
             } catch (error) {
-                console.error("Ошибка при загрузке категорий:", error);
+                console.error("Error loading categories:", error);
             }
         };
 
@@ -24,15 +24,15 @@ const Navbar = () => {
 
     const logout = () => {
         localStorage.removeItem("accessToken");
-        window.location.reload()
         navigate("/")
+        window.location.reload()
     };
 
     return (
         <div className="navbar-content">
             <ul className="navbar-links">
                 <li className="navbar-title dropdown">
-                    <a href="/courses">Категории</a>
+                    <a href="/courses">Categories</a>
                     <ul className="dropdown-menu">
                         {
                             categories?.map((category) => (
@@ -41,34 +41,40 @@ const Navbar = () => {
                         }
                     </ul>
                 </li>
-                <li className="navbar-title"><a href="/about">О нас</a></li>
+                <li className="navbar-title"><a href="/about">About us</a></li>
             </ul>
 
             <div className="navbar-logo">
-                <a href="/"><img className="main-logo" src="/slay.png" alt="logo" /></a>
+                <a href="/"><img className="main-logo" src="/logo.png" alt="logo" /></a>
             </div>
 
             <ul className="navbar-links">
                 <li className="navbar-title dropdown">
-                    <a href="/support">Поддержка</a>
+                    <a href="/support">Support</a>
                     <ul className="dropdown-menu">
                         <li><a className="navbar-title" href="#faq">FAQ</a></li>
-                        <li><a className="navbar-title" href="/my-supports">Мои запросы</a></li>
-                        <li><a className="navbar-title" href="#forum">Форум</a></li>
+                        <li><a className="navbar-title" href="/my-supports">My supports</a></li>
                     </ul>
                 </li>
                 {
                     authStore?.authenticated === false ? (
-                        <li className="navbar-title"><a href="/">Авторизация</a></li>
+                        <li className="navbar-title"><a href="/">Sign in</a></li>
                     ) : (
                         <li className="navbar-title dropdown">
                             <a href={`/profile/${authStore?.userData?.username}`}>
                                 {authStore?.userData?.username || ""}
                             </a>
                             <ul className="dropdown-menu">
-                                <li><a className="navbar-title" href="/admin/support">Админ панель</a></li>
-                                <li><a className="navbar-title" href="#docs">Документы</a></li>
-                                <li><a className="navbar-title" style={{cursor: "pointer"}} onClick={logout}>Выйти</a></li>
+                                {
+                                    authStore?.userData.roles.includes("ADMIN", "MODERATOR")
+                                        ? <li><a className="navbar-title" href="/admin/support">Admin panel</a></li>
+                                        : ""
+                                }
+
+                                <li><a className="navbar-title" href={`/profile/${authStore.userData.username}`}>Profile</a></li>
+                                <li><a className="navbar-title" href="/messages">Messages</a></li>
+                                <li><a className="navbar-title" href="/settings">Settings</a></li>
+                                <li><a className="navbar-title-red" style={{cursor: "pointer"}} onClick={logout}>Exit</a></li>
                             </ul>
                         </li>
                     )
