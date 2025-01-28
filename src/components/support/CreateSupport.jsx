@@ -67,7 +67,6 @@ const CreateSupport = () => {
             <h1 className="main-center-title">SUPPORT</h1>
 
             <div className="main-center-container">
-                {/* Блок результата запроса */}
                 {requestResultText && (
                     <div className="request-result-block">
                         <span className="request-result-text">{requestResultText}</span>

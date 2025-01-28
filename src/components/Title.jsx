@@ -23,7 +23,7 @@ const Title = () => {
             return;
         }
 
-        const response = await axios.post(`${process.env.API_BASE_URL}/api/auth/signup`,
+        const response = await axios.post(`${process.env.REACT_APP_API_BASE_URL}/api/auth/signup`,
             data
         )
         if (response.data.success === false) {
@@ -38,7 +38,7 @@ const Title = () => {
     }
 
     const onSubmitLogin = (data) => {
-        axios.post(`${process.env.API_BASE_URL}/api/auth/signin`,
+        axios.post(`${process.env.REACT_APP_API_BASE_URL}/api/auth/signin`,
             data
         )
             .then((response) => {

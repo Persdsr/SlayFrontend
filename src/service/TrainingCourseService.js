@@ -3,7 +3,7 @@ import axios from "axios";
 export default class TrainingCourseService {
 
     static async getTrainingCourseById(id) {
-        return await axios.get(`${process.env.API_BASE_URL}/api/training-course/detail/` + id,
+        return await axios.get(`${process.env.REACT_APP_API_BASE_URL}/api/training-course/detail/` + id,
             {
             headers: {
             Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
@@ -12,7 +12,7 @@ export default class TrainingCourseService {
     }
 
     static async getAuthorTrainingCourses(username) {
-        return await axios.get(`${process.env.API_BASE_URL}/api/user/` + username,
+        return await axios.get(`${process.env.REACT_APP_API_BASE_URL}/api/user/` + username,
             {
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
@@ -25,12 +25,12 @@ export default class TrainingCourseService {
     }
 
     static async getCategoriesWithCourses() {
-        console.log(process.env.API_BASE_URL)
+        console.log(process.env.REACT_APP_API_BASE_URL)
         return await axios.get(`${process.env.API_BASE_URL}/api/category/training-courses`);
     }
 
     static async deleteCourseById(id) {
-        return await axios.delete(`${process.env.API_BASE_URL}/api/training-course/` + id,
+        return await axios.delete(`${process.env.REACT_APP_API_BASE_URL}/api/training-course/` + id,
             {
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
@@ -40,19 +40,19 @@ export default class TrainingCourseService {
     }
 
     static async updateTrainingCourseByFields(id, fields) {
-        return await axios.patch(`${process.env.API_BASE_URL}/api/training-course/update-fields/${id}`, fields);
+        return await axios.patch(`${process.env.REACT_APP_API_BASE_URL}/api/training-course/update-fields/${id}`, fields);
     }
 
     static async getAllCategoriesNames() {
-        return await axios.get(`${process.env.API_BASE_URL}/api/category/categories-name`)
+        return await axios.get(`${process.env.REACT_APP_API_BASE_URL}/api/category/categories-name`)
     }
 
     static async getAllCategoriesWitTags() {
-        return await axios.get(`${process.env.API_BASE_URL}/api/category/categories-tags`)
+        return await axios.get(`${process.env.REACT_APP_API_BASE_URL}/api/category/categories-tags`)
     }
 
     static async getTagsCoursesAndAuthorName(searchQuery) {
-        return await axios.get(`${process.env.API_BASE_URL}/api/training-course/search`, {
+        return await axios.get(`${process.env.REACT_APP_API_BASE_URL}/api/training-course/search`, {
             params: {
                 searchQuery: searchQuery
             }

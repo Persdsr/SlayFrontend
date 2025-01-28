@@ -34,7 +34,7 @@ export default class ChatService {
 
     static async deleteMessageById(messageId) {
         try {
-            const response = await axios.delete(`${process.env.API_BASE_URL}/api/chat/message` + messageId,
+            const response = await axios.delete(`${process.env.REACT_APP_API_BASE_URL}/api/chat/message` + messageId,
                 {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem("accessToken")}`,

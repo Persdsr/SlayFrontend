@@ -38,7 +38,7 @@ const SupportDetail = () => {
 
     useEffect(() => {
         const stompClient = new Client({
-            webSocketFactory: () => new SockJS(`${process.env.API_BASE_URL}/ws`),
+            webSocketFactory: () => new SockJS(`${process.env.REACT_APP_API_BASE_URL}/ws`),
             onConnect: () => {
                 console.log("Connected to WebSocket");
                 stompClient.subscribe(`/topic/support/${params.supportId}`, (message) => {
@@ -63,7 +63,7 @@ const SupportDetail = () => {
 
         try {
             const response = await axios.post(
-                `${process.env.API_BASE_URL}/api/files/upload`,
+                `${process.env.REACT_APP_API_BASE_URL}/api/files/upload`,
                 formData,
                 {
                     headers: { "Content-Type": "multipart/form-data" },

@@ -4,7 +4,7 @@ export default class UserService {
 
     static async signUp(data) {
         try {
-            const response = await axios.post('http://localhost:8080/api/auth/signup', data);
+            const response = await axios.post(`${process.env.REACT_APP_API_BASE_URL}/api/auth/signup`, data);
             console.log('Успех:', response);
             return response.data;
         } catch (err) {
@@ -17,7 +17,7 @@ export default class UserService {
 
     static async followToUser(followBody) {
         try {
-            const response = await axios.post('http://localhost:8080/api/user/follow',
+            const response = await axios.post(`${process.env.REACT_APP_API_BASE_URL}/api/user/follow`,
                 followBody,
                 {
                     headers: {
@@ -33,7 +33,7 @@ export default class UserService {
 
     static async unFollowToUser(followBody) {
         try {
-            const response = await axios.post('http://localhost:8080/api/user/unfollow',
+            const response = await axios.post(`${process.env.REACT_APP_API_BASE_URL}/api/user/unfollow`,
                 followBody,
                 {
                     headers: {
@@ -48,7 +48,7 @@ export default class UserService {
     }
 
     static async updateUserData(formData) {
-            const response = await axios.patch("http://localhost:8080/api/user/update_user_fields", formData,
+            const response = await axios.patch(`${process.env.REACT_APP_API_BASE_URL}/api/user/update_user_fields`, formData,
                 {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
@@ -58,7 +58,7 @@ export default class UserService {
     }
 
     static async getUserProfileData() {
-        const response = await axios.get("http://localhost:8080/api/user/profile", {
+        const response = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/api/user/profile`, {
             headers: {
                 Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
             }
@@ -67,7 +67,7 @@ export default class UserService {
     }
 
     static async getUserPurchaseCourses() {
-        const response = await axios.get("http://localhost:8080/api/user/purchase-courses",
+        const response = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/api/user/purchase-courses`,
             {
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem("accessToken")}`,

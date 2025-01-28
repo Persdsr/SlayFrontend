@@ -38,7 +38,7 @@ function App() {
             }
 
             try {
-                const response = await axios.get(`${process.env.API_BASE_URL}/api/auth/userinfo`, {
+                const response = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/api/auth/userinfo`, {
                     headers: {
                         "Authorization": `Bearer ${token}`,
                     },

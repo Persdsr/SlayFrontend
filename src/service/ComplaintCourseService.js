@@ -4,18 +4,18 @@ import {type} from "@testing-library/user-event/dist/type";
 export default class ComplaintCourseService {
 
     static async getComplaintCourseDetailById(complaintId) {
-        const response = await axios.get(`${process.env.API_BASE_URL}/api/complaint-course/` + complaintId)
+        const response = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/api/complaint-course/` + complaintId)
         return response.data;
     }
 
     static async getComplaintCourseTypes() {
-        const response = await axios.get(`${process.env.API_BASE_URL}/api/complaint-course/types`)
+        const response = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/api/complaint-course/types`)
         return response.data;
     }
 
     static async createComplaintCourse(complaintBody) {
         const response = await axios.post(
-            `${process.env.API_BASE_URL}/api/complaint-course`,
+            `${process.env.REACT_APP_API_BASE_URL}/api/complaint-course`,
             complaintBody, // Передаем объект как есть
             {
                 headers: {
@@ -29,7 +29,7 @@ export default class ComplaintCourseService {
 
     static async createChatAndFirstMessage(messageBody) {
         const response = await axios.post(
-            `${process.env.API_BASE_URL}/api/chat`,
+            `${process.env.REACT_APP_API_BASE_URL}/api/chat`,
             messageBody,
             {
                 headers: {
