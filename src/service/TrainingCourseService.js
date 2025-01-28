@@ -25,6 +25,7 @@ export default class TrainingCourseService {
     }
 
     static async getCategoriesWithCourses() {
+        console.log(process.env.API_BASE_URL)
         return await axios.get(`${process.env.API_BASE_URL}/api/category/training-courses`);
     }
 
