@@ -40,18 +40,20 @@ const CategoriesList = () => {
                 </div>
             </form>
             {
-                categories.map((category) => (
+                categories.length > 0 ? categories.map((category) => (
                     category.trainingCourses.length > 0 ?
                         <CategoryTagListItem data={category.trainingCourses} title={category.name} key={category.id}/> // Добавлен key
                         : ""
                 ))
+                    : ""
             }
             {
-                tags.map((tag) => (
+                tags.length > 0 ? tags.map((tag) => (
                     tag.trainingCourses.length > 0 ?
                         <CategoryTagListItem data={tag.trainingCourses} title={tag.name} key={tag.id}/> // Добавлен key
                         : ""
                 ))
+                    : ""
             }
         </div>
     );
