@@ -36,16 +36,17 @@ function App() {
                 console.log("The user is not logged in");
                 return;
             }
-
-            try {
-                const response = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/api/auth/userinfo`, {
-                    headers: {
-                        "Authorization": `Bearer ${token}`,
-                    },
-                });
-                authStore.setAuth(response.data);
-            } catch (error) {
-                console.error("Error when receiving user information:", error);
+            if (token) {
+                try {
+                    const response = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/api/auth/userinfo`, {
+                        headers: {
+                            "Authorization": `Bearer ${token}`,
+                        },
+                    });
+                    authStore.setAuth(response.data);
+                } catch (error) {
+                    console.error("Error when receiving user information:", error);
+                }
             }
         };
 

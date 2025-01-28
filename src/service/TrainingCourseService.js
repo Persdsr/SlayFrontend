@@ -21,12 +21,12 @@ export default class TrainingCourseService {
     }
 
     static async getSportCategoriesName() {
-        return await axios.get(`${process.env.API_BASE_URL}/api/category/categories-name`);
+        return await axios.get(`${process.env.REACT_APP_API_BASE_URL}/api/category/categories-name`);
     }
 
     static async getCategoriesWithCourses() {
         console.log(process.env.REACT_APP_API_BASE_URL)
-        return await axios.get(`${process.env.API_BASE_URL}/api/category/training-courses`);
+        return await axios.get(`${process.env.REACT_APP_API_BASE_URL}/api/category/training-courses`);
     }
 
     static async deleteCourseById(id) {
