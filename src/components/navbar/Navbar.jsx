@@ -35,9 +35,9 @@ const Navbar = () => {
                     <a href="/courses">Categories</a>
                     <ul className="dropdown-menu">
                         {
-                            categories?.map((category) => (
+                            categories ? categories?.map((category) => (
                                 <li key={category.name}><a className="navbar-title" href={category.name}>{category.name}</a></li>
-                            ))
+                            )) : ""
                         }
                     </ul>
                 </li>
