@@ -274,7 +274,7 @@ const CreateTrainingCourse = () => {
             price: data.price,
             authorUsername: useAuth?.userData?.username,
             category: data.category,
-            tags: data.tags.map((tag) => tag.value),
+            tags: data.tags ? data.map((tag) => tag.value) : [],
             trainingCourseSteps: data.trainingCourseSteps.map((step) => ({
                 title: step.title,
                 description: step.description,
