@@ -4,9 +4,9 @@ import { Link } from 'react-router-dom';
 const NotFound = () => {
     return (
         <div className="not-found">
-            <h1 style={{color:"white"}}>404 - Страница не найдена</h1>
-            <p style={{color:"white"}}>К сожалению, такой страницы не существует.</p>
-            <Link to="/">Вернуться на главную</Link>
+            <h1 style={{color:"white"}}>404 - Not found</h1>
+            <p style={{color:"white"}}>Unfortunately, there is no such page.</p>
+            <Link to="/">Go back to the main page</Link>
         </div>
     );
 };

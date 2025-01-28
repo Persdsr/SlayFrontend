@@ -5,7 +5,7 @@ import {useNavigate} from "react-router-dom";
 
 const Navbar = () => {
     const [categories, setCategories] = useState([]);
-    const authStore = useAuthStore(); // Подключение к состоянию авторизации
+    const authStore = useAuthStore();
     const navigate = useNavigate()
 
     useEffect(() => {

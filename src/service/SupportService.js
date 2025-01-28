@@ -4,7 +4,7 @@ import {useNavigate} from "react-router-dom";
 export default class SupportService {
 
     static async getSupportDetailById(supportId) {
-        const response = await axios.get("http://localhost:8080/api/support/" + supportId,
+        const response = await axios.get(`${process.env.API_BASE_URL}/api/support/` + supportId,
             {
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
@@ -15,7 +15,7 @@ export default class SupportService {
 
     static async deleteSupport(supportId) {
         axios
-            .patch(`http://localhost:8080/api/support/${supportId}`,
+            .patch(`${process.env.API_BASE_URL}/api/support/${supportId}`,
                 {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
@@ -32,7 +32,7 @@ export default class SupportService {
 
     static async changeResolvedStatusSupport(supportId) {
         axios
-            .patch(`http://localhost:8080/api/support/${supportId}`,
+            .patch(`${process.env.API_BASE_URL}/api/support/${supportId}`,
                 {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
@@ -51,7 +51,7 @@ export default class SupportService {
 
     static async getAllUserSupports(username) {
         try {
-            const response = await axios.get(`http://localhost:8080/api/support/user/${username}`,
+            const response = await axios.get(`${process.env.API_BASE_URL}/api/support/user/${username}`,
                 {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
@@ -68,7 +68,7 @@ export default class SupportService {
 
     static async getSupportRequestTypes() {
         try {
-            const response = await axios.get("http://localhost:8080/api/support/support-request-types",
+            const response = await axios.get(`${process.env.API_BASE_URL}/api/support/support-request-types`,
                 {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
@@ -83,7 +83,7 @@ export default class SupportService {
 
     static async sendSupport(formData, setUploadProgress, setUploadedFiles, reset, setRequestResultText) {
         axios
-            .post("http://localhost:8080/api/support", formData, {
+            .post(`${process.env.API_BASE_URL}/api/support`, formData, {
                 onUploadProgress: (progressEvent) => {
                     const progress = Math.round(
                         (progressEvent.loaded * 100) / progressEvent.total
@@ -102,11 +102,11 @@ export default class SupportService {
                 setUploadedFiles([]);
                 setUploadProgress({});
                 reset()
-                window.scrollTo({ top: 0, behavior: "smooth" }); // Прокрутка наверх
-                setRequestResultText(response.data); // Успешный ответ
+                window.scrollTo({ top: 0, behavior: "smooth" });
+                setRequestResultText(response.data);
             })
             .catch((error) => {
-                setRequestResultText("Произошла ошибка при отправке. Попробуйте снова."); // Ошибка
+                setRequestResultText("Произошла ошибка при отправке. Попробуйте снова.");
                 console.error("Ошибка:", error);
             });
     }

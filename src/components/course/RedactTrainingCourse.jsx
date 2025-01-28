@@ -285,7 +285,7 @@ const RedactTrainingCourse = () => {
                 trainingCourseStepDetails: step.trainingCourseStepDetails.map((detail, detailIndex) => ({
                     title: detail.title,
                     description: detail.description,
-                    video:  detail?.videos?.name ? "http://localhost:8080/download/" + detail?.videos?.name : watch(`trainingCourseSteps[${stepIndex}].trainingCourseStepDetails[${detailIndex}].videos`)
+                    video:  detail?.videos?.name ? `${process.env.API_BASE_URL}/download/` + detail?.videos?.name : watch(`trainingCourseSteps[${stepIndex}].trainingCourseStepDetails[${detailIndex}].videos`)
                 })),
             })),
         }));
@@ -306,7 +306,7 @@ const RedactTrainingCourse = () => {
 
 
         try {
-            const response = await fetch(`http://localhost:8080/api/training-course/update/${params.courseId}`, {
+            const response = await fetch(`${process.env.API_BASE_URL}/api/training-course/update/${params.courseId}`, {
                 method: 'PUT',
                 body: formData,
             });

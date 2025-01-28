@@ -33,19 +33,19 @@ function App() {
         const fetchRequestTypes = async () => {
             const token = localStorage.getItem("accessToken");
             if (!token) {
-                console.log("Пользователь не авторизован");
+                console.log("The user is not logged in");
                 return;
             }
 
             try {
-                const response = await axios.get("http://localhost:8080/api/auth/userinfo", {
+                const response = await axios.get(`${process.env.API_BASE_URL}/api/auth/userinfo`, {
                     headers: {
                         "Authorization": `Bearer ${token}`,
                     },
                 });
                 authStore.setAuth(response.data);
             } catch (error) {
-                console.error("Ошибка при получении информации о пользователе:", error);
+                console.error("Error when receiving user information:", error);
             }
         };
 
@@ -80,8 +80,8 @@ function App() {
                 <Route path="/complaint/:complaintId" element={<ComplaintDetail />} />
                 <Route path="/admin/complaints" element={<Complaints />} />
                 <Route path="/admin/banned-users" element={<BannedUsers />} />
-                <Route path="/profile/:username" element={<Profile />} /> {/* Должен быть в самом низу */}
-                <Route path="*" element={<NotFound />} /> {/* Для всех некорректных URL */}
+                <Route path="/profile/:username" element={<Profile />} />
+                <Route path="*" element={<NotFound />} />
             </Routes>
         </BrowserRouter>
     );

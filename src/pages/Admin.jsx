@@ -8,7 +8,6 @@ const Admin = () => {
             <div className="content-container">
                 <AdminPanelLinks />
 
-                {/* Основной контент */}
                 <div className="content-block">
 
                 </div>

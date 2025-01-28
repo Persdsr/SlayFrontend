@@ -3,7 +3,7 @@ import axios from "axios";
 export default class ComplaintService {
 
     static async getAllSortedByDateComplaint() {
-        const response = await axios.get("http://localhost:8080/api/complaint",
+        const response = await axios.get(`${process.env.API_BASE_URL}/api/complaint`,
             {
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
@@ -16,7 +16,7 @@ export default class ComplaintService {
     }
 
     static async getComplaintDetailById(complaintId) {
-        const response = await axios.get("http://localhost:8080/api/complaint/" + complaintId,
+        const response = await axios.get(`${process.env.API_BASE_URL}/api/complaint/` + complaintId,
             {
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
@@ -27,7 +27,7 @@ export default class ComplaintService {
 
     static async getComplaintTypes() {
         try {
-            const response = await axios.get("http://localhost:8080/api/complaint/complaint-types",
+            const response = await axios.get(`${process.env.API_BASE_URL}/api/complaint/complaint-types`,
                 {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
@@ -41,7 +41,7 @@ export default class ComplaintService {
 
     static async getLocalComplaintTypes() {
         try {
-            const response = await axios.get("http://localhost:8080/api/complaint/local-complaint-types",
+            const response = await axios.get(`${process.env.API_BASE_URL}/api/complaint/local-complaint-types`,
                 {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
@@ -56,7 +56,7 @@ export default class ComplaintService {
     static async changeResolvedStatusComplaint(complaintId) {
         axios
             .patch(
-                `http://localhost:8080/api/complaint/${complaintId}`,
+                `${process.env.API_BASE_URL}/api/complaint/${complaintId}`,
                 {}, // Пустое тело, так как данные не передаются
                 {
                     headers: {
@@ -74,7 +74,7 @@ export default class ComplaintService {
     }
 
     static async getComplaintBannedUsers() {
-        return await axios.get(`http://localhost:8080/api/complaint-user/banned-users`,
+        return await axios.get(`${process.env.API_BASE_URL}/api/complaint-user/banned-users`,
             {
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
@@ -84,7 +84,7 @@ export default class ComplaintService {
 
     static async getAllUserComplaints() {
         try {
-            const response = await axios.get(`http://localhost:8080/api/complaint/user`,
+            const response = await axios.get(`${process.env.API_BASE_URL}/api/complaint/user`,
                 {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem("accessToken")}`,

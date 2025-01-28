@@ -38,7 +38,7 @@ const SupportDetail = () => {
 
     useEffect(() => {
         const stompClient = new Client({
-            webSocketFactory: () => new SockJS("http://localhost:8080/ws"),
+            webSocketFactory: () => new SockJS(`${process.env.API_BASE_URL}/ws`),
             onConnect: () => {
                 console.log("Connected to WebSocket");
                 stompClient.subscribe(`/topic/support/${params.supportId}`, (message) => {
@@ -63,7 +63,7 @@ const SupportDetail = () => {
 
         try {
             const response = await axios.post(
-                "http://localhost:8080/api/files/upload",
+                `${process.env.API_BASE_URL}/api/files/upload`,
                 formData,
                 {
                     headers: { "Content-Type": "multipart/form-data" },
@@ -76,7 +76,7 @@ const SupportDetail = () => {
     };
 
     const sendMessage = async (data) => {
-        const imageUrls = await uploadFiles(); // Функция для загрузки файлов через REST API
+        const imageUrls = await uploadFiles();
 
         if (!client) {
             console.error("WebSocket клиент не подключен");
@@ -91,16 +91,14 @@ const SupportDetail = () => {
             },
             createAt: new Date().toISOString(),
             supportRequestId: params.supportId,
-            images: imageUrls, // Ссылки на загруженные файлы
+            images: imageUrls,
         };
 
-        // Отправляем данные через WebSocket
         client.publish({
             destination: "/app/chat.sendMessage",
             body: JSON.stringify(newMessage),
         });
 
-        // Сброс состояния формы
         reset();
         setUploadedFiles([]);
     };

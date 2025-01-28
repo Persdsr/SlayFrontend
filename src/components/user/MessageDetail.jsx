@@ -60,7 +60,7 @@ const MessageDetail = () => {
 
     useEffect(() => {
         const stompClient = new Client({
-            webSocketFactory: () => new SockJS("http://localhost:8080/ws"),
+            webSocketFactory: () => new SockJS(`${process.env.API_BASE_URL}/ws`),
             onConnect: () => {
                 console.log("Connected to WebSocket");
 
@@ -90,7 +90,7 @@ const MessageDetail = () => {
 
         try {
             const response = await axios.post(
-                "http://localhost:8080/api/files/upload",
+                `${process.env.API_BASE_URL}/api/files/upload`,
                 formData,
                 {
                     headers: {

@@ -304,7 +304,7 @@ const CreateTrainingCourse = () => {
         console.log(data.files)
 
         try {
-            const response = await axios.post('http://localhost:8080/api/training-course', formData,
+            const response = await axios.post(`${process.env.API_BASE_URL}/api/training-course`, formData,
                 {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem("accessToken")}`,

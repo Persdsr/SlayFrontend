@@ -4,7 +4,7 @@ import axios from "axios";
 export default class AdminService {
 
     static async getAllSortedByDateSupports() {
-        const response = await axios.get("http://localhost:8080/api/support",
+        const response = await axios.get(`${process.env.API_BASE_URL}/api/support`,
             {
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
