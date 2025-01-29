@@ -306,18 +306,16 @@ const RedactTrainingCourse = () => {
 
 
         try {
-            const response = await fetch(`${process.env.API_BASE_URL}/api/training-course/update/${params.courseId}`, {
-                method: 'PUT',
-                body: formData,
-            });
-            const text = await response.text();
+            const response = await axios.patch(`${process.env.API_BASE_URL}/api/training-course/update/${params.courseId}`,
+                formData,
+            );
 
-            if (response.ok) {
-                console.log('Response:', text);
+            if (response.status === 200) {
+                console.log('Response:', response.data);
                 alert('Course updated successfully!');
             } else {
-                console.error('Server error:', text);
-                alert(`Error: ${text}`);
+                console.error('Server error:', response.status);
+                alert(`Error`);
             }
         } catch (err) {
             console.error('Error submitting form:', err);
