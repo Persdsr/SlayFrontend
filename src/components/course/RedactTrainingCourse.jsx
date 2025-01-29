@@ -303,8 +303,6 @@ const RedactTrainingCourse = () => {
         if (data.poster) formData.append("poster", data.poster);
         if (data.trailer) formData.append("trailer", data.trailer);
 
-
-
         try {
             const response = await axios.put(`${process.env.API_BASE_URL}/api/training-course/update/${params.courseId}`,
                 formData,
