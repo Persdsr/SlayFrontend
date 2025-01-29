@@ -267,14 +267,13 @@ const CreateTrainingCourse = () => {
 
     const onSubmit = async (data) => {
         const formData = new FormData();
-
         formData.append("data", JSON.stringify({
             name: data.name,
             description: data.description,
             price: data.price,
             authorUsername: useAuth?.userData?.username,
             category: data.category,
-            tags: data.tags ? data.map((tag) => tag.value) : [],
+            tags: data.tags.length > 0 ? data.tags.map((tag) => tag.value) : [],
             trainingCourseSteps: data.trainingCourseSteps.map((step) => ({
                 title: step.title,
                 description: step.description,
@@ -301,7 +300,6 @@ const CreateTrainingCourse = () => {
             });
         });
 
-        console.log(data.files)
 
         try {
             const response = await axios.post(`${process.env.API_BASE_URL}/api/training-course`, formData,
