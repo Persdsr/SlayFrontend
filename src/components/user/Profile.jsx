@@ -85,7 +85,7 @@ const Profile = () => {
     };
 
     const deleteReview = async (reviewId) => {
-        if (window.confirm("Вы уверены, что хотите удалить этот курс?")) {
+        if (window.confirm("Вы уверены, что хотите удалить этот отзыв?")) {
             try {
                 await ReviewService.deleteReviewById(reviewId);
                 window.location.reload();
@@ -164,7 +164,9 @@ const Profile = () => {
         console.log(formData)
         try {
             const response = await UserService.followToUser(formData);
-            window.location.reload()
+            if (response.status === 200) {
+                window.location.reload()
+            }
         } catch (error) {
             console.error("Ошибка отправки жалобы:", error);
         }
@@ -176,8 +178,10 @@ const Profile = () => {
         formData.append("author", data?.author?.username)
         console.log(formData)
         try {
-            const response = await UserService.unFollowToUser(formData);
-            window.location.reload()
+            const response = await UserService.followToUser(formData);
+            if (response.status === 200) {
+                window.location.reload()
+            }
         } catch (error) {
             console.error("Ошибка отправки жалобы:", error);
         }
@@ -242,8 +246,9 @@ const Profile = () => {
                                         <div className="dialog-content">
                                             <p>Вы уверены, что хотите отписаться?</p>
                                             <div className="dialog-actions">
-                                                <form onSubmit={unFollowSubmit}>
+                                                <form>
                                                     <button
+                                                        onClick={unFollowSubmit}
                                                         className="dialog-confirm-btn"
                                                     >
                                                         Отписаться
@@ -276,9 +281,9 @@ const Profile = () => {
                                                       className="profile-write">Send message</button>
                                         : ""
                                 }
-                                <form onSubmit={onFollowSubmit}>
-                                    <button type={"submit"} className="profile-follow">Follow</button>
-                                </form>
+
+                                    <button onClick={onFollowSubmit} type={"submit"} className="profile-follow">Follow</button>
+
                             </div>
                     }
 

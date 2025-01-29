@@ -24,8 +24,9 @@ export default class UserService {
                         Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
                     }}
             );
+            console.log(response.status)
             console.log('Успех:', response);
-            return response.data;
+            return response;
         } catch (err) {
             console.log(err.response.data.message);
         }
@@ -41,7 +42,7 @@ export default class UserService {
                     }}
             );
             console.log('Успех:', response);
-            return response.data;
+            return response;
         } catch (err) {
             console.log(err.response.data.message);
         }
