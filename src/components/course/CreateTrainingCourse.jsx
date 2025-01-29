@@ -302,7 +302,7 @@ const CreateTrainingCourse = () => {
 
 
         try {
-            const response = await axios.post(`https://${process.env.REACT_APP_API_BASE_URL}/api/training-course`, formData,
+            const response = await axios.post(`${process.env.REACT_APP_API_BASE_URL}/api/training-course`, formData,
                 {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
