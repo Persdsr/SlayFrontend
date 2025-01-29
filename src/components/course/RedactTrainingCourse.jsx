@@ -306,7 +306,7 @@ const RedactTrainingCourse = () => {
 
 
         try {
-            const response = await axios.patch(`${process.env.API_BASE_URL}/api/training-course/update/${params.courseId}`,
+            const response = await axios.put(`${process.env.API_BASE_URL}/api/training-course/update/${params.courseId}`,
                 formData,
             );
 
