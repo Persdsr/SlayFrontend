@@ -246,14 +246,13 @@ const Profile = () => {
                                         <div className="dialog-content">
                                             <p>Вы уверены, что хотите отписаться?</p>
                                             <div className="dialog-actions">
-                                                <form>
+
                                                     <button
                                                         onClick={unFollowSubmit}
                                                         className="dialog-confirm-btn"
                                                     >
                                                         Отписаться
                                                     </button>
-                                                </form>
                                                 <button
                                                     className="dialog-cancel-btn"
                                                     onClick={closeUnfollowDialog}
