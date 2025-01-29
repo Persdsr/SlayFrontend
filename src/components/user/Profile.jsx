@@ -176,9 +176,9 @@ const Profile = () => {
 
         const formData = new FormData()
         formData.append("author", data?.author?.username)
-        console.log(formData)
+
         try {
-            const response = await UserService.followToUser(formData);
+            const response = await UserService.unFollowToUser(formData);
             if (response.status === 200) {
                 window.location.reload()
             }
@@ -250,6 +250,7 @@ const Profile = () => {
                                                     <button
                                                         onClick={unFollowSubmit}
                                                         className="dialog-confirm-btn"
+                                                        type={"submit"}
                                                     >
                                                         Отписаться
                                                     </button>
