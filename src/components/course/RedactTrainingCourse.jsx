@@ -311,7 +311,7 @@ const RedactTrainingCourse = () => {
             );
 
             if (response.status === 200) {
-                console.log('Response:', response.data);
+                console.log('Response:', response);
                 alert('Course updated successfully!');
             } else {
                 console.error('Server error:', response.status);
