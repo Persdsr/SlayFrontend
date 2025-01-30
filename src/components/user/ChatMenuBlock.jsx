@@ -8,7 +8,6 @@ const ChatMenuBlock = ({ chats }) => {
     const authStore = useAuthStore();
 
     useEffect(() => {
-        console.log(chats)
         if (!searchTerm.trim()) {
             setFilteredChats(chats);
         } else {

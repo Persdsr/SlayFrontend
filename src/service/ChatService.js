@@ -10,7 +10,7 @@ export default class ChatService {
                         Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
                     }}
                 );
-            return response.data;
+            return response;
         } catch (err) {
             console.log(err.response.data.message);
 

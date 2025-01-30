@@ -364,8 +364,8 @@ const RedactTrainingCourse = () => {
 
             setCategories(categoriesResponse?.data.categories || []);
             const formattedTags = categoriesResponse.data.tags.map((tag) => ({
-                value: tag, // Уникальное значение
-                label: tag, // Отображаемое название
+                value: tag,
+                label: tag,
             }));
             setTags(formattedTags);
 
