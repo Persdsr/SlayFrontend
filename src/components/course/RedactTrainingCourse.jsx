@@ -302,7 +302,7 @@ const RedactTrainingCourse = () => {
         if (data.trailer) formData.append("trailer", data.trailer);
 
         try {
-            const response = await axios.put(`${process.env.API_BASE_URL}/api/training-course/update/${params.courseId}`,
+            const response = await axios.put(`${process.env.REACT_APP_API_BASE_URL}/api/training-course/update/${params.courseId}`,
                 formData,
             );
 
