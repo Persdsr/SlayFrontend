@@ -4,7 +4,7 @@ export default class ChatService {
 
     static async getChats() {
         try {
-            const response = await axios.get(`${process.env.API_BASE_URL}/api/chat`,
+            const response = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/api/chat`,
                 {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
@@ -19,7 +19,7 @@ export default class ChatService {
 
     static async getChatDetailById(chatId) {
         try {
-            const response = await axios.get(`${process.env.API_BASE_URL}/api/chat/c/` + chatId,
+            const response = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/api/chat/c/` + chatId,
                 {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem("accessToken")}`,

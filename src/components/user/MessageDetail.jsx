@@ -14,6 +14,7 @@ import SockJS from "sockjs-client";
 import axios from "axios";
 import VideoPlayer from "../VideoPlayer";
 import {format} from "date-fns";
+import FileService from "../../service/FileService";
 
 const MessageDetail = () => {
     const [chats, setChats] = useState([]);
@@ -33,7 +34,7 @@ const MessageDetail = () => {
         const fetchChats = async () => {
             try {
                 const response = await ChatService.getChats();
-                setChats(response);
+                setChats(response.data);
 
             } catch (error) {
                 console.error("Error fetching chats:", error);
@@ -117,6 +118,7 @@ const MessageDetail = () => {
     }
 
     const sendMessage = async (data) => {
+
         const filesUrls = await uploadFiles();
 
         if (!client) {
@@ -177,12 +179,25 @@ const MessageDetail = () => {
                                         <div className="message-info">
                                             <span className="message-sender-username">{message.sender.username}</span>
                                             <span className="message-text">{message.message}</span>
+                                            {message.files.map((file, index) => (
+                                                FileService.getFileType(file) === "video" ?
+                                                    <VideoPlayer key={index}
+                                                        videoUrl={file.replace("download", "view")}
+
+                                                    />
+
+                                            : <img key={index} className="message-image"
+                                                   src={file} onClick={() => openImageModal(file)} alt=""/>
+                                            ))}
+
+
                                         </div>
                                         <span className="message-createdAt">
             {/*{message?.createdAt
                 ? format(new Date(message.createdAt), "yyyy-MM-dd HH:mm:ss")
                 : "-"}*/}
         </span>
+
                                     </div>
                                 ))}
                             </div>
@@ -277,7 +292,7 @@ const MessageDetail = () => {
             {showImageModal && (
                 <div className="review-modal-overlay" onClick={closeImageModal}>
                     <div className="image-modal-content">
-                        <img src={selectedImage} alt="Selected Review"/>
+                        <img src={selectedImage}  alt="Selected Review"/>
                     </div>
                 </div>
             )}

@@ -326,7 +326,7 @@ const Profile = () => {
                 )}
 
                 <div className="avatar-container">
-                <img className="profile-avatar" src={data?.author?.avatar} alt="User Avatar"/>
+                <img className="profile-avatar" src={data?.author?.avatar || "/defaultAvatar.jpg"} />
                     <div className="profile-user-info">
                         <span className="profile-user-info-name">{data?.author?.name}</span>
                         <span className="profile-user-name">@{data?.author?.username}</span>
@@ -466,7 +466,7 @@ const Profile = () => {
             {showImageModal && (
                 <div className="review-modal-overlay" onClick={closeImageModal}>
                     <div className="image-modal-content">
-                    <img src={selectedImage} alt="Selected Review"/>
+                    <img src={selectedImage}/>
                     </div>
                 </div>
             )}

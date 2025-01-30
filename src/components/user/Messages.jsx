@@ -12,10 +12,9 @@ const Messages = () => {
         const fetchData = async () => {
             try {
                 const response = await ChatService.getChats();
-                setChats(response);
+                setChats(response.data);
                 console.log("1111111111111111")
                 console.log(response)
-                console.log("1111111111111111")
             } catch (error) {
                 console.error("Error fetching data:", error);
             }

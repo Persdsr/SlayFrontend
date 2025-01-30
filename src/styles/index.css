@@ -2172,7 +2172,9 @@ footer {
     margin-right: 10px;
 }
 
-
+.message-image {
+    max-width: 300px;
+}
 
 .icon-btn:focus {
     outline: none;

@@ -57,7 +57,7 @@ const UserSettings = () => {
                         <h2>Avatar</h2>
                         <label className="avatar-wrapper">
                             <img
-                                src={data.avatar}
+                                src={data.avatar || "/defaultAvatar.jpg"}
                                 alt="Profile Avatar"
                                 className="profile-avatar-settings"
                             />

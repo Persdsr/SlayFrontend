@@ -68,9 +68,7 @@ const CourseStepDetailFormField = ({prefix, register, control, watch, setValue, 
                                     const file = e.target.files[0];
                                     handleFileChange(e)
                                     if (file) {
-                                        // Сохраняем файл для отправки на сервер
                                         setValue(`${prefix}.trainingCourseStepDetails[${detailIndex}].videos`, file);
-                                        // Создаём URL для отображения
                                         const objectUrl = URL.createObjectURL(file);
                                         setValue(`${prefix}.trainingCourseStepDetails[${detailIndex}].videoPreview`, objectUrl);
 

@@ -16,4 +16,19 @@ export default class FileService {
             console.error("Error uploading files:", error);
         }
     }
+
+    static getFileType(fileName) {
+        const extension = fileName.split('.').pop().toLowerCase();
+        const imageExtensions = ['jpg', 'jpeg', 'png', 'gif', 'bmp', 'webp'];
+        const videoExtensions = ['mp4', 'avi', 'mov', 'mkv', 'flv', 'wmv'];
+
+        if (imageExtensions.includes(extension)) {
+            return 'image';
+        } else if (videoExtensions.includes(extension)) {
+            return 'video';
+        } else {
+            return 'unknown';
+        }
+    }
+
 }
