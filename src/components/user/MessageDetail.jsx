@@ -34,6 +34,7 @@ const MessageDetail = () => {
             try {
                 const response = await ChatService.getChats();
                 setChats(response);
+
             } catch (error) {
                 console.error("Error fetching chats:", error);
             }
@@ -81,6 +82,7 @@ const MessageDetail = () => {
 
         return () => stompClient.deactivate();
     }, [params.chatId]);
+
     const uploadFiles = async () => {
         const formData = new FormData();
 

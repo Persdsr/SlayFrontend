@@ -8,6 +8,7 @@ const ChatMenuBlock = ({ chats }) => {
     const authStore = useAuthStore();
 
     useEffect(() => {
+        console.log(chats)
         if (!searchTerm.trim()) {
             setFilteredChats(chats);
         } else {
@@ -19,7 +20,7 @@ const ChatMenuBlock = ({ chats }) => {
             setFilteredChats(filtered);
         }
     }, [searchTerm, chats]);
- //1
+
     const handleSearch = (e) => {
         setSearchTerm(e.target.value);
     };
@@ -35,7 +36,7 @@ const ChatMenuBlock = ({ chats }) => {
                     className="search-users-input"
                 />
             </div>
-            {filteredChats.length > 0 ? filteredChats.map((chat) => (
+            {filteredChats !== undefined && filteredChats?.length > 0 ? filteredChats.map((chat) => (
                 <NavLink to={`/message/${chat.id}`} key={chat.id}>
                     {chat.members
                         .filter((member) => member?.username !== authStore?.userData?.username)
