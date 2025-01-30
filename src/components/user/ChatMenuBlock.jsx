@@ -7,10 +7,9 @@ const ChatMenuBlock = ({ chats }) => {
     const [filteredChats, setFilteredChats] = useState(chats);
     const authStore = useAuthStore();
 
-    // Фильтрация чатов при изменении поисковой строки или списка чатов
     useEffect(() => {
         if (!searchTerm.trim()) {
-            setFilteredChats(chats); // Если поле поиска пустое, показываем все чаты
+            setFilteredChats(chats);
         } else {
             const filtered = chats.filter(chat =>
                 chat.members.some(member =>
@@ -36,7 +35,7 @@ const ChatMenuBlock = ({ chats }) => {
                     className="search-users-input"
                 />
             </div>
-            {filteredChats.map((chat) => (
+            {filteredChats.length > 0 ? filteredChats.map((chat) => (
                 <NavLink to={`/message/${chat.id}`} key={chat.id}>
                     {chat.members
                         .filter((member) => member?.username !== authStore?.userData?.username)
@@ -60,7 +59,9 @@ const ChatMenuBlock = ({ chats }) => {
                             </div>
                         ))}
                 </NavLink>
-            ))}
+            ))
+                : ""
+            }
         </div>
     );
 };

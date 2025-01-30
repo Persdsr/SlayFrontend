@@ -453,9 +453,7 @@ const RedactTrainingCourse = () => {
                                         onChange={(e) => {
                                             const file = e.target.files[0];
                                             if (file) {
-                                                // Сохраняем файл для отправки на сервер
                                                 setValue(`trailer`, file);
-                                                // Создаём URL для отображения
                                                 const objectUrl = URL.createObjectURL(file);
                                                 setValue(`trailerPreview`, objectUrl);
                                             }
