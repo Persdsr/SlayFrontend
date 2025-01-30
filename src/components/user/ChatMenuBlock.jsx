@@ -19,7 +19,7 @@ const ChatMenuBlock = ({ chats }) => {
             setFilteredChats(filtered);
         }
     }, [searchTerm, chats]);
-
+ //1
     const handleSearch = (e) => {
         setSearchTerm(e.target.value);
     };
