@@ -71,8 +71,8 @@ const Navbar = () => {
                                         : ""
                                 }
 
-                                <li><a className="navbar-title" href={`/profile/${authStore.userData.username}`}>Profile</a></li>
                                 <li><a className="navbar-title" href="/messages">Messages</a></li>
+                                <li><a className="navbar-title" href="/my-courses">My courses</a></li>
                                 <li><a className="navbar-title" href="/settings">Settings</a></li>
                                 <li><a className="navbar-title-red" style={{cursor: "pointer"}} onClick={logout}>Exit</a></li>
                             </ul>

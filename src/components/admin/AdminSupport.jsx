@@ -86,7 +86,7 @@ const AdminSupport = () => {
             <div className="content-block">
                 <h2 className="admin-page-title">Supports</h2>
                 <div className="main-content">
-                    <div className="support-list-container">
+                    <div className="object-list-container">
                         {currentItems.length > 0 ? (
                             currentItems.map((support) => (
                                 <SupportItem support={support} />

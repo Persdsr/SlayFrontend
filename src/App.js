@@ -25,6 +25,7 @@ import Messages from "./components/user/Messages";
 import MessageDetail from "./components/user/MessageDetail";
 import RedactTrainingCourse from "./components/course/RedactTrainingCourse";
 import TrainingCourseSearch from "./components/course/TrainingCourseSearch";
+import MyCourses from "./components/user/MyCourses";
 
 function App() {
     const authStore = useAuthStore();
@@ -75,6 +76,7 @@ function App() {
                 <Route path="/message/:chatId" element={<MessageDetail />} />
                 <Route path="/my-complaints" element={<MyComplaintsRequests />} />
                 <Route path="/purchase-courses" element={<MyPurchaseCourses />} />
+                <Route path="/my-courses" element={<MyCourses />} />
                 <Route path="/admin" element={<Admin />} />
                 <Route path="/admin/support" element={<AdminSupport />} />
                 <Route path="/support/:supportId" element={<SupportDetail />} />

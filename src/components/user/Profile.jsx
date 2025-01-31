@@ -403,7 +403,11 @@ const Profile = () => {
                                 ))}
                             </div>
                         </div>
-                        : <h1 className="no-course-title">No courses</h1>
+                        :
+                        <div className="no-course-block">
+                            <h1>No courses</h1>
+                            <Link to={"/create-course"} className="center-tip">Создать</Link>
+                        </div>
                 }
             </div>
 

@@ -98,6 +98,10 @@ input:-webkit-autofill {
 
 }
 
+.center-tip {
+    text-align: center;
+}
+
 .navbar-title-red {
     position: relative;
     color: white;
@@ -1835,11 +1839,11 @@ footer {
     height: 100%;
 }
 
-.support-list-container {
+.object-list-container {
     flex: 3;
 }
 
-.support-list-container p {
+.object-list-container p {
     color: #a3a3a3;
 }
 
@@ -3351,11 +3355,21 @@ footer {
     display: none; /* Скрываем поле выбора файла */
 }
 
-
-.no-course-title {
+.no-course-block {
+    display: flex;
+    flex-direction: column;
     margin: 0 auto;
+}
+
+.no-course-block h1 {
     color: white;
     font-size: 32px;
+}
+
+.center-tip {
+    color: #23c483;
+    font-size: 14px;
+    text-align: center;
 }
 
 .horizontal-courses-container {

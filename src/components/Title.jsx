@@ -108,13 +108,13 @@ const Title = () => {
                             <div className="input-simple-wrapper">
                                 <input type="text"
                                        className="input-box"
-                                       placeholder="Имя пользователя"
+                                       placeholder="username"
                                        name="username"
                                        {...register("username")}
                                 />
                                 <span className="underline"></span>
                             </div>
-                            <span id="input-username-hint" className="input-hint">Имя пользователя не должно содержать специальные символы (_+#/ и т.д.)</span>
+                            <span id="input-username-hint" className="input-hint">The username must not contain special characters (_+#/, etc.)</span>
 
                             {errors.email && <span className="error-message">*{errors.email}</span>}
                             <div className="input-wrapper">
@@ -123,6 +123,16 @@ const Title = () => {
                                        placeholder="email"
                                        name="email"
                                        {...register("email")}
+                                />
+                                <span className="underline"></span>
+                            </div>
+
+                            <div className="input-simple-wrapper">
+                                <input type="text"
+                                       className="input-box"
+                                       placeholder="name"
+                                       name="name"
+                                       {...register("name")}
                                 />
                                 <span className="underline"></span>
                             </div>
@@ -138,7 +148,7 @@ const Title = () => {
                                 <span className="underline"></span>
                             </div>
 
-                            <span id="input-password-hint" className="input-hint">Пароль должен начинаться с заглавной буквы и иметь от 8 до 32 символов</span>
+                            <span id="input-password-hint" className="input-hint">The password must start with a capital letter and have from 8 to 32 characters.</span>
 
                             {errors.confirmPassword && <span className="error-message">*{errors.confirmPassword}</span>}
                             <div className="input-wrapper">

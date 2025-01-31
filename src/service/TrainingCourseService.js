@@ -20,6 +20,15 @@ export default class TrainingCourseService {
             );
     }
 
+    static async getTrainingCoursesByAuthor() {
+        return await axios.get(`${process.env.REACT_APP_API_BASE_URL}/api/training-course/my-courses`,
+            {
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+                }}
+        );
+    }
+
     static async getSportCategoriesName() {
         return await axios.get(`${process.env.REACT_APP_API_BASE_URL}/api/category/categories-name`);
     }

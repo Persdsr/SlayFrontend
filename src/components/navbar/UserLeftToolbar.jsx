@@ -13,11 +13,19 @@ const UserLeftToolbar = () => {
             >
                 <span className="nav-span">📞 Profile</span>
             </NavLink>
+
             <NavLink
                 to={`/purchase-courses/`}
                 className="left-menu-link"
             >
-                <span className="nav-span">📞 My purchase courses</span>
+                <span className="nav-span">📞 Purchase courses</span>
+            </NavLink>
+
+            <NavLink
+                to={`/my-courses/`}
+                className="left-menu-link"
+            >
+                <span className="nav-span">📞 My courses</span>
             </NavLink>
 
             <NavLink

@@ -85,7 +85,7 @@ const MySupportRequests = () => {
             <div className="content-block">
                 <h2>Супорты</h2>
                 <div className="main-content">
-                    <div className="support-list-container">
+                    <div className="object-list-container">
                         {currentItems?.length > 0 ? (
                             currentItems.map((support) => (
                                 <SupportItem support={support}/>

@@ -7,21 +7,26 @@ import {useAuthStore} from "../store/store";
 import UserService from "../../service/UserService";
 import UserLeftToolbar from "../navbar/UserLeftToolbar";
 import CategoryTrainingCourseItem from "../course/CategoryTrainingCourseItem";
+import TrainingCourseService from "../../service/TrainingCourseService";
+import {Link, useNavigate} from "react-router-dom";
 
-const MyPurchaseCourses = () => {
+const MyCourses = () => {
     const [courses, setCourses] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const itemsPerPage = 7;
     const authStore = useAuthStore()
+    const navigate = useNavigate()
 
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const sortedData = await UserService.getUserPurchaseCourses();
-                setCourses(sortedData.data);
+                const response = await TrainingCourseService.getTrainingCoursesByAuthor();
+                console.log(response)
+                setCourses(response.data);
 
             } catch (error) {
                 console.error("Error fetching data:", error);
+
             }
         };
 
@@ -31,7 +36,7 @@ const MyPurchaseCourses = () => {
 
     const indexOfLastItem = currentPage * itemsPerPage;
     const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-    const myCourses = courses?.slice(indexOfFirstItem, indexOfLastItem);
+    const myCourses = courses.length > 0 ? courses?.slice(indexOfFirstItem, indexOfLastItem) : []
 
     const totalPages = Math.max(1, Math.ceil(courses?.length / itemsPerPage));
     return (
@@ -40,7 +45,7 @@ const MyPurchaseCourses = () => {
             <UserLeftToolbar />
 
             <div className="content-block">
-                <h2>My purchase courses</h2>
+                <h2>My courses <Link to={"/create-course"} className="center-tip">Создать</Link></h2>
                 <div className="main-content">
                     <div className="horizontal-courses-container">
                         <div className="object-list-container">
@@ -82,4 +87,4 @@ const MyPurchaseCourses = () => {
     );
 };
 
-export default MyPurchaseCourses;
+export default MyCourses;
