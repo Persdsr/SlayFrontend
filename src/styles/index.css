@@ -2841,7 +2841,12 @@ footer {
 
 .review-author-info {
     display: flex;
-    margin-bottom: 14px;
+    margin-bottom: 5px;
+}
+
+.review-course-description a {
+    cursor: pointer;
+    color: gray;
 }
 
 .review-author-avatar {
@@ -2862,6 +2867,7 @@ footer {
     height: 11px;
 }
 
+
 .review-menu {
     white-space: nowrap;
     margin-left: auto;
@@ -2872,7 +2878,7 @@ footer {
     flex-direction: row;
 }
 
-.review-author-info span {
+.review-author {
     position: relative;
     display: grid;
     grid-template-columns: 100% 1fr;
@@ -2881,6 +2887,11 @@ footer {
     font-size: 18px;
     font-weight: 600;
     font-family: "Oswald", sans-serif;
+}
+
+.review-course-description {
+    font-size: 14px;
+    color: gray;
 }
 
 .profile-review-description {
@@ -2931,6 +2942,13 @@ footer {
 
 .profile-review-block .review-content {
     margin-bottom: 10px;
+    display: flex;
+    flex-direction: column;
+}
+
+.profile-review-title {
+    color: white;
+    font-size: 16px;
 }
 
 .custom-file-input-wrapper {

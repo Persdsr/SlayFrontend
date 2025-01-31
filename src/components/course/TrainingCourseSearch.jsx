@@ -10,6 +10,7 @@ const TrainingCourseSearch = () => {
     const params = useParams()
     const [courses, setCourses] = useState([])
     const [tags, setTags] = useState([])
+    const [categories, setCategories] = useState([])
     const [users, setUsers] = useState([])
     const navigate = useNavigate()
     const {register, handleSubmit} = useForm()
@@ -20,8 +21,9 @@ const TrainingCourseSearch = () => {
             const response = await TrainingCourseService.getTagsCoursesAndAuthorName(params.searchQuery);
             setCourses(response.data.courses);
             setTags(response.data.tags);
+            setCategories(response.data.categories);
             setUsers(response.data.authors);
-            console.log(response.data.courses)
+            console.log(response.data)
         };
 
         fetchData();
@@ -46,13 +48,23 @@ const TrainingCourseSearch = () => {
                 </div>
             </form>
             {
-                courses.length > 0 ?
+                courses?.length > 0 ?
 
                 <CategoryTagListItem data={courses} title={params.searchQuery} key={courses.id}/>
                     : ""
             }
+            {
+                users?.length > 0 ? <UserListItem data={users}/>
+                    : ""
+            }
 
-            <UserListItem data={users}/>
+            {
+                categories.map((category) => (
+                    category.trainingCourses?.length > 0 ?
+                        <CategoryTagListItem data={category.trainingCourses} title={category.name} key={category.id}/>
+                        : ""
+                ))
+            }
 
             {
                 tags.map((tag) => (

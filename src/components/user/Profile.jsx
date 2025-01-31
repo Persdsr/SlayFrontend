@@ -392,7 +392,7 @@ const Profile = () => {
                                             <img src={course.poster} alt=""/>
                                             <div className="poster-overlay">
                                                 <h2>{course.name}</h2>
-                                                <Link to={`/course/detail/${course.id}`}>
+                                                <Link to={`/course/${course.id}`}>
                                                     <button className="purchase-button">Go to description</button>
                                                 </Link>
                                             </div>
@@ -409,9 +409,9 @@ const Profile = () => {
                 {data?.reviews?.map((review, index) => (
                     <div key={index} className="profile-review-block">
                         <div className="review-author-info">
-                            <img className="review-author-avatar" src={review?.author?.avatar} alt="Author Avatar"/>
+                            <img className="review-author-avatar" src={review?.author?.avatar || "/defaultAvatar.jpg"} alt="Author Avatar"/>
                             <div className="review-info">
-                                <span>{review?.author?.username}</span>
+                                <span className="review-author">{review?.author?.username}</span>
                                 <div className="star-container">
                                     {Array.from({length: review.rating}).map((_, index) => (
                                         <img
@@ -422,6 +422,7 @@ const Profile = () => {
                                         />
                                     ))}
                                 </div>
+                                <span className="review-course-description">Курс: <a href={`/course/${review.course.id}`}>{review.course.name}</a></span>
                             </div>
                             <div className="review-menu">
                                 <div className="profile-menu-container">
@@ -446,6 +447,7 @@ const Profile = () => {
                         </div>
 
                         <div className="review-content">
+                            <span className={"profile-review-title"}>{review.title}</span>
                             <span className="profile-review-description">{review.text}</span>
                         </div>
                         <div className="review-images">

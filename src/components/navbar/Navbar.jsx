@@ -36,7 +36,7 @@ const Navbar = () => {
                     <ul className="dropdown-menu">
                         {
                             categories.length > 0 ? categories?.map((category) => (
-                                <li key={category.name}><a className="navbar-title" href={category.name}>{category.name}</a></li>
+                                <li key={category.name}><a className="navbar-title" href={`/search/${category.name}`}>{category.name}</a></li>
                             )) : ""
                         }
                     </ul>

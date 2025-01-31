@@ -4,7 +4,7 @@ import {Link} from "react-router-dom";
 const CategoryTrainingCourseItem = ({course}) => {
     return (
         <div className="course-block">
-            <a href={`/course/detail/${course?.id}`}>
+            <a href={`/course/${course?.id}`}>
                 <img className="course-poster" src={course?.poster} alt=""/>
             </a>
             <div className="catalog-author-info">

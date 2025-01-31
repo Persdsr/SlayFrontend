@@ -61,7 +61,7 @@ function App() {
         <BrowserRouter>
             <Routes>
                 <Route path="/" element={<Main />} />
-                <Route path="/course/detail/:id" element={<TrainingCourseDetail />} />
+                <Route path="/course/:id" element={<TrainingCourseDetail />} />
                 <Route path="/create-course" element={<CreateTrainingCourse />} />
                 <Route path="/search/:searchQuery" element={<TrainingCourseSearch />} />
                 <Route path="/search" element={<Main />} />
