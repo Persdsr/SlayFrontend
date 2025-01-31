@@ -1,8 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {Link, useNavigate, useParams} from 'react-router-dom';
 import TrainingCourseService from '../../service/TrainingCourseService';
-import VideoPlayer from '../VideoPlayer';
-import CourseStepDetailVideoPlayer from "./CourseStepDetailVideoPlayer";
+import VideoPlayer from '../player/VideoPlayer';
 import {Swiper, SwiperSlide} from 'swiper/react';
 import 'swiper/css';
 import 'swiper/css/navigation';
@@ -385,7 +384,8 @@ const TrainingCourseDetail = () => {
                                             <span className="step-detail-description">{stepDetail.description}</span>
                                             {
                                                 stepDetail?.videos
-                                                    ? <CourseStepDetailVideoPlayer
+
+                                                    ? <VideoPlayer
                                                         title={courseDetails?.description}
                                                         videoUrl={stepDetail?.videos?.replace("download", "view")}
                                                     />

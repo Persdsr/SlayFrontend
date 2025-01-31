@@ -38,43 +38,6 @@ const ControlIcons = ({ title, topTitle, playandpause, playing, rewind, fastForw
         );
     }
 
-    const PrettoSlider = styled(Slider)({
-        height: 5,
-        '& .MuiSlider-track': {
-            border: 'none',
-        },
-        '& .MuiSlider-thumb': {
-            height: 16,
-            width: 16,
-            backgroundColor: '#fff',
-            border: '2px solid currentColor',
-            '&:focus, &:hover, &.Mui-active, &.Mui-focusVisible': {
-                boxShadow: 'inherit',
-            },
-            '&:before': {
-                display: 'none',
-            },
-        },
-        '& .MuiSlider-valueLabel': {
-            lineHeight: 1.2,
-            fontSize: 12,
-            background: 'unset',
-            padding: 0,
-            width: 32,
-            height: 32,
-            borderRadius: '50% 50% 50% 0',
-            backgroundColor: '#52af77',
-            transformOrigin: 'bottom left',
-            transform: 'translate(50%, -100%) rotate(-45deg) scale(0)',
-            '&:before': { display: 'none' },
-            '&.MuiSlider-valueLabelOpen': {
-                transform: 'translate(50%, -100%) rotate(-45deg) scale(1)',
-            },
-            '& > *': {
-                transform: 'rotate(45deg)',
-            },
-        },
-    });
     return (
         <div className="controls__div">
             <Grid container direction='row' alignItems='center' justifyContent='start' style={{padding: 16 }}>
@@ -107,12 +70,12 @@ const ControlIcons = ({ title, topTitle, playandpause, playing, rewind, fastForw
                 </Grid>*/}
 
                 <Grid item xs={12}>
-                    <PrettoSlider
+                    <Slider
                         min={0}
                         max={100}
                         value={played * 100}
                         onChange={onSeek}
-                        onMouseDown={onSeekMouseDown}
+
                         onChangeCommitted={onSeekMouseUp}
                         sx={{
                             color: '#23c483', // Цвет слайдера
@@ -127,6 +90,8 @@ const ControlIcons = ({ title, topTitle, playandpause, playing, rewind, fastForw
                             },
                         }}
                     />
+
+
                     <Grid container direction='row' justifyContent='space-between'>
                         <Typography variant='h7' style={{color:'white'}}>{playedTime}</Typography>
                         <Typography variant='h7' style={{color:'white'}}>{fullMovieTime}</Typography>

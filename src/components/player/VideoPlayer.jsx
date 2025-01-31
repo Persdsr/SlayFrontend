@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import ReactPlayer from 'react-player';
 import screenfull from 'screenfull';
-import ControlIcons from './course/ControlIcons';
+import ControlIcons from "./ControlIcons";
 
 const VideoPlayer = ({ videoUrl, title, topTitle }) => {
     const [playerState, setPlayerState] = useState({

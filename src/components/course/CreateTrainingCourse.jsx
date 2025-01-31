@@ -3,7 +3,7 @@ import {useForm, useFieldArray, FormProvider} from "react-hook-form";
 import CreatableSelect from "react-select/creatable";
 import {useAuthStore} from "../store/store";
 import TrainingCourseService from "../../service/TrainingCourseService";
-import VideoPlayer from "../VideoPlayer";
+import VideoPlayer from "../player/VideoPlayer";
 import axios from "axios";
 
 const CourseStepDetailFormField = ({prefix, register, control, watch, setValue, uploadedFiles, setUploadedFiles, handleFileChange}) => {

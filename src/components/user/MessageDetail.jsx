@@ -12,7 +12,7 @@ import {TextareaAutosize} from "@mui/material";
 import {Client} from "@stomp/stompjs";
 import SockJS from "sockjs-client";
 import axios from "axios";
-import VideoPlayer from "../VideoPlayer";
+import VideoPlayer from "../player/VideoPlayer";
 import {format} from "date-fns";
 import FileService from "../../service/FileService";
 

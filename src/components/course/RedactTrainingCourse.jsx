@@ -4,7 +4,7 @@ import CreatableSelect from "react-select/creatable";
 import {useAuthStore} from "../store/store";
 import TrainingCourseService from "../../service/TrainingCourseService";
 import {useParams} from "react-router-dom";
-import VideoPlayer from "../VideoPlayer";
+import VideoPlayer from "../player/VideoPlayer";
 import axios from "axios";
 import colourStyles from "./CustomSelectStyles";
 

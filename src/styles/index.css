@@ -847,7 +847,7 @@ footer {
     max-width: 800px;
 }
 
-.stepDetailPlayerDiv {
+.step-detail-block .playerDiv {
     position: relative;
     width: 70%;
     height: 100%;
