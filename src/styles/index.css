@@ -83,7 +83,6 @@ input:-webkit-autofill {
 }
 
 .main-logo {
-    width: max-content;
     height: 80px;
     object-fit: cover;
 }
