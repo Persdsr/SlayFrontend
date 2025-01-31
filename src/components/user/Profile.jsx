@@ -8,6 +8,7 @@ import {useAuthStore} from "../store/store";
 import UserService from "../../service/UserService";
 import UserLeftToolbar from "../navbar/UserLeftToolbar";
 import ReviewService from "../../service/ReviewService";
+import LoadingIndicator from "../LoadingIndicator";
 
 const Profile = () => {
     const [data, setData] = useState([]);
@@ -56,7 +57,6 @@ const Profile = () => {
 
     useEffect(() => {
         const fetchUserData = async () => {
-
             try {
                 const response = await TrainingCourseService.getAuthorTrainingCourses(params?.username);
                 setData(response.data);
@@ -66,6 +66,8 @@ const Profile = () => {
                 setLoading(false);
             } catch (e) {
                 navigate("/*")
+            } finally {
+                setLoading(false);
             }
 
         };
@@ -198,7 +200,7 @@ const Profile = () => {
     };
 
     if (loading) {
-        return <div className="loading-spinner"></div>;
+        return <LoadingIndicator />;
     }
 
     return (

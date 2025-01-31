@@ -4,11 +4,13 @@ import { useAuthStore } from "../store/store";
 import { useForm } from "react-hook-form";
 import UserService from "../../service/UserService";
 import UserLeftToolbar from "../navbar/UserLeftToolbar";
+import LoadingIndicator from "../LoadingIndicator";
 
 const UserSettings = () => {
     const authStore = useAuthStore();
     const { register, handleSubmit, setValue, reset } = useForm();
     const [data, setData] = useState({});
+    const [loading, setLoading] = useState(true);
 
     const onSubmit = async (formData) => {
         const body = {
@@ -32,19 +34,27 @@ const UserSettings = () => {
     }
 
     useEffect(() => {
-        const fetchData = async () => {
-            const response = await UserService.getUserProfileData();
-            setData(response.data);
-            setValue("name", response.data.name || "");
-            setValue("aboutMe", response.data.aboutMe || "");
-            setValue("banner", response.data.banner || "");
-        };
-        fetchData();
+        try {
+            const fetchData = async () => {
+                const response = await UserService.getUserProfileData();
+                setData(response.data);
+                setValue("name", response.data.name || "");
+                setValue("aboutMe", response.data.aboutMe || "");
+                setValue("banner", response.data.banner || "");
+            };
+            fetchData();
+        } catch (e) {
+
+        } finally {
+            setLoading(false);
+        }
+
     }, [setValue]);
 
-    if (!data || Object.keys(data).length === 0) {
-        return <div>Loading...</div>;
+    if (loading) {
+        return <LoadingIndicator />;
     }
+
 
     return (
         <div className="content-container">
