@@ -124,6 +124,15 @@ const TrainingCourseDetail = () => {
     }
   };
 
+  const handleByCourse = async () => {
+    if (authStore.authenticated) {
+      const response = await TrainingCourseService.handleByCourse(params.id)
+    } else {
+      navigate("/")
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  }
+
   return (
     <div className="main">
       <h1 className="course-detail-title">{courseDetails?.name}</h1>
@@ -437,45 +446,49 @@ const TrainingCourseDetail = () => {
           ))}
         </div>
       ) : (
-        <div className="course-steps-block">
-          <div className="buy-btn-container">
-            <button className="btn-course-buy">
-              Купить за {courseDetails.price}$
-            </button>
-          </div>
-          <div className="course-blur-course-steps">
-            <div className="step-block">
-              <h2 className="step-title not-clickable">
-                <h2
-                  style={{
-                    fontSize: '38px',
-                    color: '#23c483',
-                    display: 'inline-block',
-                  }}
-                >
-                  #
-                </h2>{' '}
-                {courseDetails?.trainingCourseCroppedStep?.title}
-              </h2>
+          <div className="course-steps-block">
+            <div className="buy-btn-container">
+              <button onClick={handleByCourse} className="btn-course-buy">
+                buy for {courseDetails.price}$
+              </button>
+              <span data-tooltip={"После покупки вы можете найти курс во вкладе 'Купленные курсы'"}>
+            <img className="course-buy-info" src="/icon-info.png" alt=""/>
+          </span>
+            </div>
 
-              <div className="step-detail-block">
+            <div className="course-blur-course-steps">
+              <div className="step-block">
+                <h2 className="step-title not-clickable">
+                  <h2
+                      style={{
+                        fontSize: '38px',
+                        color: '#23c483',
+                        display: 'inline-block',
+                      }}
+                  >
+                    #
+                  </h2>{' '}
+                  {courseDetails?.trainingCourseCroppedStep?.title}
+                </h2>
+
+                <div className="step-detail-block">
                 <span className="step-detail-description not-clickable">
                   {courseDetails?.trainingCourseCroppedStep?.description}
                 </span>
-              </div>
-              <div className="course-steps-video not-clickable">
-                <VideoPlayer
-                  title={courseDetails?.name}
-                  videoUrl={videoUrl?.replace('download', 'view')}
-                />
+                </div>
+                <div className="course-steps-video not-clickable">
+                  <VideoPlayer
+                      title={courseDetails?.name}
+                      videoUrl={videoUrl?.replace('download', 'view')}
+                  />
+                </div>
               </div>
             </div>
           </div>
-        </div>
       )}
 
       {showComplaintModal && (
-        <div className="modal-overlay">
+          <div className="modal-overlay">
           <div className="modal-content">
             <div className="modal-header">
               <h2>Report</h2>

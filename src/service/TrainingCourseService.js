@@ -86,4 +86,15 @@ export default class TrainingCourseService {
       }
     );
   }
+
+  static async handleByCourse(courseId) {
+    return await axios.post(
+        `${process.env.REACT_APP_API_BASE_URL}/api/training-course/buy/${courseId}`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+          }}
+    );
+  }
 }

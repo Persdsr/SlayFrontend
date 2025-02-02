@@ -1143,17 +1143,28 @@ footer {
 
 .buy-btn-container {
   text-align: center;
+  margin: 0 auto;
+  position: absolute;
+  display: flex;
+  left: 44%;
+  align-items: center;
+  top: 138px;
+  z-index: 99;
 }
+
+.course-buy-info {
+  width: 20px;
+  height: 20px;
+  margin-left: 5px;
+}
+
 
 .btn-course-buy {
   text-align: center;
   letter-spacing: 1.5px;
   border: none;
   cursor: pointer;
-  position: absolute;
-  top: 138px;
-  z-index: 99;
-  transform: translateX(-50%);
+
   padding: 10px 20px;
   background: linear-gradient(29deg, #23c483, #2aa774);
   color: #fff;
@@ -2430,6 +2441,27 @@ footer {
   to {
     opacity: 1;
   }
+}
+
+.buy-btn-container span:hover::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  bottom: 100%;
+
+  left: 50%;
+
+  background-color: #4c4c4c;
+  color: #fff;
+  padding: 5px 10px;
+  border-radius: 5px;
+  font-size: 12px;
+  white-space: nowrap;
+  opacity: 0;
+  animation: fadeIn 0.3s forwards;
+}
+
+.buy-btn-container span {
+  position: relative;
 }
 
 .profile-user-info {

@@ -8,7 +8,7 @@ const Navbar = () => {
   const authStore = useAuthStore();
   const navigate = useNavigate();
 
-  useEffect(() => {
+  useEffect(() =>  {
     const fetchCategories = async () => {
       try {
         const response = await TrainingCourseService.getSportCategoriesName();

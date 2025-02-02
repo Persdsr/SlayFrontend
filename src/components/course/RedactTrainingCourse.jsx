@@ -355,7 +355,12 @@ const RedactTrainingCourse = () => {
     try {
       const response = await axios.put(
         `${process.env.REACT_APP_API_BASE_URL}/api/training-course/update/${params.courseId}`,
-        formData
+        formData,
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+            }
+          }
       );
 
       if (response.status === 200) {
