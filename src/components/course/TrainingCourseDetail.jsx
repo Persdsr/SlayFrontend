@@ -46,7 +46,7 @@ const TrainingCourseDetail = () => {
   const onSubmit = async (data) => {
     const messageBody = {
       message: data.message,
-      receiver: courseDetails.author,
+      receiver: courseDetails.author.username,
     };
 
     try {
@@ -145,7 +145,7 @@ const TrainingCourseDetail = () => {
 
       <div className={`menu-card ${menuOpen ? 'open' : ''}`}>
         {authStore?.userData?.roles.includes('ADMIN', 'MODERATOR') ||
-        authStore?.userData?.username === courseDetails.author ? (
+        authStore?.userData?.username === courseDetails?.author?.username ? (
           <ul className="menu-list">
             <li className="menu-item">
               <svg
@@ -178,9 +178,9 @@ const TrainingCourseDetail = () => {
         <div className="menu-separator"></div>
         <ul className="menu-list">
           {authStore?.userData?.roles.includes('ADMIN', 'MODERATOR') ||
-          authStore?.userData?.username === courseDetails.author ? (
+          authStore?.userData?.username === courseDetails?.author?.username ? (
             <li
-              onClick={() => deleteCourse(courseDetails.id)}
+              onClick={() => deleteCourse(courseDetails?.id)}
               className="menu-item delete"
             >
               <svg
@@ -249,8 +249,7 @@ const TrainingCourseDetail = () => {
           <div className="card-author-info">
             <a className="author-avatar" href="#">
               <img
-                src="/рарпаапр.PNG"
-                alt="Author Avatar"
+                src={courseDetails?.author?.avatar || "/defaultAvatar.jpg"}
                 className="avatar-image"
               />
               <span></span>
@@ -261,15 +260,15 @@ const TrainingCourseDetail = () => {
             <div className="author-name">
               <span className="author-name-prefix">Author</span>
               <span className="card-author-name">
-                <Link to={`/profile/${courseDetails.author}`}>
-                  {courseDetails?.author}
+                <Link to={`/profile/${courseDetails?.author?.username}`}>
+                  {courseDetails?.author?.username}
                 </Link>
               </span>
             </div>
             {isPurchased ? (
               courseDetails?.chatting ? (
                 ''
-              ) : !authStore?.userData?.username === courseDetails.author ? (
+              ) : !authStore?.userData?.username === courseDetails?.author?.username ? (
                 <button onClick={openMessageDialog} className="btn-add-step">
                   Send message
                 </button>
@@ -338,7 +337,7 @@ const TrainingCourseDetail = () => {
                 <img src="/reviews-icon.png" alt="" className="material-icon" />
               </div>
               <span className="material-description">
-                Reviews: {courseDetails.reviewsCount}
+                Reviews: {courseDetails?.reviewsCount}
               </span>
             </div>
             <div className="material-info-block">
@@ -346,7 +345,7 @@ const TrainingCourseDetail = () => {
                 <img src="/dnevnikvideo.png" alt="" className="material-icon" />
               </div>
               <span className="material-description">
-                {`Material from ` + courseDetails.videoCount + ' videos'}
+                {`Material from ` + courseDetails?.videoCount + ' videos'}
               </span>
             </div>
             <div className="material-info-block">
@@ -354,7 +353,7 @@ const TrainingCourseDetail = () => {
                 <img src="/gym100.png" alt="" className="material-icon" />
               </div>
               <span className="material-description">
-                Course buyers: {courseDetails.courseBuyers}
+                Course buyers: {courseDetails?.courseBuyers}
               </span>
             </div>
           </div>
@@ -400,7 +399,7 @@ const TrainingCourseDetail = () => {
               </h2>
 
               <span className="step-detail-description">
-                {courseDetails.description}
+                {courseDetails?.description}
               </span>
               <Swiper
                 spaceBetween={20}
@@ -449,7 +448,7 @@ const TrainingCourseDetail = () => {
           <div className="course-steps-block">
             <div className="buy-btn-container">
               <button onClick={handleByCourse} className="btn-course-buy">
-                buy for {courseDetails.price}$
+                buy for {courseDetails?.price}$
               </button>
               <span data-tooltip={"После покупки вы можете найти курс во вкладе 'Купленные курсы'"}>
             <img className="course-buy-info" src="/icon-info.png" alt=""/>

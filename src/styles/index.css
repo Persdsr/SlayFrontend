@@ -333,6 +333,9 @@ input:-webkit-autofill {
 .title-detail-block ul {
   list-style-type: none;
   padding-left: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px
 }
 
 .title-detail-text {
@@ -340,13 +343,19 @@ input:-webkit-autofill {
   color: #e7e7e7;
   align-items: center;
   margin-bottom: 10px;
+  line-height: 22px;
   font-size: 22px;
 }
 
+
 .list-icon {
-  width: 24px;
-  height: 24px;
+  width: 28px;
+  height: 28px;
   margin-right: 10px;
+}
+
+.title-detail-text .green-detail-text {
+  color: var(--main-color);
 }
 
 .title-block-description {
@@ -806,7 +815,8 @@ footer {
   color: #e7e7e7;
   align-items: center;
   margin-bottom: 10px;
-  font-size: 22px;
+  line-height: 22px;
+  font-size: 20px;
 }
 
 .error-message {
@@ -3444,6 +3454,11 @@ footer {
 .file-name {
   color: #fff;
   font-weight: bold;
+}
+
+
+.player-wrapper video {
+  pointer-events: none;
 }
 
 .placeholder {

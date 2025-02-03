@@ -365,7 +365,7 @@ const Profile = () => {
               {data?.courses?.map((course) => (
                 <div className="user-training-course-block" key={course.id}>
                   <div className="user-training-course-info">
-                    <img src={data?.author?.avatar} alt="" />
+                    <img src={data?.author?.avatar || '/defaultAvatar.jpg'} alt="" />
                     <div>
                       <span className="course-author-name">
                         {course?.author.username}

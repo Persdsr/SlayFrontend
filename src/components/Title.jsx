@@ -87,16 +87,16 @@ const Title = () => {
       <div className="title-detail-block">
         <ul>
           <li className="title-detail-text">
-            <img src="/maxresdefault.png" alt="Icon 1" className="list-icon" />
-            Many training courses for sport interest
+            <img src="/gym100.png" alt="Icon 1" className="list-icon" />
+            Create your own courses or learn from your coaches – all in one place!
           </li>
           <li className="title-detail-text">
-            <img src="/slay.png" alt="Icon 2" className="list-icon" />
-            Razlichnik podhot for everybody
+            <img src="/ganteli.png" alt="Icon 2" className="list-icon" />
+            Choose from hundreds of courses and communicate directly with the trainers – your progress is in your hands!
           </li>
           <li className="title-detail-text">
-            <img src="/slay.png" alt="Icon 3" className="list-icon" />
-            Prosmort otcheta self trenirovok
+            <img src="/icon-motivation.png" alt="Icon 3" className="list-icon" />
+            Training videos that motivate, and courses that work – start changing today!
           </li>
         </ul>
       </div>
@@ -225,19 +225,19 @@ const Title = () => {
             <ul>
               <li className="modal-detail-text">
                 <img
-                  src="/maxresdefault.png"
+                  src="/"
                   alt="Icon 1"
                   className="list-icon"
                 />
-                Many training courses for sport interest
+                Your personal trainer and a library of training videos are all in one place!
               </li>
               <li className="modal-detail-text">
                 <img src="/slay.png" alt="Icon 2" className="list-icon" />
-                Razlichnik podhot for everybody
+                Sports, Health and Development – start with the right course and training videos now!
               </li>
               <li className="modal-detail-text">
-                <img src="/slay.png" alt="Icon 3" className="list-icon" />
-                Prosmort otcheta self trenirovok
+                <img src="/dnevnikvideo.png" alt="Icon 3" className="list-icon" />
+                Create, learn, be inspired – watch training videos and reach new heights with us!
               </li>
             </ul>
           </div>

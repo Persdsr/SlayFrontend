@@ -13,7 +13,7 @@ const CategoryTrainingCourseItem = ({ course }) => {
             <span>
               <img
                 className="catalog-author-avatar"
-                src={course.author.avatar}
+                src={course.author.avatar || "/defaultAvatar.jpg"}
                 alt=""
               />
             </span>
