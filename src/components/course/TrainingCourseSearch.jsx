@@ -5,7 +5,7 @@ import CategoryTagListItem from './CategoryTagListItem';
 import { useForm } from 'react-hook-form';
 import TrainingCourseService from '../../service/TrainingCourseService';
 import UserListItem from '../user/UserListItem';
-import LoadingIndicator from '../LoadingIndicator';
+import LoadingPageIndicator from '../LoadingPageIndicator';
 
 const TrainingCourseSearch = () => {
   const params = useParams();
@@ -42,7 +42,7 @@ const TrainingCourseSearch = () => {
   };
 
   if (loading) {
-    return <LoadingIndicator />;
+    return <LoadingPageIndicator />;
   }
 
   return (

@@ -57,7 +57,7 @@ const Title = () => {
       <div className="title-info-block">
         <div className="title-block-content">
           <h1 className="title-block-text">
-            <span className="title-block-slay">SLAY</span> THE BEST GYM PRACTICE
+            <span className="title-block-slay">SLAY</span> - SPORT PLATFORM PRACTIC COURSES
             COURSES
           </h1>
           <span className="title-block-description">

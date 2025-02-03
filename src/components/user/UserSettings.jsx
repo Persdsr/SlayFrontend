@@ -4,7 +4,7 @@ import { useAuthStore } from '../store/store';
 import { useForm } from 'react-hook-form';
 import UserService from '../../service/UserService';
 import UserLeftToolbar from '../navbar/UserLeftToolbar';
-import LoadingIndicator from '../LoadingIndicator';
+import LoadingPageIndicator from '../LoadingPageIndicator';
 
 const UserSettings = () => {
   const authStore = useAuthStore();
@@ -58,7 +58,7 @@ const UserSettings = () => {
   }, [setValue]);
 
   if (loading) {
-    return <LoadingIndicator />;
+    return <LoadingPageIndicator />;
   }
 
   return (

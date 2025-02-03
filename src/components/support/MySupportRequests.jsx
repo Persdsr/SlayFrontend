@@ -4,6 +4,8 @@ import SupportItem from './SupportItem';
 import Filters from '../filter/Filters';
 import UserRequestsToolbar from '../navbar/UserRequestsToolbar';
 import { useAuthStore } from '../store/store';
+import LoadingMiniIndicator from "../LoadingMiniIndicator";
+import LoadingPageIndicator from "../LoadingPageIndicator";
 
 const MySupportRequests = () => {
   const [supports, setSupports] = useState([]);
@@ -16,10 +18,16 @@ const MySupportRequests = () => {
   const itemsPerPage = 7;
   const [supportTypes, setSupportTypes] = useState([]);
   const authStore = useAuthStore();
+  const [isLoading, setIsLoading] = useState(false)
 
   useEffect(() => {
     const fetchData = async () => {
+      setIsLoading(true)
       try {
+        const simulateLongRequest = () =>
+            new Promise((resolve) => setTimeout(resolve, 5000)); // 5 секунд
+
+        await simulateLongRequest();
         const sortedData = await SupportService.getAllUserSupports(
           authStore?.userData.username
         );
@@ -30,6 +38,8 @@ const MySupportRequests = () => {
         setSupportTypes(types);
       } catch (error) {
         console.error('Error fetching data:', error);
+      } finally {
+        setIsLoading(false)
       }
     };
 
@@ -84,48 +94,53 @@ const MySupportRequests = () => {
 
       <div className="content-block">
         <h2>Supports</h2>
-        <div className="main-content">
-          <div className="object-list-container">
-            {currentItems?.length > 0 ? (
-              currentItems.map((support) => <SupportItem support={support} />)
-            ) : (
-              <p>There is no data to display.</p>
-            )}
-            {filteredSupports?.length > 0 && (
-              <div className="pagination">
-                <button
-                  className="pagination-btn"
-                  onClick={() => setCurrentPage(currentPage - 1)}
-                  disabled={currentPage === 1}
-                >
-                  &lt; Back
-                </button>
-                <span className="page-info">
+        {
+          isLoading ? (
+                  <LoadingMiniIndicator />
+              ) :
+              <div className="main-content">
+                <div className="object-list-container">
+                  {currentItems?.length > 0 ? (
+                      currentItems.map((support) => <SupportItem support={support}/>)
+                  ) : (
+                      <p>There is no data to display.</p>
+                  )}
+                  {filteredSupports?.length > 0 && (
+                      <div className="pagination">
+                        <button
+                            className="pagination-btn"
+                            onClick={() => setCurrentPage(currentPage - 1)}
+                            disabled={currentPage === 1}
+                        >
+                          &lt; Back
+                        </button>
+                        <span className="page-info">
                   Page {currentPage} of {totalPages}
                 </span>
-                <button
-                  className="pagination-btn"
-                  onClick={() => setCurrentPage(currentPage + 1)}
-                  disabled={currentPage === totalPages}
-                >
-                  Forward &gt;
-                </button>
-              </div>
-            )}
-          </div>
+                        <button
+                            className="pagination-btn"
+                            onClick={() => setCurrentPage(currentPage + 1)}
+                            disabled={currentPage === totalPages}
+                        >
+                          Forward &gt;
+                        </button>
+                      </div>
+                  )}
+                </div>
 
-          <Filters
-            searchQuery={searchQuery}
-            setSearchQuery={setSearchQuery}
-            filterType={filterType}
-            setFilterType={setFilterType}
-            resolvedFilter={resolvedFilter}
-            setResolvedFilter={setResolvedFilter}
-            sortOrder={sortOrder}
-            setSortOrder={setSortOrder}
-            types={supportTypes}
-          />
-        </div>
+                <Filters
+                    searchQuery={searchQuery}
+                    setSearchQuery={setSearchQuery}
+                    filterType={filterType}
+                    setFilterType={setFilterType}
+                    resolvedFilter={resolvedFilter}
+                    setResolvedFilter={setResolvedFilter}
+                    sortOrder={sortOrder}
+                    setSortOrder={setSortOrder}
+                    types={supportTypes}
+                />
+              </div>
+        }
       </div>
     </div>
   );

@@ -8,7 +8,7 @@ import { useAuthStore } from '../store/store';
 import UserService from '../../service/UserService';
 import UserLeftToolbar from '../navbar/UserLeftToolbar';
 import ReviewService from '../../service/ReviewService';
-import LoadingIndicator from '../LoadingIndicator';
+import LoadingPageIndicator from '../LoadingPageIndicator';
 
 const Profile = () => {
   const [data, setData] = useState([]);
@@ -204,7 +204,7 @@ const Profile = () => {
   };
 
   if (loading) {
-    return <LoadingIndicator />;
+    return <LoadingPageIndicator />;
   }
 
   return (

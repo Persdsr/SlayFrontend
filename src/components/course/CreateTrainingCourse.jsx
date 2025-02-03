@@ -5,6 +5,8 @@ import { useAuthStore } from '../store/store';
 import TrainingCourseService from '../../service/TrainingCourseService';
 import VideoPlayer from '../player/VideoPlayer';
 import axios from 'axios';
+import LoadingPageIndicator from "../LoadingPageIndicator";
+import LoadingMiniIndicator from "../LoadingMiniIndicator";
 
 const CourseStepDetailFormField = ({
   prefix,
@@ -204,6 +206,7 @@ const CreateTrainingCourse = () => {
   const [categories, setCategories] = useState([]);
   const [tags, setTags] = useState([]);
   const [uploadedFiles, setUploadedFiles] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -303,64 +306,71 @@ const CreateTrainingCourse = () => {
   };
 
   const onSubmit = async (data) => {
-    const formData = new FormData();
-    formData.append(
-      'data',
-      JSON.stringify({
-        name: data.name,
-        description: data.description,
-        price: data.price,
-        authorUsername: useAuth?.userData?.username,
-        category: data.category,
-        tags: data.tags.length > 0 ? data.tags.map((tag) => tag.value) : [],
-        trainingCourseSteps: data.trainingCourseSteps.map((step) => ({
-          title: step.title,
-          description: step.description,
-          trainingCourseStepDetails: step.trainingCourseStepDetails.map(
-            (detail) => ({
-              title: detail.title,
-              description: detail.description,
-              video: detail.videos.name,
-            })
-          ),
-        })),
-      })
-    );
-
-    if (uploadedFiles.length > 0) {
-      uploadedFiles.forEach((file) => {
-        formData.append('files', file);
-      });
-    }
-
-    if (data.poster) formData.append('poster', data.poster[0]);
-    if (data.trailer) formData.append('trailer', data.trailer[0]);
-
-    data.trainingCourseSteps.forEach((step) => {
-      step.trainingCourseStepDetails.forEach((detail) => {
-        if (detail.video) formData.append(`videos`, detail.video[0]);
-      });
-    });
+    setIsLoading(true);
 
     try {
-      const response = await axios.post(
-        `${process.env.REACT_APP_API_BASE_URL}/api/training-course`,
-        formData,
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
-          },
-        }
+      const formData = new FormData();
+      formData.append(
+          "data",
+          JSON.stringify({
+            name: data.name,
+            description: data.description,
+            price: data.price,
+            authorUsername: useAuth?.userData?.username,
+            category: data.category,
+            tags: data.tags.length > 0 ? data.tags.map((tag) => tag.value) : [],
+            trainingCourseSteps: data.trainingCourseSteps.map((step) => ({
+              title: step.title,
+              description: step.description,
+              trainingCourseStepDetails: step.trainingCourseStepDetails.map(
+                  (detail) => ({
+                    title: detail.title,
+                    description: detail.description,
+                    video: detail.videos.name,
+                  })
+              ),
+            })),
+          })
       );
+
+      if (uploadedFiles.length > 0) {
+        uploadedFiles.forEach((file) => {
+          formData.append("files", file);
+        });
+      }
+
+      if (data.poster) formData.append("poster", data.poster[0]);
+      if (data.trailer) formData.append("trailer", data.trailer[0]);
+
+      data.trainingCourseSteps.forEach((step) => {
+        step.trainingCourseStepDetails.forEach((detail) => {
+          if (detail.video) formData.append(`videos`, detail.video[0]);
+        });
+      });
+
+
+      const response = await axios.post(
+          `${process.env.REACT_APP_API_BASE_URL}/api/training-course`,
+          formData,
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+            },
+          }
+      );
+
       if (response.status === 200) {
-        console.log('Response:', response);
-        alert('Course created successfully!');
+        console.log("Response:", response);
+        alert("Course created successfully!");
       } else {
-        console.error('Server error:', response);
-        alert(`Error: }`);
+        console.error("Server error:", response);
+        alert("Error: Server returned an unexpected response");
       }
     } catch (err) {
-      console.error('Error submitting form:', err);
+      console.error("Error submitting form:", err);
+      alert("Error: Failed to create the course");
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -501,9 +511,13 @@ const CreateTrainingCourse = () => {
               />
             </div>
 
-            <button className="support-btn" type="submit">
-              Submit
-            </button>
+              {isLoading ? (
+                  <LoadingMiniIndicator />
+              ) : (
+                  <button className="support-btn" type="submit">
+                      Submit
+                  </button>
+              )}
           </div>
         </form>
       </FormProvider>
