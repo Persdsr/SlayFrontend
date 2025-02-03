@@ -514,7 +514,7 @@ const CreateTrainingCourse = () => {
               {isLoading ? (
                   <LoadingMiniIndicator />
               ) : (
-                  <button className="support-btn" type="submit">
+                  <button className="green-center-btn" type="submit">
                       Submit
                   </button>
               )}

@@ -327,7 +327,7 @@ const Profile = () => {
 
                   <div className="modal-footer">
                     <div className="support-btn-block">
-                      <button className="support-btn">Send</button>
+                      <button className="green-center-btn">Send</button>
                     </div>
                   </div>
                 </form>
@@ -573,7 +573,7 @@ const Profile = () => {
 
                 <div className="modal-footer">
                   <div className="support-btn-block">
-                    <button className="support-btn">Send</button>
+                    <button className="green-center-btn">Send</button>
                   </div>
                 </div>
               </form>

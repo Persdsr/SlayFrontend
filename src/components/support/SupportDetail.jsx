@@ -225,7 +225,7 @@ const SupportDetail = () => {
               ))}
             </div>
             <div className="support-btn-block">
-              <button className="support-btn">Send</button>
+              <button className="green-center-btn">Send</button>
             </div>
           </form>
         ) : (

@@ -319,7 +319,7 @@ const TrainingCourseDetail = () => {
 
                 <div className="modal-footer">
                   <div className="support-btn-block">
-                    <button className="support-btn">Send</button>
+                    <button className="green-center-btn">Send</button>
                   </div>
                 </div>
               </form>
@@ -533,7 +533,7 @@ const TrainingCourseDetail = () => {
 
                 <div className="modal-footer">
                   <div className="support-btn-block">
-                    <button className="support-btn">Send</button>
+                    <button className="green-center-btn">Send</button>
                   </div>
                 </div>
               </form>
