@@ -265,7 +265,7 @@ input:-webkit-autofill {
   font-size: 48px;
   color: white;
   font-weight: 700;
-  margin-bottom: 10px;
+  margin-bottom: 20px;
 }
 
 .title-detail-block {
@@ -386,6 +386,8 @@ input:-webkit-autofill {
 
 .catalog-navigate-text {
   color: #afafaf;
+  max-width: 600px;
+  font-size: 24px;
 }
 
 .catalog-navigate-btn {
@@ -863,15 +865,21 @@ footer {
   font-size: 20px;
 }
 
-.error-message {
-  color: #d8000c;
-  margin-left: 8px;
-}
-
 .card-error {
   background-color: #ffe5e5;
   color: #d8000c;
   border: 1px solid #d8000c;
+  border-radius: 5px;
+  padding: 15px;
+  display: flex;
+  align-items: center;
+  margin: 10px 0;
+}
+
+.card-response {
+  background-color: #23c483;
+  color: #ffffff;
+  border: 1px solid #08784b;
   border-radius: 5px;
   padding: 15px;
   display: flex;
@@ -1239,7 +1247,7 @@ footer {
 }
 
 .input-simple-wrapper {
-  margin: 15px 0 20px 0;
+  margin: 15px 0 10px 0;
   display: flex;
   flex-direction: column;
 }
@@ -3514,6 +3522,12 @@ footer {
   font-size: 14px;
 }
 
+.response-message {
+  color: var(--main-color);
+  font-size: 14px;
+  margin-left: 8px;
+}
+
 .submit-button {
   background-color: var(--main-color);
   color: white;
@@ -3930,4 +3944,17 @@ footer {
   border: 1px solid #ccc;
   border-radius: 5px;
   font-size: 14px;
+}
+
+.reset-password-container {
+  margin: 200px auto 0 auto;
+  width: 20%;
+  padding: 20px 10px 30px 10px;
+}
+
+.reset-password-form {
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+  gap: 15px;
 }

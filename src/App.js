@@ -26,6 +26,7 @@ import MessageDetail from './components/user/MessageDetail';
 import RedactTrainingCourse from './components/course/RedactTrainingCourse';
 import TrainingCourseSearch from './components/course/TrainingCourseSearch';
 import MyCourses from './components/user/MyCourses';
+import ResetPassword from "./pages/ResetPassword";
 
 function App() {
   const authStore = useAuthStore();
@@ -71,6 +72,7 @@ function App() {
         <Route path="/courses" element={<CoursesCatalog />} />
         <Route path="/support" element={<CreateSupport />} />
         <Route path="/settings" element={<UserSettings />} />
+        <Route path="/reset-password" element={<ResetPassword />} />
         <Route path="/about" element={<About />} />
         <Route path="/my-supports" element={<MySupportRequests />} />
         <Route path="/messages" element={<Messages />} />

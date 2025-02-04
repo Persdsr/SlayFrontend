@@ -21,12 +21,12 @@ const Main = () => {
               <img src="/white-man.png" alt="" className="title-poster" />
             </div>
             <div className="catalog-navigate-info">
-              <h2 className="catalog-title">All course catalog</h2>
+              <h2 className="catalog-title">All courses catalog</h2>
               <span className="catalog-navigate-text">
-                Alfdok podfll flldl l ldllfdp pddfd
+                Your path to perfect fitness begins with the first step – choose your course and start today!
               </span>
               <a href="/courses">
-                <button className="catalog-navigate-btn">Посмотреть</button>
+                <button className="catalog-navigate-btn">GO!</button>
               </a>
             </div>
           </div>

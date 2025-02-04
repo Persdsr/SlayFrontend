@@ -87,4 +87,21 @@ export default class UserService {
     );
     return response;
   }
+
+  static async resetPassword(token, password) {
+    const response = await axios.post(
+        `${process.env.REACT_APP_API_BASE_URL}/api/auth/reset`,
+        {
+          },
+        {
+          params: {
+            token: token,
+            newPassword: password
+        }
+        }
+    );
+    return response;
+  }
+
 }
+
