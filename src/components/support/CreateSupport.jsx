@@ -5,7 +5,9 @@ import SupportService from '../../service/SupportService';
 import { useAuthStore } from '../store/store';
 
 const CreateSupport = () => {
-  const { register, handleSubmit, reset } = useForm();
+  const { register, handleSubmit, reset, formState: {
+    errors
+  } } = useForm();
   const [uploadedFiles, setUploadedFiles] = useState([]);
   const [uploadProgress, setUploadProgress] = useState({});
   const [requestResultText, setRequestResultText] = useState('');
@@ -26,7 +28,9 @@ const CreateSupport = () => {
 
     const supportBody = {
       email: data.email,
-      senderUsername: authStore?.userData?.username,
+      senderUsername: authStore?.authenticated
+          ? authStore?.userData?.username
+          : null,
       requestType: data.requestType,
       subject: data.subject,
       description: data.description,
@@ -84,9 +88,20 @@ const CreateSupport = () => {
               type="email"
               className="simple-input"
               name="email"
-              {...register('email')}
+              {...register('email',
+                  {
+                    required: 'Email is required',
+                    maxLength: {
+                      value: 100,
+                      message: 'Email must be no more than 100 characters',
+                    },
+                  }
+              )}
             />
           </div>
+          {errors.email?.message && (
+              <span className="error-message">*{errors?.email.message}</span>
+          )}
 
           <div className="input-simple-wrapper">
             <label htmlFor="requestType" className="support-label">
@@ -95,7 +110,9 @@ const CreateSupport = () => {
             <select
               name="requestType"
               className="simple-input"
-              {...register('requestType')}
+              {...register('requestType', {
+                required: "Request type is required"
+              })}
             >
               <option value="" disabled selected>
                 Select support type
@@ -107,26 +124,57 @@ const CreateSupport = () => {
               ))}
             </select>
           </div>
+          {errors.requestType?.message && (
+              <span className="error-message">*{errors?.requestType.message}</span>
+          )}
 
           <div className="input-simple-wrapper">
             <label htmlFor="subject" className="support-label">
-              Topic<span style={{ color: 'red', marginBottom: '5px' }}>*</span>
+              Subject<span style={{ color: 'red', marginBottom: '5px' }}>*</span>
             </label>
             <input
               type="text"
               className="simple-input"
               name="subject"
-              {...register('subject')}
+              {...register('subject',
+                  {
+                    required: 'Subject is required',
+                    maxLength: {
+                      value: 300,
+                      message: 'Subject must be no more than 300 characters',
+                    },
+                  }
+              )}
             />
           </div>
+          {errors.subject?.message && (
+              <span className="error-message">*{errors?.subject.message}</span>
+          )}
+          <br/>
+
           <label htmlFor="description" className="support-label">
             Description<span style={{ color: 'red', marginBottom: '5px' }}>*</span>
           </label>
           <textarea
-            {...register('description')}
+            {...register('description',
+                {
+                  required: 'Description is required',
+                  minLength: {
+                    value: 1,
+                    message: 'Description must be at least 3 characters',
+                  },
+                  maxLength: {
+                    value: 5000,
+                    message: 'Description must be no more than 100 characters',
+                  },
+                }
+            )}
             className="support-area"
             name="description"
           />
+          {errors.description?.message && (
+              <span className="error-message">*{errors?.description.message}</span>
+          )}
 
           <div className="file-upload-wrapper">
             <div className="file-upload-block">
@@ -144,11 +192,23 @@ const CreateSupport = () => {
                 name="images"
                 className="file-upload-input"
                 multiple
-                {...register('images')}
+                {...register('images' ,{
+                  validate: {
+                    validFormat: (files) => {
+                      if (!files || files.length === 0) return true;
+                      const file = files[0];
+                      const acceptedFormats = ['image/jpeg', 'image/png', 'image/gif', "image/webp"];
+                      return acceptedFormats.includes(file.type) || 'Unsupported image format';
+                    },
+                  }
+                })}
                 onChange={handleFileChange}
               />
             </div>
           </div>
+          {errors.images?.message && (
+              <span className="error-message">*{errors?.images.message}</span>
+          )}
 
           <div className="uploaded-files-list">
             {uploadedFiles.map((file, index) => (

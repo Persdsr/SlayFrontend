@@ -24,10 +24,6 @@ const MySupportRequests = () => {
     const fetchData = async () => {
       setIsLoading(true)
       try {
-        const simulateLongRequest = () =>
-            new Promise((resolve) => setTimeout(resolve, 5000)); // 5 секунд
-
-        await simulateLongRequest();
         const sortedData = await SupportService.getAllUserSupports(
           authStore?.userData.username
         );

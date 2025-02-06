@@ -14,9 +14,11 @@ const CourseStepDetailFormField = ({
                                        control,
                                        watch,
                                        setValue,
+                                       stepIndex,
                                        uploadedFiles,
                                        setUploadedFiles,
                                        handleFileChange,
+                                       errors
                                    }) => {
     const {fields, append, remove} = useFieldArray({
         control,
@@ -53,11 +55,21 @@ const CourseStepDetailFormField = ({
                             <input
                                 className="simple-input"
                                 {...register(
-                                    `${prefix}.trainingCourseStepDetails[${detailIndex}].title`
+                                    `${prefix}.trainingCourseStepDetails[${detailIndex}].title`,
+                                    {
+                                        maxLength: {
+                                            value: 700,
+                                            message: 'Title must be no more than 700 characters',
+                                        },
+                                    }
                                 )}
                             />
                         </label>
                     </div>
+                    {errors?.trainingCourseSteps?.[stepIndex]?.trainingCourseStepDetails?.[detailIndex]?.title?.message && (
+                        <span
+                            className="error-message">*{errors.trainingCourseSteps[stepIndex].trainingCourseStepDetails[detailIndex].title.message}</span>
+                    )}
                     <div className="input-simple-wrapper">
                         <label className="support-label">
                             <span className="label-input-name">Description</span>
@@ -69,6 +81,11 @@ const CourseStepDetailFormField = ({
                             />
                         </label>
                     </div>
+                    {errors.trainingCourseSteps?.[stepIndex].trainingCourseStepDetails?.[detailIndex].description?.message && (
+                        <span
+                            className="error-message">*{errors.trainingCourseSteps[stepIndex].trainingCourseStepDetails[detailIndex].description.message}</span>
+                    )}
+                    <h2 className="main-center-title">Video</h2>
                     <div className="input-simple-wrapper">
                         <label className="file-input-label">
                             <input
@@ -76,12 +93,27 @@ const CourseStepDetailFormField = ({
                                 accept="video/*"
                                 className="file-input"
                                 {...register(
-                                    `${prefix}.trainingCourseStepDetails[${detailIndex}].videos`
+                                    `${prefix}.trainingCourseStepDetails[${detailIndex}].videos`,
+                                    {
+                                        validate: {
+                                            validFormat: (files) => {
+                                                if (!files || files.length === 0) return true;
+                                                const file = files[0];
+                                                if (!file) return 'No video file selected';
+                                                const acceptedFormats = ['video/mp4', 'video/quicktime', 'video/x-msvideo'];
+                                                return acceptedFormats.includes(file.type) || 'Unsupported video format';
+                                            },
+                                        },
+                                    }
                                 )}
                                 onChange={(e) => {
-                                    const file = e.target.files[0];
-                                    handleFileChange(e);
+                                    const files = e.target.files;
+                                    if (!files || files.length === 0) {
+                                        return;
+                                    }
+                                    const file = files[0];
                                     if (file) {
+                                        handleFileChange(e);
                                         setValue(
                                             `${prefix}.trainingCourseStepDetails[${detailIndex}].videos`,
                                             file
@@ -94,36 +126,31 @@ const CourseStepDetailFormField = ({
                                     }
                                 }}
                             />
-                            {watch(
-                                `${prefix}.trainingCourseStepDetails[${detailIndex}].videoPreview`
-                            ) ||
-                            watch(
-                                `${prefix}.trainingCourseStepDetails[${detailIndex}].videos`
-                            ) ? (
-                                <VideoPlayer
-                                    title="Video Preview"
-                                    videoUrl={
-                                        typeof watch(
-                                            `${prefix}.trainingCourseStepDetails[${detailIndex}].videos`
-                                        ) === 'string' &&
-                                        watch(
-                                            `${prefix}.trainingCourseStepDetails[${detailIndex}].videos`
-                                        )
-                                            ? watch(
-                                                `${prefix}.trainingCourseStepDetails[${detailIndex}].videos`
-                                            ).replace('download', 'view')
-                                            : watch(
-                                                `${prefix}.trainingCourseStepDetails[${detailIndex}].videoPreview`
-                                            )
-                                    }
-                                />
-                            ) : (
-                                <span className="placeholder">
-                  Choose a file or drag it here
-                </span>
-                            )}
+                            {(() => {
+                                const preview = watch(
+                                    `${prefix}.trainingCourseStepDetails[${detailIndex}].videoPreview`
+                                );
+                                const video = watch(
+                                    `${prefix}.trainingCourseStepDetails[${detailIndex}].videos`
+                                );
+                                if (!preview && !video) return <span className="placeholder">Choose a file or drag it here</span>;
+                                return (
+                                    <VideoPlayer
+                                        title="Video Preview"
+                                        videoUrl={
+                                            typeof video === 'string' && video
+                                                ? video.replace('download', 'view')
+                                                : preview
+                                        }
+                                    />
+                                );
+                            })()}
                         </label>
                     </div>
+                    {errors.trainingCourseSteps?.[stepIndex].trainingCourseStepDetails?.[detailIndex].videos?.message && (
+                        <span
+                            className="error-message">*{errors?.trainingCourseSteps[stepIndex].trainingCourseStepDetails[detailIndex].videos.message}</span>
+                    )}
                 </div>
             ))}
             <button
@@ -145,6 +172,7 @@ const CourseStepFormField = ({
                                  uploadedFiles,
                                  setUploadedFiles,
                                  handleFileChange,
+                                 errors,
                              }) => {
     const {fields, append, remove} = useFieldArray({
         control,
@@ -178,28 +206,54 @@ const CourseStepFormField = ({
                             <span className="label-input-name">Title</span>
                             <input
                                 className="simple-input"
-                                {...register(`trainingCourseSteps[${stepIndex}].title`)}
+                                {...register(`trainingCourseSteps[${stepIndex}].title` ,
+                                    {
+                                        maxLength: {
+                                            value: 1000,
+                                            message: 'Title must be no more than 1000 characters',
+                                        },
+                                    }
+                                )}
                             />
                         </label>
                     </div>
+                    {errors?.trainingCourseSteps?.[stepIndex]?.title?.message && (
+                        <span className="error-message">
+              *{errors.trainingCourseSteps[stepIndex].title.message}
+            </span>
+                    )}
                     <div className="support-label">
                         <label>
                             <span className="label-input-name">Description</span>
                             <textarea
                                 className="support-area"
-                                {...register(`trainingCourseSteps[${stepIndex}].description`)}
+                                {...register(`trainingCourseSteps[${stepIndex}].description` ,
+                                    {
+                                        maxLength: {
+                                            value: 1000,
+                                            message: 'Description must be no more than 1000 characters',
+                                        },
+                                    }
+                                )}
                             />
                         </label>
                     </div>
+                    {errors?.trainingCourseSteps?.[stepIndex]?.description?.message && (
+                        <span className="error-message">
+              *{errors.trainingCourseSteps[stepIndex].description.message}
+            </span>
+                    )}
                     <CourseStepDetailFormField
                         prefix={`trainingCourseSteps[${stepIndex}]`}
                         register={register}
                         control={control}
+                        stepIndex={stepIndex}
                         setValue={setValue}
                         watch={watch}
                         handleFileChange={handleFileChange}
                         uploadedFiles={uploadedFiles}
                         setUploadedFiles={setUploadedFiles}
+                        errors={errors}
                     />
                 </div>
             ))}
@@ -305,7 +359,9 @@ const RedactTrainingCourse = () => {
         }),
     };
 
-    const {handleSubmit, control, register, watch, setValue} = methods;
+    const {handleSubmit, control, register, watch, setValue ,formState: {
+        errors: errors
+    }} = methods;
 
     const handleFileChange = (event) => {
         const files = Array.from(event.target.files);
@@ -323,7 +379,7 @@ const RedactTrainingCourse = () => {
                 price: data.price,
                 authorUsername: useAuth?.userData?.username,
                 category: data.category,
-                tags: data.tags.map((tag) => tag.value),
+                tags: data?.tags?.length > 0 ? data.tags.map((tag) => tag.value) : [],
                 trainingCourseSteps: data.trainingCourseSteps.map(
                     (step, stepIndex) => ({
                         title: step.title,
@@ -447,48 +503,87 @@ const RedactTrainingCourse = () => {
                     <div className="input-simple-wrapper">
                         <div className="input-simple-wrapper">
                             <label className="support-label">
-                                Название курса
+                                Course name
                                 <span style={{color: 'red', marginBottom: '5px'}}>*</span>
                             </label>
 
                             <input
                                 className="simple-input"
-                                {...register('name', {required: 'Name is required'})}
+                                {...register('name', {
+                                    required: 'Name is required',
+                                    minLength: {
+                                        value: 3,
+                                        message: 'Name must be at least 3 characters',
+                                    },
+                                    maxLength: {
+                                        value: 100,
+                                        message: 'Name must be no more than 100 characters',
+                                    },
+                                })}
                             />
                         </div>
-
+                        {errors.name?.message && (
+                            <span className="error-message">*{errors?.name.message}</span>
+                        )}
                         <div className="input-simple-wrapper">
                             <label className="support-label">
-                                Описание
-                                <span style={{color: 'red', marginBottom: '5px'}}>*</span>
+                                Description
                             </label>
                             <textarea
                                 {...register('description', {
-                                    required: 'Description is required',
+                                    maxLength: {
+                                        value: 1000,
+                                        message: 'Description must be no more than 1000 characters',
+                                    },
                                 })}
                                 className="support-area"
                                 name="description"
                             />
                         </div>
+                        {errors.description?.message && (
+                            <span className="error-message">*{errors?.description.message}</span>
+                        )}
 
                         <div className="input-simple-wrapper">
                             <label className="support-label">
-                                Цена<span style={{color: 'red', marginBottom: '5px'}}>*</span>
                             </label>
                             <input
                                 type="number"
                                 className="simple-input"
-                                {...register('price', {required: 'Price is required'})}
+                                {...register('price', {
+                                    min: {
+                                        value: 0,
+                                        message: 'Price must be greater than or equal to 0 (free course)',
+                                    },
+                                    max: {
+                                        value: 1000000,
+                                        message: 'Price must be no more than 1000000',
+                                    },
+                                })}
                             />
                         </div>
+                        {errors.price?.message && (
+                            <span className="error-message">*{errors?.price.message}</span>
+                        )}
 
                         <div className="media-input-block">
                             <h2 className="main-center-title">Poster</h2>
+                            <span style={{color: 'red', marginBottom: '5px'}}>*</span>
                             <div className="file-input-wrapper">
                                 <label className="file-input-label">
                                     <input
                                         type="file"
-                                        {...register('poster')}
+                                        {...register('poster', {
+                                            required: "Poster is required",
+                                            validate: {
+                                                validFormat: (files) => {
+                                                    if (!files || files.length === 0) return true;
+                                                    const file = files[0];
+                                                    const acceptedFormats = ['image/jpeg', 'image/png', 'image/gif', "image/webp"];
+                                                    return acceptedFormats.includes(file.type) || 'Unsupported image format';
+                                                },
+                                            },
+                                        })}
                                         className="file-input"
                                         onChange={(e) => {
                                             const file = e.target.files[0];
@@ -515,6 +610,10 @@ const RedactTrainingCourse = () => {
                                     )}
                                 </label>
                             </div>
+                            {errors.poster?.message && (
+                                <span className="error-message">*{errors?.poster.message}</span>
+                            )}
+
 
                             <h2 className="main-center-title">Trailer</h2>
                             <div className="file-input-wrapper">
@@ -523,7 +622,18 @@ const RedactTrainingCourse = () => {
                                         type="file"
                                         accept="video/*"
                                         className="file-input"
-                                        {...register(`trailer`)}
+                                        {...register(`trailer`,
+                                            {
+                                                validate: {
+                                                    validFormat: (files) => {
+                                                        if (!files || files.length === 0) return true;
+                                                        const file = files[0];
+                                                        const acceptedFormats = ['video/mp4', 'video/quicktime', 'video/x-msvideo'];
+                                                        return acceptedFormats.includes(file.type) || 'Unsupported video format';
+                                                    },
+                                                },
+                                            }
+                                        )}
                                         onChange={(e) => {
                                             const file = e.target.files[0];
                                             if (file) {
@@ -549,14 +659,22 @@ const RedactTrainingCourse = () => {
                                     )}
                                 </label>
                             </div>
+                            {errors.trailer?.message && (
+                                <span className="error-message">*{errors?.trailer.message}</span>
+                            )}
                         </div>
 
                         <div className="category-selection">
-                            <label className="category-label">Categories</label>
+                            <label className="category-label">Categories<span
+                                style={{color: 'red', marginBottom: '5px'}}>*</span></label>
+
                             <div className="category-container">
                                 {categories.map((category, index) => (
                                     <div
                                         key={index}
+                                        {...register("category", {
+                                            required: "Pick one category"
+                                        })}
                                         className={`category-block ${
                                             watch('category') === category?.name ? 'selected' : ''
                                         }`}
@@ -572,6 +690,9 @@ const RedactTrainingCourse = () => {
                                 ))}
                             </div>
                         </div>
+                        {errors.category?.message && (
+                            <span className="error-message">*{errors?.category.message}</span>
+                        )}
 
                         <div className="tags-select-block">
                             <label className="category-label">Tags</label>
@@ -580,7 +701,6 @@ const RedactTrainingCourse = () => {
                                 isMulti
                                 options={tags}
                                 onChange={(selectedOptions) => {
-                                    console.log(watch('tags'));
                                     setValue('tags', selectedOptions);
                                 }}
                                 value={watch('tags') || []}
@@ -596,6 +716,7 @@ const RedactTrainingCourse = () => {
                                 handleFileChange={handleFileChange}
                                 uploadedFiles={uploadedFiles}
                                 setUploadedFiles={setUploadedFiles}
+                                errors={errors}
                             />
                         </div>
                         {

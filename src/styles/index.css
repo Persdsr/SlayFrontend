@@ -369,6 +369,7 @@ input:-webkit-autofill {
   color: #23c483;
 }
 
+
 .course-catalog-navigate-block {
   width: 100%;
   height: 500px;
@@ -1602,28 +1603,19 @@ footer {
 }
 
 .about-content {
-  width: 400px;
+  max-width: 900px;
 }
 
 .about-title {
-  margin-bottom: 20px;
+  margin-bottom: 12px;
   color: #23c483;
 }
 
-.about-circle {
-  width: 500px;
-  height: 500px;
-  left: 400px;
-  bottom: 30px;
-  background: #23c483;
-  border-radius: 50%;
-}
 
 .about-text {
   font-family: 'Roboto', Arial, sans-serif;
   color: #d1d1d1;
   line-height: 1.6;
-  max-width: 600px;
 }
 
 .search-input-wrapper {

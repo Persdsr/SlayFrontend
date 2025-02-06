@@ -59,21 +59,32 @@ const Navbar = () => {
       </div>
 
       <ul className="navbar-links">
-        <li className="navbar-title dropdown">
-          <a href="/support">Support</a>
-          <ul className="dropdown-menu">
-            <li>
-              <a className="navbar-title" href="#faq">
-                FAQ
-              </a>
-            </li>
-            <li>
-              <a className="navbar-title" href="/my-supports">
-                My supports
-              </a>
-            </li>
-          </ul>
-        </li>
+        {
+          authStore?.authenticated === false ? (
+              <li className="navbar-title dropdown">
+                <a className="navbar-title" href="#faq">
+                  FAQ
+                </a>
+              </li>
+          ) : (
+              <li className="navbar-title dropdown">
+                <a href="/support">Support</a>
+                <ul className="dropdown-menu">
+                  <li>
+                    <a className="navbar-title" href="#faq">
+                      FAQ
+                    </a>
+                  </li>
+                  <li>
+                    <a className="navbar-title" href="/my-supports">
+                      My supports
+                    </a>
+                  </li>
+                </ul>
+              </li>
+          )
+        }
+
         {authStore?.authenticated === false ? (
           <li className="navbar-title">
             <a href="/">Sign in</a>

@@ -27,6 +27,7 @@ import RedactTrainingCourse from './components/course/RedactTrainingCourse';
 import TrainingCourseSearch from './components/course/TrainingCourseSearch';
 import MyCourses from './components/user/MyCourses';
 import ResetPassword from "./pages/ResetPassword";
+import { Suspense } from "react";
 
 function App() {
   const authStore = useAuthStore();
@@ -58,6 +59,7 @@ function App() {
   }, []);
 
   return (
+      <Suspense fallback={"...loading"}>
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Main />} />
@@ -90,6 +92,7 @@ function App() {
         <Route path="*" element={<NotFound />} />
       </Routes>
     </BrowserRouter>
+        </Suspense>
   );
 }
 

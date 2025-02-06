@@ -102,7 +102,7 @@ const Title = () => {
         setErrorMessage(response.data.message);
       }
     } catch (e) {
-
+      console.log(e)
     } finally {
       setEmailLoading(false)
     }
@@ -113,7 +113,7 @@ const Title = () => {
       <div className="title-info-block">
         <div className="title-block-content">
           <h1 className="title-block-text">
-            <span className="title-block-slay">SLAY</span> - SPORT PLATFORM PRACTIC COURSES
+            <span className="title-block-slay">SLAY</span> - SPORT PLATFORM PRACTICE COURSES
           </h1>
           <div className="title-buttons">
             <button
@@ -133,7 +133,7 @@ const Title = () => {
       </div>
 
       <div className="title-poster-block">
-        <img src="/logo-man.png" alt="" className="title-poster" />
+        <img src="/logo-man-tools.png" alt="" className="title-poster" />
       </div>
 
       <div className="title-detail-block">
@@ -309,26 +309,26 @@ const Title = () => {
           <div className="modal-info">
             <div className="modal-poster">
               <img
-                src="/maxresdefault.png"
-                alt=""
-                className="modal-poster-img"
+                  src="/logo-man.png"
+                  alt=""
+                  className="modal-poster-img"
               />
             </div>
             <ul>
               <li className="modal-detail-text">
                 <img
-                  src="/"
-                  alt="Icon 1"
-                  className="list-icon"
+                    src="/icon-personal-trainer.png"
+                    alt="Icon 1"
+                    className="list-icon"
                 />
                 Your personal trainer and a library of training videos are all in one place!
               </li>
               <li className="modal-detail-text">
-                <img src="/slay.png" alt="Icon 2" className="list-icon" />
+                <img src="/sportsmen.png" alt="Icon 2" className="list-icon"/>
                 Sports, Health and Development – start with the right course and training videos now!
               </li>
               <li className="modal-detail-text">
-                <img src="/dnevnikvideo.png" alt="Icon 3" className="list-icon" />
+                <img src="/dnevnikvideo.png" alt="Icon 3" className="list-icon"/>
                 Create, learn, be inspired – watch training videos and reach new heights with us!
               </li>
             </ul>
@@ -415,7 +415,7 @@ const Title = () => {
           <div className="modal-info">
             <div className="modal-poster">
               <img
-                  src="/maxresdefault.png"
+                  src="/logo-man.png"
                   alt=""
                   className="modal-poster-img"
               />
@@ -423,19 +423,19 @@ const Title = () => {
             <ul>
               <li className="modal-detail-text">
                 <img
-                    src="/maxresdefault.png"
+                    src="/icon-personal-trainer.png"
                     alt="Icon 1"
                     className="list-icon"
                 />
-                Many training courses for sport interest
+                Your personal trainer and a library of training videos are all in one place!
               </li>
               <li className="modal-detail-text">
-                <img src="/slay.png" alt="Icon 2" className="list-icon" />
-                Razlichnik podhot for everybody
+                <img src="/sportsmen.png" alt="Icon 2" className="list-icon"/>
+                Sports, Health and Development – start with the right course and training videos now!
               </li>
               <li className="modal-detail-text">
-                <img src="/slay.png" alt="Icon 3" className="list-icon" />
-                Prosmort otcheta self trenirovok
+                <img src="/dnevnikvideo.png" alt="Icon 3" className="list-icon"/>
+                Create, learn, be inspired – watch training videos and reach new heights with us!
               </li>
             </ul>
           </div>
@@ -507,7 +507,7 @@ const Title = () => {
           <div className="modal-info">
             <div className="modal-poster">
               <img
-                  src="/maxresdefault.png"
+                  src="/logo-man.png"
                   alt=""
                   className="modal-poster-img"
               />
@@ -515,19 +515,19 @@ const Title = () => {
             <ul>
               <li className="modal-detail-text">
                 <img
-                    src="/maxresdefault.png"
+                    src="/icon-personal-trainer.png"
                     alt="Icon 1"
                     className="list-icon"
                 />
-                Many training courses for sport interest
+                Your personal trainer and a library of training videos are all in one place!
               </li>
               <li className="modal-detail-text">
-                <img src="/slay.png" alt="Icon 2" className="list-icon" />
-                Razlichnik podhot for everybody
+                <img src="/sportsmen.png" alt="Icon 2" className="list-icon"/>
+                Sports, Health and Development – start with the right course and training videos now!
               </li>
               <li className="modal-detail-text">
-                <img src="/slay.png" alt="Icon 3" className="list-icon" />
-                Prosmort otcheta self trenirovok
+                <img src="/dnevnikvideo.png" alt="Icon 3" className="list-icon"/>
+                Create, learn, be inspired – watch training videos and reach new heights with us!
               </li>
             </ul>
           </div>

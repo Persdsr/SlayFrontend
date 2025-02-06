@@ -114,7 +114,7 @@ export default class SupportService {
         setUploadProgress({});
         reset();
         window.scrollTo({ top: 0, behavior: 'smooth' });
-        setRequestResultText(response.data);
+        setRequestResultText("Your request has been sent to your email address. We will review it as soon as possible!");
       })
       .catch((error) => {
         setRequestResultText(
