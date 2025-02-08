@@ -50,6 +50,7 @@ const MessageDetail = () => {
         );
         setChatDetail(responseChatDetail);
         setMessages(responseChatDetail.messages || []);
+        console.log(responseChatDetail)
       } catch (error) {
         console.error('Error fetching chat detail:', error);
       }

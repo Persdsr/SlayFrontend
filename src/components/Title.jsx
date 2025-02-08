@@ -16,21 +16,21 @@ const Title = () => {
   const {
     register: registerLogin,
     handleSubmit: handleSubmitLogin,
-    loginWatch,
+    watch: loginWatch,
     formState: { errors: errorsLogin },
   } = useForm();
 
   const {
     register: registerRegister,
     handleSubmit: handleSubmitRegister,
-    registerWatch,
+    watch: registerWatch,
     formState: { errors: errorsRegister },
   } = useForm();
 
   const {
     register: registerForgot,
     handleSubmit: handleSubmitForgot,
-    forgotWatch,
+    watch:forgotWatch,
     formState: { errors: errorsForgot },
   } = useForm();
 
@@ -59,11 +59,9 @@ const Title = () => {
   };
 
   const onSubmitLogin = (data) => {
-    console.log('Успех:32');
     axios
       .post(`${process.env.REACT_APP_API_BASE_URL}/api/auth/signin`, data)
       .then((response) => {
-        console.log('Успех:', response);
         setAuthTokens(response.data);
         window.location.reload();
       })
@@ -185,9 +183,17 @@ const Title = () => {
                       {
                         required: "Username is required",
                         minLength: {
-                          value: 8,
+                          value: 4,
                           message: "Username must contain from 4 to 26 characters."
-                        }
+                        },
+                        maxLength: {
+                          value: 26,
+                          message: "Username must contain from 4 to 26 characters."
+                        },
+                        pattern: {
+                          value: /^[a-zA-Z0-9]+$/,
+                          message: "Username must contain only Latin letters, numbers, and allowed special characters",
+                        },
                       }
                   )}
                 />
@@ -256,7 +262,11 @@ const Title = () => {
                         minLength: {
                           value: 8,
                           message: "Password must be at least 8 characters"
-                        }
+                        },
+                        pattern: {
+                          value: /^[a-zA-Z0-9!@#$%^&*(),.?":{}|<>]+$/,
+                          message: "Password must contain only Latin letters, numbers, and allowed special characters",
+                        },
                       }
                   )}
                 />
@@ -363,7 +373,14 @@ const Title = () => {
                     className="input-box"
                     placeholder="username"
                     name="username"
-                    {...registerLogin('username', { required: "Username is required" })}
+                    {...registerLogin('username', {
+                      required: "Username is required",
+                          pattern: {
+                            value: /^[a-zA-Z0-9]+$/,
+                            message: "Username must contain only Latin letters, numbers, and allowed special characters",
+                          },
+                    }
+                    )}
                 />
                 <span className="underline"></span>
               </div>
@@ -377,7 +394,11 @@ const Title = () => {
                     className="input-box"
                     placeholder="password"
                     name="password"
-                    {...registerLogin('password', { required: "Password is required" })}
+                    {...registerLogin('password', { required: "Password is required",
+                      pattern: {
+                        value: /^[a-zA-Z0-9!@#$%^&*(),.?":{}|<>]+$/,
+                        message: "Password must contain only Latin letters, numbers, and allowed special characters",
+                      },})}
                 />
                 <span className="underline"></span>
               </div>

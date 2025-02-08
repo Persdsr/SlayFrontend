@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {useForm} from "react-hook-form";
 import {useNavigate, useParams, useSearchParams} from "react-router-dom";
 import UserService from "../service/UserService";
@@ -12,7 +12,7 @@ const ResetPassword = () => {
     } = useForm();
     const navigate = useNavigate()
     const [searchParams] = useSearchParams();
-    const [errorMessage, setErrorMessage] = useSearchParams();
+    const [errorMessage, setErrorMessage] = useState();
 
     const token = searchParams.get("token");
 
@@ -66,7 +66,11 @@ const ResetPassword = () => {
                                minLength: {
                                    value: 8,
                                    message: "Password must be at least 8 characters"
-                               }
+                               },
+                               pattern: {
+                                   value: /^[a-zA-Z0-9!@#$%^&*(),.?":{}|<>]+$/,
+                                   message: "Password must contain only Latin letters, numbers, and allowed special characters",
+                               },
                            }
                        )}
 
@@ -80,6 +84,7 @@ const ResetPassword = () => {
                            required: 'Please confirm your password',
                            validate: (value) =>
                                value === watch("newPassword") || 'Passwords do not match',
+
                        })}
                     placeholder="Confim new password"
                 />
