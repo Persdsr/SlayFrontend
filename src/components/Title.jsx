@@ -131,7 +131,7 @@ const Title = () => {
       </div>
 
       <div className="title-poster-block">
-        <img src="/logo-man-tools.png" alt="" className="title-poster" />
+        <img src="/logo-man-tools_2.png" alt="" className="title-poster" />
       </div>
 
       <div className="title-detail-block">
