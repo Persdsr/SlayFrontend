@@ -319,7 +319,7 @@ const Title = () => {
           <div className="modal-info">
             <div className="modal-poster">
               <img
-                  src="/logo-man.png"
+                  src="/logo-man-tools_2.png"
                   alt=""
                   className="modal-poster-img"
               />
