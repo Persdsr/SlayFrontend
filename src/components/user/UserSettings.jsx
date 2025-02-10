@@ -5,12 +5,13 @@ import { useForm } from 'react-hook-form';
 import UserService from '../../service/UserService';
 import UserLeftToolbar from '../navbar/UserLeftToolbar';
 import LoadingPageIndicator from '../LoadingPageIndicator';
+import LoadingMiniIndicator from "../LoadingMiniIndicator";
 
 const UserSettings = () => {
   const authStore = useAuthStore();
   const { register, handleSubmit, setValue, reset } = useForm();
   const [data, setData] = useState({});
-  const [loading, setLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
 
   const onSubmit = async (formData) => {
     const body = {
@@ -42,7 +43,9 @@ const UserSettings = () => {
   };
 
   useEffect(() => {
+    setIsLoading(true)
     try {
+
       const fetchData = async () => {
         const response = await UserService.getUserProfileData();
         setData(response.data);
@@ -53,104 +56,106 @@ const UserSettings = () => {
       fetchData();
     } catch (e) {
     } finally {
-      setLoading(false);
+      setIsLoading(false);
     }
   }, [setValue]);
 
-  if (loading) {
-    return <LoadingPageIndicator />;
-  }
 
   return (
-    <div className="content-container">
-      <UserLeftToolbar authStore={authStore} />
+      <div className="content-container">
+        <UserLeftToolbar authStore={authStore}/>
+        <div className="profile-block">
+          {
+            isLoading ? (
+                    <LoadingMiniIndicator/>
+            ) : (
+                <form onSubmit={handleSubmit(onSubmit)} className="modern-form">
+                  <div className="profile-photo-block-modern">
+                    <h2>Avatar</h2>
+                    <label className="avatar-wrapper">
+                      <img
+                          src={data.avatar || '/defaultAvatar.jpg'}
+                          alt="Profile Avatar"
+                          className="profile-avatar-settings"
+                      />
+                      <div className="overlay">
+                        <span className="icon">📷</span>
+                      </div>
+                      <input
+                          type="file"
+                          id="avatar-input"
+                          className="avatar-input"
+                          {...register('avatar', {
+                            onChange: (e) => {
+                              if (e.target.files && e.target.files[0]) {
+                                setData({
+                                  ...data,
+                                  avatar: URL.createObjectURL(e.target.files[0]),
+                                });
+                              }
+                            },
+                          })}
+                      />
+                    </label>
+                    <h2>Banner</h2>
+                    <label className="banner-wrapper">
+                      <img
+                          src={data.banner ? data.banner : '/white-background.jpeg'}
+                          alt="Profile banner"
+                          className="profile-banner-settings"
+                      />
+                      <div className="banner-overlay">
+                        <span className="icon">📷</span>
+                      </div>
+                      <input
+                          type="file"
+                          id="banner-input"
+                          className="banner-input"
+                          {...register('banner', {
+                            onChange: (e) => {
+                              if (e.target.files && e.target.files[0]) {
+                                setData({
+                                  ...data,
+                                  banner: URL.createObjectURL(
+                                      e.target.files[0]
+                                          ? e.target.files[0]
+                                          : '/white-background.jpeg'
+                                  ),
+                                });
+                              }
+                            },
+                          })}
+                      />
+                    </label>
+                  </div>
 
-      <div className="profile-block">
-        <form onSubmit={handleSubmit(onSubmit)} className="modern-form">
-          <div className="profile-photo-block-modern">
-            <h2>Avatar</h2>
-            <label className="avatar-wrapper">
-              <img
-                src={data.avatar || '/defaultAvatar.jpg'}
-                alt="Profile Avatar"
-                className="profile-avatar-settings"
-              />
-              <div className="overlay">
-                <span className="icon">📷</span>
-              </div>
-              <input
-                type="file"
-                id="avatar-input"
-                className="avatar-input"
-                {...register('avatar', {
-                  onChange: (e) => {
-                    if (e.target.files && e.target.files[0]) {
-                      setData({
-                        ...data,
-                        avatar: URL.createObjectURL(e.target.files[0]),
-                      });
-                    }
-                  },
-                })}
-              />
-            </label>
-            <h2>Banner</h2>
-            <label className="banner-wrapper">
-              <img
-                src={data.banner ? data.banner : '/white-background.jpeg'}
-                alt="Profile banner"
-                className="profile-banner-settings"
-              />
-              <div className="banner-overlay">
-                <span className="icon">📷</span>
-              </div>
-              <input
-                type="file"
-                id="banner-input"
-                className="banner-input"
-                {...register('banner', {
-                  onChange: (e) => {
-                    if (e.target.files && e.target.files[0]) {
-                      setData({
-                        ...data,
-                        banner: URL.createObjectURL(
-                          e.target.files[0]
-                            ? e.target.files[0]
-                            : '/white-background.jpeg'
-                        ),
-                      });
-                    }
-                  },
-                })}
-              />
-            </label>
-          </div>
+                  <div className="form-group-simple">
+                    <label>name</label>
+                    <input type="text" required={true} {...register('name')} />
+                  </div>
 
-          <div className="form-group-simple">
-            <label>name</label>
-            <input type="text" required={true} {...register('name')} />
-          </div>
+                  <div className="form-group-simple">
+                    <label>about me</label>
+                    <textarea className="simple-textarea" {...register('aboutMe')} />
+                  </div>
 
-          <div className="form-group-simple">
-            <label>about me</label>
-            <textarea className="simple-textarea" {...register('aboutMe')} />
-          </div>
-
-          <div className="form-actions-modern">
-            <button type="submit" className="save-button-setting">
-              Save
-            </button>
-            <button
-              onClick={cancelSetting}
-              type="button"
-              className="cancel-button-modern"
-            >
-              Cancel
-            </button>
-          </div>
-        </form>
+                  <div className="form-actions-modern">
+                    <button type="submit" className="save-button-setting">
+                      Save
+                    </button>
+                    <button
+                        onClick={cancelSetting}
+                        type="button"
+                        className="cancel-button-modern"
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                </form>
+            )
+          }
+        </div>
       </div>
-    </div>
   );
 };
 

@@ -14,6 +14,7 @@ export const useAuthStore = create((set, getState) => ({
   },
   resetAuth: () => {
     resetAuthTokens();
+    localStorage.removeItem('userData');
     set({
       loading: false,
       authenticated: false,

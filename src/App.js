@@ -22,7 +22,7 @@ import NotFound from './pages/NotFound';
 import UserSettings from './components/user/UserSettings';
 import MyPurchaseCourses from './components/user/MyPurchaseCourses';
 import Messages from './components/user/Messages';
-import MessageDetail from './components/user/MessageDetail';
+import ChatDetail from './components/user/ChatDetail';
 import RedactTrainingCourse from './components/course/RedactTrainingCourse';
 import TrainingCourseSearch from './components/course/TrainingCourseSearch';
 import MyCourses from './components/user/MyCourses';
@@ -33,25 +33,39 @@ function App() {
   const authStore = useAuthStore();
 
   useEffect(() => {
+    const cachedUserData = localStorage.getItem('userData');
+    if (cachedUserData) {
+      authStore.setAuth(JSON.parse(cachedUserData));
+    }
+  }, []);
+
+  useEffect(() => {
     const fetchRequestTypes = async () => {
       const token = localStorage.getItem('accessToken');
       if (!token) {
         return;
       }
-      if (token) {
-        try {
-          const response = await axios.get(
+
+      const cachedUserData = localStorage.getItem('userData');
+      if (cachedUserData) {
+        authStore.setAuth(JSON.parse(cachedUserData));
+        return;
+      }
+
+      try {
+        const response = await axios.get(
             `${process.env.REACT_APP_API_BASE_URL}/api/auth/userinfo`,
             {
               headers: {
                 Authorization: `Bearer ${token}`,
               },
             }
-          );
-          authStore.setAuth(response.data);
-        } catch (error) {
-          console.error('Error when receiving user information:', error);
-        }
+        );
+        // Сохраняем данные о пользователе в localStorage
+        localStorage.setItem('userData', JSON.stringify(response.data));
+        authStore.setAuth(response.data);
+      } catch (error) {
+        console.error('Error when receiving user information:', error);
       }
     };
 
@@ -78,7 +92,7 @@ function App() {
         <Route path="/about" element={<About />} />
         <Route path="/my-supports" element={<MySupportRequests />} />
         <Route path="/messages" element={<Messages />} />
-        <Route path="/message/:chatId" element={<MessageDetail />} />
+        <Route path="/message/:chatId" element={<ChatDetail />} />
         <Route path="/my-complaints" element={<MyComplaintsRequests />} />
         <Route path="/purchase-courses" element={<MyPurchaseCourses />} />
         <Route path="/my-courses" element={<MyCourses />} />
