@@ -368,6 +368,7 @@ const RedactTrainingCourse = () => {
     };
 
     const onSubmit = async (data) => {
+        setIsLoading(true)
         const formData = new FormData();
 
         formData.append(
