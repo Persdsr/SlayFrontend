@@ -7,6 +7,7 @@ import {useParams} from 'react-router-dom';
 import VideoPlayer from '../player/VideoPlayer';
 import axios from 'axios';
 import LoadingMiniIndicator from "../LoadingMiniIndicator";
+import LoadingPageIndicator from "../LoadingPageIndicator";
 
 const CourseStepDetailFormField = ({
                                        prefix,
@@ -282,6 +283,7 @@ const RedactTrainingCourse = () => {
     const params = useParams();
     const [uploadedFiles, setUploadedFiles] = useState([]);
     const [isLoading, setIsLoading] = useState(false)
+    const [isPageLoading, setIsPageLoading] = useState(false)
 
     const methods = useForm({
         defaultValues: {
@@ -437,60 +439,68 @@ const RedactTrainingCourse = () => {
     };
 
     useEffect(() => {
+        setIsPageLoading(true)
         const fetchData = async () => {
-            const courseResponse = await TrainingCourseService.getTrainingCourseById(
-                params.courseId
-            );
-            const categoriesResponse =
-                await TrainingCourseService.getAllCategoriesWitTags();
-            const courseDetail = courseResponse?.data.body;
+            try {
+                const courseResponse = await TrainingCourseService.getTrainingCourseById(
+                    params.courseId
+                );
+                const categoriesResponse =
+                    await TrainingCourseService.getAllCategoriesWitTags();
+                const courseDetail = courseResponse?.data.body;
 
-            setValue('name', courseDetail?.name || '');
-            setValue('description', courseDetail?.description || '');
-            setValue('price', courseDetail?.price || '');
-            setValue('category', courseDetail?.category || '');
-            setValue(
-                'tags',
-                courseDetail?.tags.map((tag) => ({
-                    value: tag.name,
-                    label: tag.name,
-                })) || []
-            );
-            setValue('poster', courseDetail?.poster || null);
-            setValue('trailer', courseDetail?.trailer || null);
+                setValue('name', courseDetail?.name || '');
+                setValue('description', courseDetail?.description || '');
+                setValue('price', courseDetail?.price || '');
+                setValue('category', courseDetail?.category || '');
+                setValue(
+                    'tags',
+                    courseDetail?.tags.map((tag) => ({
+                        value: tag.name,
+                        label: tag.name,
+                    })) || []
+                );
+                setValue('poster', courseDetail?.poster || null);
+                setValue('trailer', courseDetail?.trailer || null);
 
 
-            if (courseDetail?.trainingCourseSteps?.length) {
-                const steps = courseDetail.trainingCourseSteps.map((step) => ({
-                    title: step.title || '',
-                    description: step.description || '',
-                    trainingCourseStepDetails: step.trainingCourseStepDetails?.length
-                        ? step.trainingCourseStepDetails.map((detail) => ({
-                            title: detail.title || '',
-                            description: detail.description || '',
-                            videos: detail.videos,
-                        }))
-                        : [{title: '', description: '', videos: null}],
+                if (courseDetail?.trainingCourseSteps?.length) {
+                    const steps = courseDetail.trainingCourseSteps.map((step) => ({
+                        title: step.title || '',
+                        description: step.description || '',
+                        trainingCourseStepDetails: step.trainingCourseStepDetails?.length
+                            ? step.trainingCourseStepDetails.map((detail) => ({
+                                title: detail.title || '',
+                                description: detail.description || '',
+                                videos: detail.videos,
+                            }))
+                            : [{title: '', description: '', videos: null}],
+                    }));
+                    setValue('trainingCourseSteps', steps);
+                } else {
+                    setValue('trainingCourseSteps', [
+                        {
+                            title: '',
+                            description: '',
+                            trainingCourseStepDetails: [
+                                {title: '', description: '', videos: null},
+                            ],
+                        },
+                    ]);
+                }
+
+                setCategories(categoriesResponse?.data.categories || []);
+                const formattedTags = categoriesResponse.data.tags.map((tag) => ({
+                    value: tag,
+                    label: tag,
                 }));
-                setValue('trainingCourseSteps', steps);
-            } else {
-                setValue('trainingCourseSteps', [
-                    {
-                        title: '',
-                        description: '',
-                        trainingCourseStepDetails: [
-                            {title: '', description: '', videos: null},
-                        ],
-                    },
-                ]);
+                setTags(formattedTags);
+            } catch (e) {
+                console.log(e)
+            } finally {
+                setIsPageLoading(false)
             }
 
-            setCategories(categoriesResponse?.data.categories || []);
-            const formattedTags = categoriesResponse.data.tags.map((tag) => ({
-                value: tag,
-                label: tag,
-            }));
-            setTags(formattedTags);
         };
         fetchData();
     }, [setValue, params.courseId]);
@@ -498,245 +508,251 @@ const RedactTrainingCourse = () => {
     return (
         <div className="main-center-container">
             <h2>Create Training Course</h2>
-            <FormProvider {...methods}>
-                <form onSubmit={handleSubmit(onSubmit)}>
-                    <div className="input-simple-wrapper">
-                        <div className="input-simple-wrapper">
-                            <label className="support-label">
-                                Course name
-                                <span style={{color: 'red', marginBottom: '5px'}}>*</span>
-                            </label>
+            {
+                isPageLoading ? (
+                    <LoadingPageIndicator />
+                ) : (
+                    <FormProvider {...methods}>
+                        <form onSubmit={handleSubmit(onSubmit)}>
+                            <div className="input-simple-wrapper">
+                                <div className="input-simple-wrapper">
+                                    <label className="support-label">
+                                        Course name
+                                        <span style={{color: 'red', marginBottom: '5px'}}>*</span>
+                                    </label>
 
-                            <input
-                                className="simple-input"
-                                {...register('name', {
-                                    required: 'Name is required',
-                                    minLength: {
-                                        value: 3,
-                                        message: 'Name must be at least 3 characters',
-                                    },
-                                    maxLength: {
-                                        value: 100,
-                                        message: 'Name must be no more than 100 characters',
-                                    },
-                                })}
-                            />
-                        </div>
-                        {errors.name?.message && (
-                            <span className="error-message">*{errors?.name.message}</span>
-                        )}
-                        <div className="input-simple-wrapper">
-                            <label className="support-label">
-                                Description
-                            </label>
-                            <textarea
-                                {...register('description', {
-                                    maxLength: {
-                                        value: 1000,
-                                        message: 'Description must be no more than 1000 characters',
-                                    },
-                                })}
-                                className="support-area"
-                                name="description"
-                            />
-                        </div>
-                        {errors.description?.message && (
-                            <span className="error-message">*{errors?.description.message}</span>
-                        )}
-
-                        <div className="input-simple-wrapper">
-                            <label className="support-label">
-                            </label>
-                            <input
-                                type="number"
-                                className="simple-input"
-                                {...register('price', {
-                                    min: {
-                                        value: 0,
-                                        message: 'Price must be greater than or equal to 0 (free course)',
-                                    },
-                                    max: {
-                                        value: 1000000,
-                                        message: 'Price must be no more than 1000000',
-                                    },
-                                })}
-                            />
-                        </div>
-                        {errors.price?.message && (
-                            <span className="error-message">*{errors?.price.message}</span>
-                        )}
-
-                        <div className="media-input-block">
-                            <h2 className="main-center-title">Poster</h2>
-                            <span style={{color: 'red', marginBottom: '5px'}}>*</span>
-                            <div className="file-input-wrapper">
-                                <label className="file-input-label">
                                     <input
-                                        type="file"
-                                        {...register('poster', {
-                                            required: {
-                                                value: false,
-                                                message: "Poster is required",
+                                        className="simple-input"
+                                        {...register('name', {
+                                            required: 'Name is required',
+                                            minLength: {
+                                                value: 3,
+                                                message: 'Name must be at least 3 characters',
                                             },
-                                            validate: {
-                                                validFormat: (files) => {
-                                                    const existingPoster = watch('poster');
-                                                    if (existingPoster) return true;
-
-                                                    if (!files || files.length === 0) return true;
-
-                                                    const file = files[0];
-                                                    const acceptedFormats = ['image/jpeg', 'image/jpeg', 'image/png', 'image/gif', 'image/webp'];
-                                                    return acceptedFormats.includes(file.type) || 'Unsupported image format';
-                                                },
+                                            maxLength: {
+                                                value: 100,
+                                                message: 'Name must be no more than 100 characters',
                                             },
                                         })}
-                                        className="file-input"
-                                        onChange={(e) => {
-                                            const file = e.target.files[0];
-                                            if (file) {
-                                                setValue('poster', file);
-                                                const objectUrl = URL.createObjectURL(file);
-                                                setValue('posterPreview', objectUrl);
-                                            }
-                                        }}
                                     />
-                                    {watch('posterPreview') || watch('poster') ? (
-                                        <img
-                                            style={{width: '350px'}}
-                                            src={
-                                                typeof watch('poster') === 'string' && watch('poster')
-                                                    ? watch('poster')
-                                                    : watch('posterPreview')
-                                            }
-                                            alt="Poster Preview"
-                                        />
-                                    ) : (
-                                        <span className="placeholder">Choose a file or drag it here</span>
-                                    )}
-                                </label>
-                            </div>
-                            {errors.poster?.message && (
-                                <span className="error-message">*{errors?.poster.message}</span>
-                            )}
+                                </div>
+                                {errors.name?.message && (
+                                    <span className="error-message">*{errors?.name.message}</span>
+                                )}
+                                <div className="input-simple-wrapper">
+                                    <label className="support-label">
+                                        Description
+                                    </label>
+                                    <textarea
+                                        {...register('description', {
+                                            maxLength: {
+                                                value: 1000,
+                                                message: 'Description must be no more than 1000 characters',
+                                            },
+                                        })}
+                                        className="support-area"
+                                        name="description"
+                                    />
+                                </div>
+                                {errors.description?.message && (
+                                    <span className="error-message">*{errors?.description.message}</span>
+                                )}
 
-
-                            <h2 className="main-center-title">Trailer</h2>
-                            <div className="file-input-wrapper">
-                                <label className="file-input-label">
+                                <div className="input-simple-wrapper">
+                                    <label className="support-label">
+                                    </label>
                                     <input
-                                        type="file"
-                                        accept="video/*"
-                                        className="file-input"
-                                        {...register(`trailer`, {
-                                            validate: {
-                                                validFormat: (value) => {
-                                                    if (!value || (typeof value === 'string' && value.trim() === '')) return true;
-                                                    if (typeof value === 'string') return true;
-                                                    if (value.length === 0) return true;
-                                                    const file = value[0];
-                                                    if (!file) return true;
-                                                    const acceptedFormats = ['video/mp4', 'video/quicktime', 'video/x-msvideo'];
-                                                    return acceptedFormats.includes(file.type) || 'Unsupported video format';
-                                                },
+                                        type="number"
+                                        className="simple-input"
+                                        {...register('price', {
+                                            min: {
+                                                value: 0,
+                                                message: 'Price must be greater than or equal to 0 (free course)',
+                                            },
+                                            max: {
+                                                value: 1000000,
+                                                message: 'Price must be no more than 1000000',
                                             },
                                         })}
-                                        onChange={(e) => {
-                                            const file = e.target.files[0];
-                                            if (file) {
-                                                setValue(`trailer`, file);
-                                                const objectUrl = URL.createObjectURL(file);
-                                                setValue(`trailerPreview`, objectUrl);
-                                            } else {
-                                                setValue(`trailer`, null);
-                                                setValue(`trailerPreview`, null);
-                                            }
-                                        }}
                                     />
-                                    {watch(`trailerPreview`) || watch(`trailer`) ? (
-                                        <VideoPlayer
-                                            title="Video Preview"
-                                            videoUrl={
-                                                typeof watch('trailer') === 'string' && watch('trailer')
-                                                    ? watch('trailer').replace('download', 'view')
-                                                    : watch('trailerPreview')
-                                            }
-                                        />
-                                    ) : (
-                                        <span className="placeholder">Choose a file or drag it here</span>
-                                    )}
-                                </label>
-                            </div>
-                            {errors.trailer?.message && (
-                                <span className="error-message">*{errors?.trailer.message}</span>
-                            )}
-                        </div>
+                                </div>
+                                {errors.price?.message && (
+                                    <span className="error-message">*{errors?.price.message}</span>
+                                )}
 
-                        <div className="category-selection">
-                            <label className="category-label">Categories<span
-                                style={{color: 'red', marginBottom: '5px'}}>*</span></label>
+                                <div className="media-input-block">
+                                    <h2 className="main-center-title">Poster</h2>
+                                    <span style={{color: 'red', marginBottom: '5px'}}>*</span>
+                                    <div className="file-input-wrapper">
+                                        <label className="file-input-label">
+                                            <input
+                                                type="file"
+                                                {...register('poster', {
+                                                    required: {
+                                                        value: false,
+                                                        message: "Poster is required",
+                                                    },
+                                                    validate: {
+                                                        validFormat: (files) => {
+                                                            const existingPoster = watch('poster');
+                                                            if (existingPoster) return true;
 
-                            <div className="category-container">
-                                {categories.map((category, index) => (
-                                    <div
-                                        key={index}
-                                        {...register("category", {
-                                            required: "Pick one category"
-                                        })}
-                                        className={`category-block ${
-                                            watch('category') === category?.name ? 'selected' : ''
-                                        }`}
-                                        onClick={() => setValue('category', category?.name)}
-                                    >
-                                        <img
-                                            src={category?.poster}
-                                            alt={category?.name}
-                                            className="category-image"
-                                        />
-                                        <p className="category-select-name">{category?.name}</p>
+                                                            if (!files || files.length === 0) return true;
+
+                                                            const file = files[0];
+                                                            const acceptedFormats = ['image/jpeg', 'image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+                                                            return acceptedFormats.includes(file.type) || 'Unsupported image format';
+                                                        },
+                                                    },
+                                                })}
+                                                className="file-input"
+                                                onChange={(e) => {
+                                                    const file = e.target.files[0];
+                                                    if (file) {
+                                                        setValue('poster', file);
+                                                        const objectUrl = URL.createObjectURL(file);
+                                                        setValue('posterPreview', objectUrl);
+                                                    }
+                                                }}
+                                            />
+                                            {watch('posterPreview') || watch('poster') ? (
+                                                <img
+                                                    style={{width: '350px'}}
+                                                    src={
+                                                        typeof watch('poster') === 'string' && watch('poster')
+                                                            ? watch('poster')
+                                                            : watch('posterPreview')
+                                                    }
+                                                    alt="Poster Preview"
+                                                />
+                                            ) : (
+                                                <span className="placeholder">Choose a file or drag it here</span>
+                                            )}
+                                        </label>
                                     </div>
-                                ))}
+                                    {errors.poster?.message && (
+                                        <span className="error-message">*{errors?.poster.message}</span>
+                                    )}
+
+
+                                    <h2 className="main-center-title">Trailer</h2>
+                                    <div className="file-input-wrapper">
+                                        <label className="file-input-label">
+                                            <input
+                                                type="file"
+                                                accept="video/*"
+                                                className="file-input"
+                                                {...register(`trailer`, {
+                                                    validate: {
+                                                        validFormat: (value) => {
+                                                            if (!value || (typeof value === 'string' && value.trim() === '')) return true;
+                                                            if (typeof value === 'string') return true;
+                                                            if (value.length === 0) return true;
+                                                            const file = value[0];
+                                                            if (!file) return true;
+                                                            const acceptedFormats = ['video/mp4', 'video/quicktime', 'video/x-msvideo'];
+                                                            return acceptedFormats.includes(file.type) || 'Unsupported video format';
+                                                        },
+                                                    },
+                                                })}
+                                                onChange={(e) => {
+                                                    const file = e.target.files[0];
+                                                    if (file) {
+                                                        setValue(`trailer`, file);
+                                                        const objectUrl = URL.createObjectURL(file);
+                                                        setValue(`trailerPreview`, objectUrl);
+                                                    } else {
+                                                        setValue(`trailer`, null);
+                                                        setValue(`trailerPreview`, null);
+                                                    }
+                                                }}
+                                            />
+                                            {watch(`trailerPreview`) || watch(`trailer`) ? (
+                                                <VideoPlayer
+                                                    title="Video Preview"
+                                                    videoUrl={
+                                                        typeof watch('trailer') === 'string' && watch('trailer')
+                                                            ? watch('trailer').replace('download', 'view')
+                                                            : watch('trailerPreview')
+                                                    }
+                                                />
+                                            ) : (
+                                                <span className="placeholder">Choose a file or drag it here</span>
+                                            )}
+                                        </label>
+                                    </div>
+                                    {errors.trailer?.message && (
+                                        <span className="error-message">*{errors?.trailer.message}</span>
+                                    )}
+                                </div>
+
+                                <div className="category-selection">
+                                    <label className="category-label">Categories<span
+                                        style={{color: 'red', marginBottom: '5px'}}>*</span></label>
+
+                                    <div className="category-container">
+                                        {categories.map((category, index) => (
+                                            <div
+                                                key={index}
+                                                {...register("category", {
+                                                    required: "Pick one category"
+                                                })}
+                                                className={`category-block ${
+                                                    watch('category') === category?.name ? 'selected' : ''
+                                                }`}
+                                                onClick={() => setValue('category', category?.name)}
+                                            >
+                                                <img
+                                                    src={category?.poster}
+                                                    alt={category?.name}
+                                                    className="category-image"
+                                                />
+                                                <p className="category-select-name">{category?.name}</p>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                                {errors.category?.message && (
+                                    <span className="error-message">*{errors?.category.message}</span>
+                                )}
+
+                                <div className="tags-select-block">
+                                    <label className="category-label">Tags</label>
+                                    <CreatableSelect
+                                        styles={customStyles}
+                                        isMulti
+                                        options={tags}
+                                        onChange={(selectedOptions) => {
+                                            setValue('tags', selectedOptions);
+                                        }}
+                                        value={watch('tags') || []}
+                                    />
+                                </div>
+
+                                <div className="form-course-create-container">
+                                    <CourseStepFormField
+                                        setValue={setValue}
+                                        watch={watch}
+                                        control={control}
+                                        register={register}
+                                        handleFileChange={handleFileChange}
+                                        uploadedFiles={uploadedFiles}
+                                        setUploadedFiles={setUploadedFiles}
+                                        errors={errors}
+                                    />
+                                </div>
+                                {
+                                    isLoading ? (
+                                        <LoadingMiniIndicator/>
+                                    ) : <button className="green-center-btn" type="submit">
+                                        Save changes
+                                    </button>
+                                }
                             </div>
-                        </div>
-                        {errors.category?.message && (
-                            <span className="error-message">*{errors?.category.message}</span>
-                        )}
-
-                        <div className="tags-select-block">
-                            <label className="category-label">Tags</label>
-                            <CreatableSelect
-                                styles={customStyles}
-                                isMulti
-                                options={tags}
-                                onChange={(selectedOptions) => {
-                                    setValue('tags', selectedOptions);
-                                }}
-                                value={watch('tags') || []}
-                            />
-                        </div>
-
-                        <div className="form-course-create-container">
-                            <CourseStepFormField
-                                setValue={setValue}
-                                watch={watch}
-                                control={control}
-                                register={register}
-                                handleFileChange={handleFileChange}
-                                uploadedFiles={uploadedFiles}
-                                setUploadedFiles={setUploadedFiles}
-                                errors={errors}
-                            />
-                        </div>
-                        {
-                            isLoading ? (
-                                <LoadingMiniIndicator/>
-                            ) : <button className="green-center-btn" type="submit">
-                                Save changes
-                            </button>
-                        }
-                    </div>
-                </form>
-            </FormProvider>
+                        </form>
+                    </FormProvider>
+                )
+            }
         </div>
     );
 };
