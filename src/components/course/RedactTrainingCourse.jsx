@@ -93,18 +93,7 @@ const CourseStepDetailFormField = ({
                                 accept="video/*"
                                 className="file-input"
                                 {...register(
-                                    `${prefix}.trainingCourseStepDetails[${detailIndex}].videos`,
-                                    {
-                                        validate: {
-                                            validFormat: (files) => {
-                                                if (!files || files.length === 0) return true;
-                                                const file = files[0];
-                                                if (!file) return 'No video file selected';
-                                                const acceptedFormats = ['video/mp4', 'video/quicktime', 'video/x-msvideo'];
-                                                return acceptedFormats.includes(file.type) || 'Unsupported video format';
-                                            },
-                                        },
-                                    }
+                                    `${prefix}.trainingCourseStepDetails[${detailIndex}].videos`
                                 )}
                                 onChange={(e) => {
                                     const files = e.target.files;
@@ -112,18 +101,24 @@ const CourseStepDetailFormField = ({
                                         return;
                                     }
                                     const file = files[0];
-                                    if (file) {
-                                        handleFileChange(e);
-                                        setValue(
-                                            `${prefix}.trainingCourseStepDetails[${detailIndex}].videos`,
-                                            file
-                                        );
-                                        const objectUrl = URL.createObjectURL(file);
-                                        setValue(
-                                            `${prefix}.trainingCourseStepDetails[${detailIndex}].videoPreview`,
-                                            objectUrl
-                                        );
+
+                                    const acceptedFormats = ['video/mp4', 'video/quicktime', 'video/x-msvideo'];
+                                    if (!acceptedFormats.includes(file.type)) {
+
+                                        return;
                                     }
+
+                                    handleFileChange(e);
+                                    setValue(
+                                        `${prefix}.trainingCourseStepDetails[${detailIndex}].videos`,
+                                        file
+                                    );
+
+                                    const objectUrl = URL.createObjectURL(file);
+                                    setValue(
+                                        `${prefix}.trainingCourseStepDetails[${detailIndex}].videoPreview`,
+                                        objectUrl
+                                    );
                                 }}
                             />
                             {(() => {
@@ -133,7 +128,11 @@ const CourseStepDetailFormField = ({
                                 const video = watch(
                                     `${prefix}.trainingCourseStepDetails[${detailIndex}].videos`
                                 );
-                                if (!preview && !video) return <span className="placeholder">Choose a file or drag it here</span>;
+
+                                if (!preview && !video) {
+                                    return <span className="placeholder">Choose a file or drag it here</span>;
+                                }
+
                                 return (
                                     <VideoPlayer
                                         title="Video Preview"
@@ -574,12 +573,19 @@ const RedactTrainingCourse = () => {
                                     <input
                                         type="file"
                                         {...register('poster', {
-                                            required: "Poster is required",
+                                            required: {
+                                                value: false,
+                                                message: "Poster is required",
+                                            },
                                             validate: {
                                                 validFormat: (files) => {
+                                                    const existingPoster = watch('poster');
+                                                    if (existingPoster) return true;
+
                                                     if (!files || files.length === 0) return true;
+
                                                     const file = files[0];
-                                                    const acceptedFormats = ['image/jpeg', 'image/png', 'image/gif', "image/webp"];
+                                                    const acceptedFormats = ['image/jpeg', 'image/jpeg', 'image/png', 'image/gif', 'image/webp'];
                                                     return acceptedFormats.includes(file.type) || 'Unsupported image format';
                                                 },
                                             },
@@ -588,13 +594,13 @@ const RedactTrainingCourse = () => {
                                         onChange={(e) => {
                                             const file = e.target.files[0];
                                             if (file) {
-                                                setValue(`poster`, file);
+                                                setValue('poster', file);
                                                 const objectUrl = URL.createObjectURL(file);
-                                                setValue(`posterPreview`, objectUrl);
+                                                setValue('posterPreview', objectUrl);
                                             }
                                         }}
                                     />
-                                    {watch(`posterPreview`) || watch(`poster`) ? (
+                                    {watch('posterPreview') || watch('poster') ? (
                                         <img
                                             style={{width: '350px'}}
                                             src={
@@ -602,11 +608,10 @@ const RedactTrainingCourse = () => {
                                                     ? watch('poster')
                                                     : watch('posterPreview')
                                             }
+                                            alt="Poster Preview"
                                         />
                                     ) : (
-                                        <span className="placeholder">
-                      Choose a file or drag it here
-                    </span>
+                                        <span className="placeholder">Choose a file or drag it here</span>
                                     )}
                                 </label>
                             </div>

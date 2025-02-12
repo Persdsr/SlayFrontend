@@ -94,16 +94,19 @@ const CourseStepDetailFormField = ({
             <label className="file-input-label">
               <input
                   type="file"
+                  accept="video/*"
                   {...register(
                       `${prefix}.trainingCourseStepDetails[${detailIndex}].videos`,
                       {
                         validate: {
                           validFormat: (files) => {
-                            if (!files || files.length === 0) return true;
-                            const file = files[0];
-                            if (!file) return 'No video file selected';
+                            const file = watch(`${prefix}.trainingCourseStepDetails[${detailIndex}].videos`);
+                            if (file) return true;
+
+                            if (!files || files.length === 0) return 'No video file selected';
+
                             const acceptedFormats = ['video/mp4', 'video/quicktime', 'video/x-msvideo'];
-                            return acceptedFormats.includes(file.type) || 'Unsupported video format';
+                            return acceptedFormats.includes(files[0].type) || 'Unsupported video format';
                           },
                         },
                       }
@@ -556,6 +559,7 @@ const CreateTrainingCourse = () => {
                 <label className="file-input-label">
                   <input
                       type="file"
+                      accept="video/*"
                       {...register('trailer', {
                         validate: {
                           validFormat: (files) => {
