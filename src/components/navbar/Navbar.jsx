@@ -24,6 +24,7 @@ const Navbar = () => {
   const logout = () => {
     authStore.resetAuth();
     navigate('/');
+    window.location.reload()
   };
 
   return (
