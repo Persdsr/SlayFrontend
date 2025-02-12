@@ -627,24 +627,28 @@ const RedactTrainingCourse = () => {
                                         type="file"
                                         accept="video/*"
                                         className="file-input"
-                                        {...register(`trailer`,
-                                            {
-                                                validate: {
-                                                    validFormat: (files) => {
-                                                        if (!files || files.length === 0) return true;
-                                                        const file = files[0];
-                                                        const acceptedFormats = ['video/mp4', 'video/quicktime', 'video/x-msvideo'];
-                                                        return acceptedFormats.includes(file.type) || 'Unsupported video format';
-                                                    },
+                                        {...register(`trailer`, {
+                                            validate: {
+                                                validFormat: (value) => {
+                                                    if (!value || (typeof value === 'string' && value.trim() === '')) return true;
+                                                    if (typeof value === 'string') return true;
+                                                    if (value.length === 0) return true;
+                                                    const file = value[0];
+                                                    if (!file) return true;
+                                                    const acceptedFormats = ['video/mp4', 'video/quicktime', 'video/x-msvideo'];
+                                                    return acceptedFormats.includes(file.type) || 'Unsupported video format';
                                                 },
-                                            }
-                                        )}
+                                            },
+                                        })}
                                         onChange={(e) => {
                                             const file = e.target.files[0];
                                             if (file) {
                                                 setValue(`trailer`, file);
                                                 const objectUrl = URL.createObjectURL(file);
                                                 setValue(`trailerPreview`, objectUrl);
+                                            } else {
+                                                setValue(`trailer`, null);
+                                                setValue(`trailerPreview`, null);
                                             }
                                         }}
                                     />
@@ -658,9 +662,7 @@ const RedactTrainingCourse = () => {
                                             }
                                         />
                                     ) : (
-                                        <span className="placeholder">
-                      Choose a file or drag it here
-                    </span>
+                                        <span className="placeholder">Choose a file or drag it here</span>
                                     )}
                                 </label>
                             </div>
