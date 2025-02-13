@@ -132,6 +132,9 @@ const TrainingCourseDetail = () => {
   const handleByCourse = async () => {
     if (authStore.authenticated) {
       const response = await TrainingCourseService.handleByCourse(params.id)
+      if (response.status === 200) {
+        window.location.reload();
+      }
     } else {
       navigate("/")
       window.scrollTo({ top: 0, behavior: 'smooth' });
