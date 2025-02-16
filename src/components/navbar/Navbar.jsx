@@ -1,12 +1,14 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import TrainingCourseService from '../../service/TrainingCourseService';
 import { useAuthStore } from '../store/store';
 import { useNavigate } from 'react-router-dom';
 
 const Navbar = () => {
   const [categories, setCategories] = useState([]);
+  const [dropdownVisible, setDropdownVisible] = useState(null); // Состояние для управления видимостью dropdown
   const authStore = useAuthStore();
   const navigate = useNavigate();
+  const dropdownRef = useRef(null); // Ref для отслеживания кликов вне dropdown
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -24,22 +26,40 @@ const Navbar = () => {
   const logout = () => {
     authStore.resetAuth();
     navigate('/');
-    window.location.reload()
+    window.location.reload();
   };
+
+  // Обработчик клика для открытия/закрытия dropdown
+  const toggleDropdown = (id) => {
+    setDropdownVisible(dropdownVisible === id ? null : id);
+  };
+
+  // Закрытие dropdown при клике вне его области
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setDropdownVisible(null);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
 
   return (
       <div className="navbar-content">
         <ul className="navbar-links">
-          <li className="navbar-title dropdown">
-            <a href="/courses">Categories</a>
-            <ul className="dropdown-menu">
+          <li className="navbar-title dropdown" ref={dropdownRef}>
+            <a href="/courses" onClick={(e) => { e.preventDefault(); toggleDropdown('categories'); }}>
+              Categories
+            </a>
+            <ul className={`dropdown-menu ${dropdownVisible === 'categories' ? 'visible' : ''}`}>
               {categories.length > 0
                   ? categories?.map((category) => (
                       <li key={category.name}>
-                        <a
-                            className="navbar-title"
-                            href={`/search/${category.name}`}
-                        >
+                        <a className="navbar-title" href={`/search/${category.name}`}>
                           {category.name}
                         </a>
                       </li>
@@ -66,9 +86,11 @@ const Navbar = () => {
                 </a>
               </li>
           ) : (
-              <li className="navbar-title dropdown">
-                <a href="/support">Support</a>
-                <ul className="dropdown-menu">
+              <li className="navbar-title dropdown" ref={dropdownRef}>
+                <a href="/support" onClick={(e) => { e.preventDefault(); toggleDropdown('support'); }}>
+                  Support
+                </a>
+                <ul className={`dropdown-menu ${dropdownVisible === 'support' ? 'visible' : ''}`}>
                   <li>
                     <a className="navbar-title" href="#faq">
                       FAQ
@@ -88,11 +110,11 @@ const Navbar = () => {
                 <a href="/">Sign in</a>
               </li>
           ) : (
-              <li className="navbar-title dropdown">
-                <a href={`/profile/${authStore?.userData?.username}`}>
+              <li className="navbar-title dropdown" ref={dropdownRef}>
+                <a href={`/profile/${authStore?.userData?.username}`} onClick={(e) => { e.preventDefault(); toggleDropdown('profile'); }}>
                   {authStore?.userData?.username || ''}
                 </a>
-                <ul className="dropdown-menu">
+                <ul className={`dropdown-menu ${dropdownVisible === 'profile' ? 'visible' : ''}`}>
                   {authStore?.userData.roles.includes('ADMIN', 'MODERATOR') ? (
                       <li>
                         <a className="navbar-title" href="/admin/support">
@@ -102,7 +124,11 @@ const Navbar = () => {
                   ) : (
                       ''
                   )}
-
+                  <li>
+                    <a className="navbar-title" href={`/profile/${authStore?.userData.username}`}>
+                      Profile
+                    </a>
+                  </li>
                   <li>
                     <a className="navbar-title" href="/messages">
                       Messages
@@ -119,11 +145,7 @@ const Navbar = () => {
                     </a>
                   </li>
                   <li>
-                    <a
-                        className="navbar-title-red"
-                        style={{ cursor: 'pointer' }}
-                        onClick={logout}
-                    >
+                    <a className="navbar-title-red" style={{cursor: 'pointer'}} onClick={logout}>
                       Exit
                     </a>
                   </li>

@@ -10,7 +10,7 @@ const ChatMenuBlock = ({ chats }) => {
   const [isChatsLoading, setIsChatLoading] = useState(false)
 
   useEffect(() => {
-    setIsChatLoading(false)
+    setIsChatLoading(true)
     try {
       if (!searchTerm.trim()) {
         setFilteredChats(chats);
@@ -25,7 +25,7 @@ const ChatMenuBlock = ({ chats }) => {
     } catch (e) {
       console.log(e)
     } finally {
-      setIsChatLoading(true)
+      setIsChatLoading(false)
     }
   }, [searchTerm, chats]);
 
