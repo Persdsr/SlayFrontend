@@ -68,7 +68,7 @@ const ResetPassword = () => {
                                    message: "Password must be at least 8 characters"
                                },
                                pattern: {
-                                   value: /^[a-zA-Z0-9!@#$%^&*(),.?":{}|<>-]+$/,
+                                   value: /^[a-zA-Z0-9!@#$%^&*(),.?":{}|\/<>-]+$/,
                                    message: "Password must contain only Latin letters, numbers, and allowed special characters",
                                },
                            }
