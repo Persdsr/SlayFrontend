@@ -97,6 +97,11 @@ const Navbar = () => {
                     </a>
                   </li>
                   <li>
+                    <a className="navbar-title" href="/support">
+                      Write to support
+                    </a>
+                  </li>
+                  <li>
                     <a className="navbar-title" href="/my-supports">
                       My supports
                     </a>
