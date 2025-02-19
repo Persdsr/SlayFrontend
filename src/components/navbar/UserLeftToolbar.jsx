@@ -11,23 +11,23 @@ const UserLeftToolbar = () => {
         to={`/profile/${authStore?.userData?.username}`}
         className="left-menu-link"
       >
-        <span className="nav-span">📞 Profile</span>
+        <span className="nav-span">Profile</span>
       </NavLink>
 
       <NavLink to={`/purchase-courses/`} className="left-menu-link">
-        <span className="nav-span">📞 Purchase courses</span>
+        <span className="nav-span">Purchase courses</span>
       </NavLink>
 
       <NavLink to={`/my-courses/`} className="left-menu-link">
-        <span className="nav-span">📞 My courses</span>
+        <span className="nav-span">My courses</span>
       </NavLink>
 
       <NavLink to={`/messages/`} className="left-menu-link">
-        <span className="nav-span">📞 Messages</span>
+        <span className="nav-span">Messages</span>
       </NavLink>
 
       <NavLink to="/settings" className="left-menu-link">
-        <span className="nav-span">⚙️ Settings</span>
+        <span className="nav-span">Settings</span>
       </NavLink>
     </div>
   );
