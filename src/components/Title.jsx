@@ -173,7 +173,7 @@ const Title = () => {
             </div>
             <div className="modal-column">
 
-              <div className="input-simple-wrapper">
+              <div className="input-wrapper">
                 <input
                   type="text"
                   className="input-box"
@@ -229,7 +229,7 @@ const Title = () => {
                   <span className="error-message">*{errorsRegister.email?.message}</span>
               )}
 
-              <div className="input-simple-wrapper">
+              <div className="input-wrapper">
                 <input
                   type="text"
                   className="input-box"

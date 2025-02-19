@@ -21,19 +21,9 @@ a {
   text-decoration: none;
 }
 
-input:-webkit-autofill,
-input:-webkit-autofill:hover,
-input:-webkit-autofill:focus,
-input:-webkit-autofill,
-textarea:-webkit-autofill,
-textarea:-webkit-autofill:hover,
-textarea:-webkit-autofill:focus,
-select:-webkit-autofill,
-select:-webkit-autofill:hover,
-select:-webkit-autofill:focus {
-  -webkit-text-fill-color: inherit !important;
-  transition: background-color 5000s ease-in-out 0s;
-  color: white !important;
+input:-webkit-autofill {
+  background-color: transparent !important;
+  color: inherit !important;
 }
 
 input {
@@ -43,10 +33,6 @@ input {
 textarea {
   border: 0;
   outline: none;
-}
-input:-webkit-autofill {
-  font-weight: 400 !important;
-  color: white !important;
 }
 
 .navbar-content {
@@ -771,7 +757,7 @@ footer {
 }
 
 .modal-close:hover {
-  color: #000000;
+  color: #157550;
 }
 
 .modal-inline {
@@ -1260,7 +1246,8 @@ footer {
   font-size: 16px;
   padding: 10px 0;
   border: none;
-  color: white !important;
+  color: #808080 !important;
+  font-weight: 700;
   border-bottom: 2px solid #ccc;
   width: 100%;
   background-color: var(--main-background-color);
@@ -1735,6 +1722,7 @@ footer {
   color: #939595;
   background-color: var(--main-background-color);
   font-size: 16px;
+  font-family: var(--main-font-family);
   font-weight: 700;
   border: #55595c 1px solid;
 }
