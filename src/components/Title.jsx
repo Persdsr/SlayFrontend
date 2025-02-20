@@ -12,6 +12,9 @@ const Title = () => {
   const [errorMessage, setErrorMessage] = useState();
   const [responseMessage, setResponseMessage] = useState();
   const [isEmailLoading, setEmailLoading] = useState(false)
+  const [isRegisterLoading, setIsRegisterLoading] = useState(false)
+  const [isLoginLoading, setIsLoginLoading] = useState(false)
+  const [isForgotLoading, setIsForgotLoading] = useState(false)
 
   const {
     register: registerLogin,
@@ -36,6 +39,7 @@ const Title = () => {
 
   const onSubmit = async (data) => {
     const { password, confirmPassword } = data;
+    setIsRegisterLoading(true)
 
     if (password !== confirmPassword) {
       const errorMessage = document.getElementById('error-message');
@@ -43,34 +47,42 @@ const Title = () => {
       setErrorMessage('Passwords do not match');
       return;
     }
-
-    const response = await axios.post(
-      `${process.env.REACT_APP_API_BASE_URL}/api/auth/signup`,
-      data
-    );
-    if (response.data.success === false) {
-      const errorMessage = document.getElementById('error-message');
-      errorMessage.classList.remove('hidden');
-      setErrorMessage(response.data.message);
-    } else {
-      setRegisterOpen(false);
-      setLoginOpen(true);
+    try {
+      const response = await axios.post(
+          `${process.env.REACT_APP_API_BASE_URL}/api/auth/signup`,
+          data
+      );
+      if (response.data.success === false) {
+        const errorMessage = document.getElementById('error-message');
+        errorMessage.classList.remove('hidden');
+        setErrorMessage(response.data.message);
+      } else {
+        setRegisterOpen(false);
+        setLoginOpen(true);
+      }
+    } finally {
+      setIsRegisterLoading(false)
     }
   };
 
   const onSubmitLogin = (data) => {
-    axios
-      .post(`${process.env.REACT_APP_API_BASE_URL}/api/auth/signin`, data)
-      .then((response) => {
-        setAuthTokens(response.data);
-        window.location.reload();
-      })
-      .catch((err) => {
-        console.log(err.response.data.message);
-        const errorMessage = document.getElementById('error-message');
-        errorMessage.classList.remove('hidden');
-        setErrorMessage(err.response.data.message);
-      });
+    setIsLoginLoading(true)
+    try {
+      axios
+          .post(`${process.env.REACT_APP_API_BASE_URL}/api/auth/signin`, data)
+          .then((response) => {
+            setAuthTokens(response.data);
+            window.location.reload();
+          })
+          .catch((err) => {
+            console.log(err.response.data.message);
+            const errorMessage = document.getElementById('error-message');
+            errorMessage.classList.remove('hidden');
+            setErrorMessage(err.response.data.message);
+          });
+    } finally {
+      setIsLoginLoading(false)
+    }
   };
 
   const onForgotPasswordSubmit = async (data) => {
@@ -79,7 +91,6 @@ const Title = () => {
     const errorMessage = document.getElementById('error-message');
     errorMessage.classList.add('hidden');
     setEmailLoading(true)
-
     try {
       const response = await axios
           .post(`${process.env.REACT_APP_API_BASE_URL}/api/auth/forgot`, {
@@ -311,9 +322,16 @@ const Title = () => {
               </span>
 
             </div>
-            <button type="submit" className="modal-btn-confirm">
-              Register
-            </button>
+            {
+              isRegisterLoading ? (
+                  <LoadingMiniIndicator/>
+              ) : (
+                  <button type="submit" className="modal-btn-confirm">
+                    Register
+                  </button>
+              )
+            }
+
           </form>
 
           <div className="modal-info">
@@ -426,9 +444,16 @@ const Title = () => {
           </span>
         </span>
             </div>
-            <button type="submit" className="modal-btn-confirm">
-              Sign in
-            </button>
+            {
+              isLoginLoading ? (
+                  <LoadingMiniIndicator/>
+              ) : (
+                  <button type="submit" className="modal-btn-confirm">
+                    Sign in
+                  </button>
+              )
+            }
+
           </form>
 
           <div className="modal-inline"></div>
