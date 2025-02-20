@@ -2349,9 +2349,10 @@ footer {
 }
 
 .profile-block {
-  width: 50%;
+  width: 60%;
   margin-left: 100px;
   display: flex;
+  min-width: 60%;
   flex-direction: column;
 }
 
@@ -2359,6 +2360,18 @@ footer {
   color: white;
   text-transform: uppercase;
   font-family: var(--main-font-family);
+}
+
+.settings-block {
+  width: 50%;
+  margin-left: 100px;
+  display: flex;
+  flex-direction: column;
+}
+
+.settings-block h2 {
+  color: white;
+  text-transform: uppercase;
 }
 
 .modern-form input {
@@ -2929,6 +2942,7 @@ footer {
 .profile-review-block {
   padding: 12px;
   background-color: #212121;
+  width: 280px;
   margin-bottom: 20px;
   border-radius: 10px;
 }

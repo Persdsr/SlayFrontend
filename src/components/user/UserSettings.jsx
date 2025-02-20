@@ -75,7 +75,7 @@ const UserSettings = () => {
   return (
       <div className="content-container">
         <UserLeftToolbar authStore={authStore} />
-        <div className="profile-block">
+        <div className="settings-block">
           {isLoading ? (
               <LoadingMiniIndicator />
           ) : (

@@ -14,7 +14,6 @@ const Title = () => {
   const [isEmailLoading, setEmailLoading] = useState(false)
   const [isRegisterLoading, setIsRegisterLoading] = useState(false)
   const [isLoginLoading, setIsLoginLoading] = useState(false)
-  const [isForgotLoading, setIsForgotLoading] = useState(false)
 
   const {
     register: registerLogin,

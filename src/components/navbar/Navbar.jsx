@@ -5,10 +5,10 @@ import { useNavigate } from 'react-router-dom';
 
 const Navbar = () => {
   const [categories, setCategories] = useState([]);
-  const [dropdownVisible, setDropdownVisible] = useState(null); // Состояние для управления видимостью dropdown
+  const [dropdownVisible, setDropdownVisible] = useState(null);
   const authStore = useAuthStore();
   const navigate = useNavigate();
-  const dropdownRef = useRef(null); // Ref для отслеживания кликов вне dropdown
+  const dropdownRef = useRef(null);
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -29,12 +29,10 @@ const Navbar = () => {
     window.location.reload();
   };
 
-  // Обработчик клика для открытия/закрытия dropdown
   const toggleDropdown = (id) => {
     setDropdownVisible(dropdownVisible === id ? null : id);
   };
 
-  // Закрытие dropdown при клике вне его области
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
