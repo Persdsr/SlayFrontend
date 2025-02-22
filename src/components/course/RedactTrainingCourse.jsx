@@ -702,11 +702,11 @@ const RedactTrainingCourse = () => {
                                                 }`}
                                                 onClick={() => setValue('category', category?.name)}
                                             >
-                                                <img
+                                       {/*         <img
                                                     src={category?.poster}
                                                     alt={category?.name}
                                                     className="category-image"
-                                                />
+                                                />*/}
                                                 <p className="category-select-name">{category?.name}</p>
                                             </div>
                                         ))}
