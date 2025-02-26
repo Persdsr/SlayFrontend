@@ -28,6 +28,7 @@ import TrainingCourseSearch from './components/course/TrainingCourseSearch';
 import MyCourses from './components/user/MyCourses';
 import ResetPassword from "./pages/ResetPassword";
 import { Suspense } from "react";
+import AdminSportCategory from "./components/admin/AdminSportCategory";
 
 function App() {
   const authStore = useAuthStore();
@@ -98,6 +99,7 @@ function App() {
         <Route path="/my-courses" element={<MyCourses />} />
         <Route path="/admin" element={<Admin />} />
         <Route path="/admin/support" element={<AdminSupport />} />
+        <Route path="/admin/sport-category" element={<AdminSportCategory />} />
         <Route path="/support/:supportId" element={<SupportDetail />} />
         <Route path="/complaint/:complaintId" element={<ComplaintDetail />} />
         <Route path="/admin/complaints" element={<Complaints />} />

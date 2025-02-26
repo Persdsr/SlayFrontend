@@ -589,7 +589,7 @@ const CreateTrainingCourse = () => {
             </div>
 
             <div className="category-selection">
-              <label className="category-label">Categories<span
+              <label className="category-label">Category<span
                   style={{color: 'red', marginBottom: '5px'}}>*</span></label>
 
               <div className="category-container">

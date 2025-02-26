@@ -1,7 +1,7 @@
 import React from 'react';
 import '../styles/index.css';
 
-const Modal = ({ isOpen, onClose, children }) => {
+const AuthModal = ({ isOpen, onClose, content }) => {
   if (!isOpen) return null;
 
   return (
@@ -10,10 +10,10 @@ const Modal = ({ isOpen, onClose, children }) => {
         <button className="modal-close" onClick={onClose}>
           ✖
         </button>
-        {children}
+        {content}
       </div>
     </div>
   );
 };
 
-export default Modal;
+export default AuthModal;

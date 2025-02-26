@@ -118,7 +118,7 @@ const Navbar = () => {
                   {authStore?.userData?.username || ''}
                 </a>
                 <ul className={`dropdown-menu ${dropdownVisible === 'profile' ? 'visible' : ''}`}>
-                  {authStore?.userData.roles.includes('ADMIN', 'MODERATOR') ? (
+                  {authStore?.userData.roles.includes('ADMIN') || authStore?.userData.roles.includes('MODERATOR')  ? (
                       <li>
                         <a className="navbar-title" href="/admin/support">
                           Admin panel

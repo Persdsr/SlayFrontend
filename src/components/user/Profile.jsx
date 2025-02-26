@@ -9,6 +9,8 @@ import UserService from '../../service/UserService';
 import UserLeftToolbar from '../navbar/UserLeftToolbar';
 import ReviewService from '../../service/ReviewService';
 import LoadingPageIndicator from '../LoadingPageIndicator';
+import FileService from "../../service/FileService";
+import VideoPlayer from "../player/VideoPlayer";
 
 const Profile = () => {
   const [data, setData] = useState([]);
@@ -504,14 +506,31 @@ const Profile = () => {
               <span className="profile-review-description">{review.text}</span>
             </div>
             <div className="review-images">
-              {review.images?.map((image, imgIndex) => (
-                <img
-                  key={imgIndex}
-                  src={image}
-                  alt={`Review Image ${imgIndex + 1}`}
-                  className="review-image"
-                  onClick={() => openImageModal(image)}
-                />
+              {review.images?.map((file) => (
+                  FileService.getFileType(file) === 'video' ? (
+                      <video
+                          onClick={(e) => {
+                            e.preventDefault();
+                            openImageModal(file.replace('download', 'view'));
+                          }}
+                          key={file.split('/').pop()}
+                          width="100px"
+                          height="140px"
+                          muted
+                          disableRemotePlayback
+                      >
+                        <source src={file.replace('download', 'view')} type="video/mp4" />
+                        Your browser does not support the video tag.
+                      </video>
+                  ) : (
+                      <img
+                          src={file}
+                          alt={`Review Image`}
+                          className="review-image"
+                          key={file.split('/').pop()}
+                          onClick={() => openImageModal(file)}
+                      />
+                  )
               ))}
             </div>
           </div>
@@ -519,11 +538,26 @@ const Profile = () => {
       </div>
 
       {showImageModal && (
-        <div className="review-modal-overlay" onClick={closeImageModal}>
-          <div className="image-modal-content">
-            <img src={selectedImage} />
+          <div
+              className="review-modal-overlay"
+              onClick={closeImageModal}
+          >
+            <div className="image-modal-content" onClick={(e) => e.stopPropagation()}>
+              {FileService.getFileType(selectedImage) === 'video' ? (
+                  <VideoPlayer
+                      width={"100px"}
+                      key={selectedImage}
+                      videoUrl={selectedImage.replace('download', 'view')}
+                  />
+              ) : (
+                  <img
+                      src={selectedImage}
+                      alt="Selected Image"
+                      onClick={(e) => e.stopPropagation()}
+                  />
+              )}
+            </div>
           </div>
-        </div>
       )}
 
       {showComplaintModal && (

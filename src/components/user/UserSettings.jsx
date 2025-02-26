@@ -9,7 +9,7 @@ import LoadingMiniIndicator from "../LoadingMiniIndicator";
 
 const UserSettings = () => {
   const authStore = useAuthStore();
-  const { register, handleSubmit, setValue, reset, formState: {
+  const { register, handleSubmit, setValue, reset, watch, formState: {
     errors: errors
   } } = useForm();
   const [data, setData] = useState({});
@@ -44,9 +44,6 @@ const UserSettings = () => {
     }
   };
 
-  const cancelSetting = () => {
-    window.location.reload();
-  };
 
   useEffect(() => {
     setIsLoading(true);
@@ -96,6 +93,18 @@ const UserSettings = () => {
                         id="avatar-input"
                         className="avatar-input"
                         {...register('avatar', {
+                          validate: {
+                            validFormat: (files) => {
+                              const existingAvatar = watch('avatar');
+                              if (existingAvatar) return true;
+
+                              if (!files || files.length === 0) return true;
+
+                              const file = files[0];
+                              const acceptedFormats = ['image/jpeg', 'image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+                              return acceptedFormats.includes(file.type) || 'Unsupported image format';
+                            },
+                          },
                           onChange: (e) => {
                             if (e.target.files && e.target.files[0]) {
                               setData({
@@ -106,6 +115,9 @@ const UserSettings = () => {
                           },
                         })}
                     />
+                    {errors.avatar?.message && (
+                        <span className="error-message">*{errors?.avatar.message}</span>
+                    )}
                   </label>
                   <h2>Banner</h2>
                   <label className="banner-wrapper">
@@ -121,7 +133,18 @@ const UserSettings = () => {
                         type="file"
                         id="banner-input"
                         className="banner-input"
-                        {...register('banner', {
+                        {...register('banner', {validate: {
+                            validFormat: (files) => {
+                              const existingBanner = watch('banner');
+                              if (existingBanner) return true;
+
+                              if (!files || files.length === 0) return true;
+
+                              const file = files[0];
+                              const acceptedFormats = ['image/jpeg', 'image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+                              return acceptedFormats.includes(file.type) || 'Unsupported image format';
+                            },
+                          },
                           onChange: (e) => {
                             if (e.target.files && e.target.files[0]) {
                               setData({
@@ -139,6 +162,10 @@ const UserSettings = () => {
                   </label>
                 </div>
 
+                {errors.baner?.message && (
+                    <span className="error-message">*{errors?.baner.message}</span>
+                )}
+
                 <div className="form-group-simple">
                   <label>Name</label>
                   <input type="text" required={true} {...register('name', {
@@ -153,6 +180,10 @@ const UserSettings = () => {
                   })} />
                 </div>
 
+                {errors.name?.message && (
+                    <span className="error-message">*{errors?.name.message}</span>
+                )}
+
                 <div className="form-group-simple">
                   <label>About Me</label>
                   <textarea className="simple-textarea" {...register('aboutMe', {
@@ -162,6 +193,10 @@ const UserSettings = () => {
                     }
                   })} />
                 </div>
+
+                {errors.aboutMe?.message && (
+                    <span className="error-message">*{errors?.aboutMe.message}</span>
+                )}
 
                 <div className="form-group-simple">
                   <label>Birthday</label>
@@ -186,7 +221,7 @@ const UserSettings = () => {
                     Save
                   </button>
                   <button
-                      onClick={cancelSetting}
+                      onClick={() => window.location.reload()}
                       type="button"
                       className="cancel-button-modern"
                   >

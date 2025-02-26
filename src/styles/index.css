@@ -700,7 +700,6 @@ footer {
   }
 }
 
-
 .input-modal-field {
   border: #807f7f 1px solid;
   border-radius: 14px;
@@ -709,6 +708,19 @@ footer {
   font-size: 20px;
   width: 100%;
 }
+
+.star-rating {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.star-rating img {
+  width: 24px;
+  height: 24px;
+  cursor: pointer;
+}
+
 
 .modal-overlay {
   position: fixed;
@@ -1360,6 +1372,7 @@ footer {
 .step-detail-description {
   font-size: 20px;
   color: #dbd9d9;
+  white-space: pre-line;
 }
 
 .step-detail-block {

@@ -11,6 +11,10 @@ import ComplaintCourseService from '../../service/ComplaintCourseService';
 import { useForm } from 'react-hook-form';
 import { useAuthStore } from '../store/store';
 import LoadingPageIndicator from "../LoadingPageIndicator";
+import Modal from "../modal/Modal"
+import ComplaintModalContent from "../modal/ComplaintModalContent";
+import MessageModalContent from "../modal/MessageModalContent";
+import ReviewModalContent from "../modal/ReviewModalContent";
 
 const TrainingCourseDetail = () => {
   const params = useParams();
@@ -19,78 +23,41 @@ const TrainingCourseDetail = () => {
   let [createAt, setCreateAt] = useState('');
   let [isPurchased, setPurchased] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
-  const [showComplaintModal, setShowComplaintModal] = useState(false);
+  const [showModal, setShowModal] = useState(false);
+  const [modalContent, setModalContent] = useState(null);
+  const [modalTitle, setModalTitle] = useState('');
   const [complaintTypesMap, setComplaintTypesMap] = useState([]);
   const navigate = useNavigate();
-  const [showMessageDialog, setShowMessageDialog] = useState(false);
-  const { register, handleSubmit, reset } = useForm();
+  const { register, handleSubmit, setValue, reset, formState: {
+    errors
+  }} = useForm();
   const authStore = useAuthStore();
-  const [requestResultText, setRequestResultText] = useState('');
-  const [isPageLoading, setIsPageLoading] = useState(false)
+  const [isPageLoading, setIsPageLoading] = useState(false);
 
-  const openComplaintModal = (courseId) => {
-    setShowComplaintModal(true);
+  const openModal = (title, content) => {
+    setModalTitle(title);
+    setModalContent(content);
+    setShowModal(true);
   };
 
-  const closeComplaintModal = () => {
-    setShowComplaintModal(false);
+  const closeModal = () => {
+    setShowModal(false);
+    setModalContent(null);
     reset();
   };
 
-  const openMessageDialog = () => {
-    setShowMessageDialog(true);
-  };
-
-  const closeMessageDialog = () => {
-    setShowMessageDialog(false);
-  };
-
-  const onSubmit = async (data) => {
-    const messageBody = {
-      message: data.message,
-      receiver: courseDetails.author.username,
-    };
-
-    try {
-      const responseChatId =
-        await ComplaintCourseService.createChatAndFirstMessage(messageBody);
-      navigate(`/message/${responseChatId}`);
-    } catch (error) {
-      console.error('Error:', error);
-    }
-  };
-
-  const onComplaintSubmit = async (data) => {
-    const complaintBody = {
-      senderUsername: authStore.userData.username,
-      reportedCourse: params.id,
-      courseComplaintType: data.complaintRequestType,
-      description: data.description,
-    };
-
-    try {
-      const response =
-        await ComplaintCourseService.createComplaintCourse(complaintBody);
-      setRequestResultText(
-        'Сomplaint has been successfully sent, you can close the window!'
-      );
-      reset();
-    } catch (error) {
-      console.error('Error:', error);
-    }
-  };
 
   useEffect(() => {
-    setIsPageLoading(true)
+    setIsPageLoading(true);
     const fetchCourse = async () => {
       try {
         const response = await TrainingCourseService.getTrainingCourseById(
-          params.id
+            params.id
         );
         setPurchased(!response.data.body.trainingCourseCroppedStep);
 
         const responseComplaintTypes =
-          await ComplaintCourseService.getComplaintCourseTypes();
+            await ComplaintCourseService.getComplaintCourseTypes();
         setComplaintTypesMap(responseComplaintTypes);
 
         setCourseDetails(response.data.body);
@@ -99,7 +66,7 @@ const TrainingCourseDetail = () => {
       } catch (error) {
         console.error('Error fetching course:', error);
       } finally {
-        setIsPageLoading(false)
+        setIsPageLoading(false);
       }
     };
 
@@ -131,36 +98,42 @@ const TrainingCourseDetail = () => {
 
   const handleByCourse = async () => {
     if (authStore.authenticated) {
-      const response = await TrainingCourseService.handleByCourse(params.id)
+      const response = await TrainingCourseService.handleByCourse(params.id);
       if (response.status === 200) {
         window.location.reload();
       }
     } else {
-      navigate("/")
+      navigate("/");
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
-  }
+  };
+
+
 
   return (
-    <div className="main">
-      {
-        isPageLoading ? (
+      <div className="main">
+        {isPageLoading ? (
             <LoadingPageIndicator />
         ) : (
             <div className="main-course-content">
               <h1 className="course-detail-title">{courseDetails?.name}</h1>
+              
 
-              <button className="menu-toggle-btn" onClick={toggleMenu}>
-                <span className="dot"></span>
-                <span className="dot"></span>
-                <span className="dot"></span>
-              </button>
-
+              {
+                authStore.authenticated ? (
+                        <button className="menu-toggle-btn" onClick={toggleMenu}>
+                          <span className="dot"></span>
+                          <span className="dot"></span>
+                          <span className="dot"></span>
+                        </button>
+                    ) :
+                    ""
+              }
               <div className={`menu-card ${menuOpen ? 'open' : ''}`}>
-                {authStore?.userData?.roles.includes('ADMIN', 'MODERATOR') ||
-                authStore?.userData?.username === courseDetails?.author?.username ? (
-                    <ul className="menu-list">
-                      <li className="menu-item">
+                <ul className="menu-list">
+                  {authStore?.userData?.roles.includes('ADMIN', 'MODERATOR') ||
+                  authStore?.userData?.username === courseDetails?.author?.username ? (
+                      <li className="menu-item" onClick={() => navigate(`/redact-course/${params.id}`)}>
                         <svg
                             className="menu-icon"
                             xmlns="http://www.w3.org/2000/svg"
@@ -179,16 +152,39 @@ const TrainingCourseDetail = () => {
                         </svg>
 
                         <p
-                            onClick={() => navigate(`/redact-course/${params.id}`)}
                             className="menu-label"
                         >
                           Redact
                         </p>
                       </li>
-                    </ul>
-                ) : (
-                    ''
-                )}
+
+
+                  ) : (
+                      ''
+                  )}
+                  {
+                    isPurchased ? (
+                            <li className="menu-item" onClick={() => openModal("Send review",
+                                <ReviewModalContent
+                                    handleSubmit={handleSubmit}
+                                    register={register}
+                                    errors={errors}
+                                    trainingCourseId={params.id}
+                                    reset={reset}
+                                />)}>
+                              <img className="menu-icon" width="25"
+                                   height="25" src="/reviews-icon.png" alt=""/>
+
+                              <p
+                                  className="menu-label"
+                              >
+                                Send review
+                              </p>
+                            </li>
+                        ) :
+                        ''
+                  }
+                </ul>
                 <div className="menu-separator"></div>
                 <ul className="menu-list">
                   {authStore?.userData?.roles.includes('ADMIN', 'MODERATOR') ||
@@ -219,7 +215,17 @@ const TrainingCourseDetail = () => {
                   ) : (
                       ''
                   )}
-                  <li onClick={() => openComplaintModal()} className="menu-item delete">
+                  <li onClick={() => openModal('Report',
+                      <ComplaintModalContent
+                          complaintTypesMap={complaintTypesMap}
+                          handleSubmit={handleSubmit}
+                          params={params}
+                          reset={reset}
+                          senderUsername={authStore.userData.username}
+                          register={register}
+                      />)
+
+                  } className="menu-item delete">
                     <svg
                         className="menu-icon"
                         strokeLinejoin="round"
@@ -231,10 +237,9 @@ const TrainingCourseDetail = () => {
                         height="24"
                         width="24"
                     >
-                      <path d="M2 21a8 8 0 0 1 13.292-6"></path>
-                      <circle r="5" cy="8" cx="10"></circle>
-                      <path d="M19 16v6"></path>
-                      <path d="M22 19h-6"></path>
+                      <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                      <line y2="9" y1="9" x2="12" x1="12"></line>
+                      <line y2="13" y1="13" x2="12" x1="12"></line>
                     </svg>
                     <p className="menu-label">Report</p>
                   </li>
@@ -274,20 +279,26 @@ const TrainingCourseDetail = () => {
                     <div className="author-name">
                       <span className="author-name-prefix">Author</span>
                       <span className="card-author-name">
-                <Link to={`/profile/${courseDetails?.author?.username}`}>
-                  {courseDetails?.author?.username}
-                </Link>
-              </span>
+                    <Link to={`/profile/${courseDetails?.author?.username}`}>
+                      {courseDetails?.author?.username}
+                    </Link>
+                  </span>
                     </div>
                     {isPurchased ? (
                         courseDetails?.chatting ? (
                             ''
-                        ) : !authStore?.userData?.username === courseDetails?.author?.username ? (
-                            <button onClick={openMessageDialog} className="btn-add-step">
+                        ) : authStore?.userData?.username === courseDetails?.author?.username ? (
+                            ''
+                        ) : (
+                            <button onClick={() => openModal('Send Message',
+                                <MessageModalContent
+                                    register={register}
+                                    handleSubmit={handleSubmit}
+                                    navigate={navigate}
+                                    authorUsername={courseDetails.author.username}
+                                />)} className="btn-add-step">
                               Send message
                             </button>
-                        ) : (
-                            ''
                         )
                     ) : (
                         ''
@@ -308,38 +319,12 @@ const TrainingCourseDetail = () => {
                 </div>
               </div>
 
-              {showMessageDialog && (
-                  <div className="modal-overlay">
-                    <div className="modal-content">
-                      <div className="modal-header">
-                        <h2>
-                          Send message to <span>{courseDetails?.author}</span>
-                        </h2>
-                        <span className="close-button" onClick={closeMessageDialog}>
-                ✖
-              </span>
-                      </div>
-                      <div className="modal-body">
-                        <form onSubmit={handleSubmit(onSubmit)}>
-                          <label htmlFor="description" className="support-label">
-                            message
-                            <span style={{color: 'red', marginBottom: '5px'}}>*</span>
-                          </label>
-                          <textarea
-                              {...register('message')}
-                              className="support-area"
-                              name="message"
-                          />
-
-                          <div className="modal-footer">
-                            <div className="support-btn-block">
-                              <button className="green-center-btn">Send</button>
-                            </div>
-                          </div>
-                        </form>
-                      </div>
-                    </div>
-                  </div>
+              {showModal && (
+                  <Modal
+                      title={modalTitle}
+                      content={modalContent}
+                      onClose={closeModal}
+                  />
               )}
 
               <div className="course-detail-material">
@@ -351,24 +336,24 @@ const TrainingCourseDetail = () => {
                         <img src="/reviews-icon.png" alt="" className="material-icon"/>
                       </div>
                       <span className="material-description">
-                Reviews: {courseDetails?.reviewsCount}
-              </span>
+                    Reviews: {courseDetails?.reviewsCount}
+                  </span>
                     </div>
                     <div className="material-info-block">
                       <div className="circle">
                         <img src="/dnevnikvideo.png" alt="" className="material-icon"/>
                       </div>
                       <span className="material-description">
-                {`Material from ` + courseDetails?.videoCount + ' videos'}
-              </span>
+                    {`Material from ` + courseDetails?.videoCount + ' videos'}
+                  </span>
                     </div>
                     <div className="material-info-block">
                       <div className="circle">
                         <img src="/gym100.png" alt="" className="material-icon"/>
                       </div>
                       <span className="material-description">
-                Course buyers: {courseDetails?.courseBuyers}
-              </span>
+                    Course buyers: {courseDetails?.courseBuyers}
+                  </span>
                     </div>
                   </div>
                   <div className="material-block">
@@ -376,19 +361,19 @@ const TrainingCourseDetail = () => {
                       <div className="circle">
                         <img src="/ganteli.png" alt="" className="material-icon"/>
                       </div>
-                      <span className="material-description">uuh</span>
+                      <span className="material-description">-</span>
                     </div>
                     <div className="material-info-block">
                       <div className="circle">
                         <img src="/dnevnikvideo.png" alt="" className="material-icon"/>
                       </div>
-                      <span className="material-description">{`Изображения: `}</span>
+                      <span className="material-description">-</span>
                     </div>
                     <div className="material-info-block">
                       <div className="circle">
                         <img src="/gym100.png" alt="" className="material-icon"/>
                       </div>
-                      <span className="material-description">Course buyers: 3</span>
+                      <span className="material-description">-</span>
                     </div>
                   </div>
                 </div>
@@ -396,25 +381,18 @@ const TrainingCourseDetail = () => {
 
               {isPurchased ? (
                   <div className="course-steps-block">
-                    {courseDetails?.trainingCourseSteps?.map((trainingCourseStep) => (
-                        <div className="step-block" key={trainingCourseStep?.id}>
+                    {courseDetails?.trainingCourseSteps?.map((trainingCourseStep, index) => (
+                        <div className="step-block" key={index}>
                           <h2 className="step-title">
-                            <h2
-                                style={{
-                                  fontSize: '38px',
-                                  color: '#23c483',
-                                  display: 'inline-block',
-                                  fontFamily: 'sans-serif',
-                                }}
-                            >
-                              #
-                            </h2>{' '}
+  <span style={{fontSize: '38px', color: '#23c483', display: 'inline-block'}}>
+    #
+  </span>{' '}
                             {trainingCourseStep?.title}
                           </h2>
 
                           <span className="step-detail-description">
-                {courseDetails?.description}
-              </span>
+                    {courseDetails?.description}
+                  </span>
                           <Swiper
                               spaceBetween={20}
                               slidesPerView={1}
@@ -435,8 +413,8 @@ const TrainingCourseDetail = () => {
                                           {stepDetail.title}
                                         </h2>
                                         <span className="step-detail-description">
-                          {stepDetail.description}
-                        </span>
+                              {stepDetail.description}
+                            </span>
                                         {stepDetail?.videos ? (
                                             <VideoPlayer
                                                 title={courseDetails?.description}
@@ -465,29 +443,23 @@ const TrainingCourseDetail = () => {
                         buy for {courseDetails?.price}$
                       </button>
                       <span data-tooltip={"После покупки вы можете найти курс во вкладе 'Купленные курсы'"}>
-            <img className="course-buy-info" src="/icon-info.png" alt=""/>
-          </span>
+                  <img className="course-buy-info" src="/icon-info.png" alt=""/>
+                </span>
                     </div>
 
                     <div className="course-blur-course-steps">
                       <div className="step-block">
                         <h2 className="step-title not-clickable">
-                          <h2
-                              style={{
-                                fontSize: '38px',
-                                color: '#23c483',
-                                display: 'inline-block',
-                              }}
-                          >
+                          <span style={{fontSize: '38px', color: '#23c483', display: 'inline-block'}}>
                             #
-                          </h2>{' '}
+                          </span>{' '}
                           {courseDetails?.trainingCourseCroppedStep?.title}
                         </h2>
 
                         <div className="step-detail-block">
-                <span className="step-detail-description not-clickable">
-                  {courseDetails?.trainingCourseCroppedStep?.description}
-                </span>
+                    <span className="step-detail-description not-clickable">
+                      {courseDetails?.trainingCourseCroppedStep?.description}
+                    </span>
                         </div>
                         <div className="course-steps-video not-clickable">
                           <VideoPlayer
@@ -499,66 +471,9 @@ const TrainingCourseDetail = () => {
                     </div>
                   </div>
               )}
-
-              {showComplaintModal && (
-                  <div className="modal-overlay">
-                    <div className="modal-content">
-                      <div className="modal-header">
-                        <h2>Report</h2>
-                        <span className="close-button" onClick={closeComplaintModal}>
-                ✖
-              </span>
-                      </div>
-                      {requestResultText && (
-                          <div className="request-result-block">
-                            <span className="request-result-text">{requestResultText}</span>
-                          </div>
-                      )}
-
-                      <div className="modal-body">
-                        <form onSubmit={handleSubmit(onComplaintSubmit)}>
-                          <div className="input-simple-wrapper">
-                            <label htmlFor="requestType" className="support-label">
-                              Report type<span style={{color: 'red'}}>*</span>
-                            </label>
-                            <select
-                                name="requestType"
-                                className="simple-input"
-                                {...register('complaintRequestType')}
-                            >
-                              <option value="" disabled selected>
-                                Pick support type
-                              </option>
-                              {Object.entries(complaintTypesMap).map(([value, label]) => (
-                                  <option value={value}>{label}</option>
-                              ))}
-                            </select>
-                          </div>
-
-                          <label htmlFor="description" className="support-label">
-                            Description
-                            <span style={{color: 'red', marginBottom: '5px'}}>*</span>
-                          </label>
-                          <textarea
-                              {...register('description')}
-                              className="support-area"
-                              name="description"
-                          />
-
-                          <div className="modal-footer">
-                            <div className="support-btn-block">
-                              <button className="green-center-btn">Send</button>
-                            </div>
-                          </div>
-                        </form>
-                      </div>
-                    </div>
-                  </div>
-              )}
             </div>
-        )
-      }
-    </div>
+        )}
+      </div>
   );
 };
 

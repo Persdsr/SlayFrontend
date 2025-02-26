@@ -94,7 +94,9 @@ export default class SupportService {
     setRequestResultText
   ) {
     axios
-      .post(`${process.env.REACT_APP_API_BASE_URL}/api/support`, formData, {
+      .post(`${process.env.REACT_APP_API_BASE_URL}/api/support`,
+          formData,
+          {
         onUploadProgress: (progressEvent) => {
           const progress = Math.round(
             (progressEvent.loaded * 100) / progressEvent.total
@@ -114,11 +116,11 @@ export default class SupportService {
         setUploadProgress({});
         reset();
         window.scrollTo({ top: 0, behavior: 'smooth' });
-        setRequestResultText("Your request has been sent to your email address. We will review it as soon as possible!");
+        setRequestResultText("Your request has been sent to your supports. We will review it as soon as possible!");
       })
       .catch((error) => {
         setRequestResultText(
-          'Произошла ошибка при отправке. Попробуйте снова.'
+          'An error occurred while sending. Try again later.'
         );
         console.error('Ошибка:', error);
       });

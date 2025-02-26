@@ -87,6 +87,45 @@ export default class TrainingCourseService {
     );
   }
 
+    static async createCourseReview(
+        formData,
+        setUploadProgress,
+        setUploadedFiles,
+        reset,
+        setRequestResultText
+    ) {
+        try {
+            await axios.post(
+                `${process.env.REACT_APP_API_BASE_URL}/api/training-course/review`,
+                formData,
+                {
+                    onUploadProgress: (progressEvent) => {
+                        const progress = Math.round(
+                            (progressEvent.loaded * 100) / progressEvent.total
+                        );
+                        setUploadProgress((prev) => ({
+                            ...prev,
+                            total: progress,
+                        }));
+                    },
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem('accessToken')}`
+                    },
+                }
+            );
+
+            setUploadedFiles([]);
+            setUploadProgress({});
+            reset();
+            setRequestResultText("Your request has been sent to your email address. We will review it as soon as possible!");
+        } catch (error) {
+            console.error('Error:', error.response ? error.response.data : error.message);
+            setRequestResultText(
+                'Произошла ошибка при отправке. Попробуйте снова.'
+            );
+        }
+    }
+
   static async handleByCourse(courseId) {
     return await axios.post(
         `${process.env.REACT_APP_API_BASE_URL}/api/training-course/buy/${courseId}`,
