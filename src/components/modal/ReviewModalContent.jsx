@@ -13,7 +13,7 @@ const ReviewModalContent = ({
     const [uploadedFiles, setUploadedFiles] = useState([]);
     const [uploadProgress, setUploadProgress] = useState({});
     const [requestResultText, setRequestResultText] = useState('');
-    const [rating, setRating] = useState(0);
+    const [rating, setRating] = useState(5);
 
     const handleFileChange = (event) => {
         const files = Array.from(event.target.files);
