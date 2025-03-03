@@ -18,45 +18,19 @@ const Footer = () => {
             <li>
               <a href="/about-us">About us</a>
             </li>
-            <li>
-              <a href="/">Сервисы</a>
-            </li>
-            <li>
-              <a href="/">Контакты</a>
-            </li>
           </ul>
         </div>
 
         <div className="footer-contact">
           <h4>Contact Us</h4>
-          <p>Email: support@company.com</p>
-          <p>Phone: +123-456-7890</p>
-          <p>Address: 123 Business Road, City, Country</p>
+          <p>Email: reixter@bk.ru</p>
         </div>
 
         <div className="footer-social">
           <h4>Follow Us</h4>
           <a href="/">
             <img
-              src="https://img.icons8.com/ios-filled/50/ffffff/facebook-new.png"
-              alt="img"
-            />
-          </a>
-          <a href="/">
-            <img
-              src="https://img.icons8.com/ios-filled/50/ffffff/twitter.png"
-              alt="img"
-            />
-          </a>
-          <a href="/">
-            <img
-              src="https://img.icons8.com/ios-filled/50/ffffff/instagram-new.png"
-              alt="img"
-            />
-          </a>
-          <a href="/">
-            <img
-              src="https://img.icons8.com/ios-filled/50/ffffff/linkedin.png"
+              src="/telegram-icon.png"
               alt="img"
             />
           </a>

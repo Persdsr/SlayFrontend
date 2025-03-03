@@ -22,13 +22,13 @@ const Title = () => {
               className="title-block-button"
               onClick={() => setRegisterOpen(true)}
             >
-              Регистрация
+              Sign Up
             </button>
             <button
               className="title-block-button"
               onClick={() => setLoginOpen(true)}
             >
-              Войти
+              Sign In
             </button>
           </div>
         </div>
