@@ -79,7 +79,7 @@ const Navbar = () => {
         <ul className="navbar-links">
           {authStore?.authenticated === false ? (
               <li className="navbar-title dropdown">
-                <a className="navbar-title" href="#faq">
+                <a className="navbar-title" href="/oferta">
                   FAQ
                 </a>
               </li>
@@ -90,7 +90,7 @@ const Navbar = () => {
                 </a>
                 <ul className={`dropdown-menu ${dropdownVisible === 'support' ? 'visible' : ''}`}>
                   <li>
-                    <a className="navbar-title" href="#faq">
+                    <a className="navbar-title" href="/oferta">
                       FAQ
                     </a>
                   </li>

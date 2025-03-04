@@ -10,28 +10,38 @@ const Footer = () => {
         </div>
 
         <div className="footer-links">
-          <h4>Quick Links</h4>
+          <h4>Дополнительно</h4>
           <ul>
             <li>
-              <a href="/">Home</a>
+              <a href={'/oferta'} className="footer-link">Лицензионное соглашение</a>
             </li>
             <li>
-              <a href="/about-us">About us</a>
+              <a href={'/about'} className="footer-link">О нас</a>
             </li>
           </ul>
         </div>
 
-        <div className="footer-contact">
-          <h4>Contact Us</h4>
-          <p>Email: reixter@bk.ru</p>
+        <div className="footer-links">
+          <h4>Quick Links</h4>
+          <ul>
+            <li>
+              <a className="footer-link" href="/">Home</a>
+            </li>
+            <li>
+              <a className="footer-link" href="/about-us">About us</a>
+            </li>
+            <li>
+              <a className="footer-link" href="/courses">Каталог курсов</a>
+            </li>
+          </ul>
         </div>
 
         <div className="footer-social">
           <h4>Follow Us</h4>
           <a href="/">
             <img
-              src="/telegram-icon.png"
-              alt="img"
+                src="/telegram-icon.png"
+                alt="img"
             />
           </a>
         </div>

@@ -26,14 +26,10 @@ const MessageModalContent = ({
     return (
         <form onSubmit={handleSubmit(onSubmit)}>
             <label htmlFor="description" className="support-label">
-                message
+                Платежная система
                 <span style={{color: 'red', marginBottom: '5px'}}>*</span>
             </label>
-            <textarea
-                {...register('message')}
-                className="support-area"
-                name="message"
-            />
+
             <div className="modal-footer">
                 <div className="support-btn-block">
                     <button className="green-center-btn">Send</button>

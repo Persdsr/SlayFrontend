@@ -15,6 +15,8 @@ import Modal from "../modal/Modal"
 import ComplaintModalContent from "../modal/ComplaintModalContent";
 import MessageModalContent from "../modal/MessageModalContent";
 import ReviewModalContent from "../modal/ReviewModalContent";
+import ModalPayment from "../modal/ModalPayment";
+import CourseBuyModalContent from "../modal/CourseBuyModalContent";
 
 const TrainingCourseDetail = () => {
   const params = useParams();
@@ -24,8 +26,11 @@ const TrainingCourseDetail = () => {
   let [isPurchased, setPurchased] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [showModal, setShowModal] = useState(false);
+  const [showPaymentModal, setPaymentShowModal] = useState(false);
   const [modalContent, setModalContent] = useState(null);
+  const [modalPaymentContent, setPaymentModalContent] = useState(null);
   const [modalTitle, setModalTitle] = useState('');
+  const [modalPaymentTitle, setPaymentModalTitle] = useState('');
   const [complaintTypesMap, setComplaintTypesMap] = useState([]);
   const navigate = useNavigate();
   const { register, handleSubmit, setValue, reset, formState: {
@@ -43,6 +48,18 @@ const TrainingCourseDetail = () => {
   const closeModal = () => {
     setShowModal(false);
     setModalContent(null);
+    reset();
+  };
+
+  const openPaymentModal = (title, content) => {
+    setPaymentModalTitle(title);
+    setPaymentModalContent(content);
+    setPaymentShowModal(true);
+  };
+
+  const closePaymentModal = () => {
+    setPaymentShowModal(false);
+    setPaymentModalContent(null);
     reset();
   };
 
@@ -95,20 +112,6 @@ const TrainingCourseDetail = () => {
       }
     }
   };
-
-  const handleByCourse = async () => {
-    if (authStore.authenticated) {
-      const response = await TrainingCourseService.handleByCourse(params.id);
-      if (response.status === 200) {
-        window.location.reload();
-      }
-    } else {
-      navigate("/");
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-  };
-
-
 
   return (
       <div className="main">
@@ -327,6 +330,14 @@ const TrainingCourseDetail = () => {
                   />
               )}
 
+              {showPaymentModal && (
+                  <ModalPayment
+                      title={modalPaymentTitle}
+                      content={modalPaymentContent}
+                      onClose={closePaymentModal}
+                  />
+              )}
+
               <div className="course-detail-material">
                 <h1 className="course-detail-title">Information</h1>
                 <div className="material-info">
@@ -439,9 +450,17 @@ const TrainingCourseDetail = () => {
               ) : (
                   <div className="course-steps-block">
                     <div className="buy-btn-container">
-                      <button onClick={handleByCourse} className="btn-course-buy">
-                        buy for {courseDetails?.price}$
+                      <button onClick={() => openPaymentModal(courseDetails.name,
+                          <CourseBuyModalContent
+                              handleSubmit={handleSubmit}
+                              register={register}
+                              navigate={navigate}
+                              courseId={params.id}
+                              authStore={authStore}
+                          />)} className="btn-course-buy">
+                        Купить за {courseDetails?.price}₽
                       </button>
+
                       <span data-tooltip={"После покупки вы можете найти курс во вкладе 'Купленные курсы'"}>
                   <img className="course-buy-info" src="/icon-info.png" alt=""/>
                 </span>
