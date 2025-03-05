@@ -16,6 +16,9 @@ const Footer = () => {
               <a href={'/oferta'} className="footer-link">Лицензионное соглашение</a>
             </li>
             <li>
+              <a href={'/oferta'} className="footer-link">Контакты</a>
+            </li>
+            <li>
               <a href={'/about'} className="footer-link">О нас</a>
             </li>
           </ul>
@@ -24,7 +27,7 @@ const Footer = () => {
         <div className="footer-links">
           <h4>Quick Links</h4>
           <ul>
-            <li>
+          <li>
               <a className="footer-link" href="/">Home</a>
             </li>
             <li>
