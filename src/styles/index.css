@@ -355,32 +355,98 @@ textarea {
   color: #23c483;
 }
 
-.course-catalog-navigate-block {
-  width: 100%;
-  height: 500px;
+.title-catalog-container {
+  margin: 200px auto 0 auto;
+  width: max-content;
+  text-align: center;
+
+}
+
+.title-catalog-container h1 {
+  color: white;
+  font-weight: 700;
+  font-size: 34px;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+
+}
+
+.catalog-desc {
+  color: #afafaf;
+  font-size: 26px;
+}
+
+.scroll-container {
   display: flex;
-  flex-direction: row;
+  align-items: center;
+  flex-direction: column;
+  width: 100%;
+  margin: 20px auto 0 auto;
+  justify-content: center;
+  overflow-x: hidden;
+}
+
+.scroll-block {
+  display: flex;
+  justify-content: center;
+  align-items: center;
   position: relative;
   overflow: hidden;
+  -webkit-mask-image: linear-gradient(90deg, transparent, #fff, 20%, #fff, 80%, transparent);
+  width: 100%;
+  max-width: 1000px;
+  margin: 0 auto;
 }
 
-.catalog-navigate-info {
+.scroll-block div {
+  white-space: nowrap;
+  animation: animate var(--t) linear infinite;
+  animation-delay: calc(var(--t) * -1);
   display: flex;
-  flex-direction: column;
-  margin: auto 0;
+  flex-wrap: nowrap;
 }
 
-.catalog-navigate-info a {
-  z-index: 99;
+.scroll-block div:nth-child(2) {
+  animation: animate2 var(--t) linear infinite;
+  animation-delay: calc(var(--t) / -2);
 }
 
-
-.catalog-navigate-text {
-  color: #afafaf;
-  max-width: 600px;
-  font-size: 24px;
+@keyframes animate {
+  0% {
+    transform: translateX(100%);
+  }
+  100% {
+    transform: translateX(-100%);
+  }
 }
 
+@keyframes animate2 {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-200%);
+  }
+}
+
+.scroll-block span {
+  display: inline-flex;
+  margin: 10px;
+  background: #353535;
+  color: #989797;
+  text-transform: uppercase;
+  padding: 5px 10px;
+  border-radius: 5px;
+  transition: .5s;
+}
+
+.catalog-navigate-btn:hover {
+  transform: translateY(-5px);
+}
+
+.catalog-navigate-btn:active {
+  transform: translateY(-1px);
+}
 .catalog-navigate-btn {
   margin-top: 20px;
   padding: 15px 30px;
@@ -400,23 +466,11 @@ textarea {
   width: fit-content;
 }
 
-.catalog-title {
-  padding-bottom: 14px;
-  color: white;
-}
-
-.catalog-navigate-btn:hover {
-  transform: translateY(-5px);
-}
-
-.catalog-navigate-btn:active {
-  transform: translateY(-1px);
-}
-
 .tip-application {
-  background-color: #1b1b1e;
+  background-image: url("../../public/tip.png");
+  background-size: cover;
+  background-position: center;
   border-radius: 30px;
-  background-position: bottom;
   width: 99%;
   height: 444px;
   margin: 100px auto;
