@@ -137,7 +137,7 @@ const TrainingCourseDetail = () => {
 
       if (response.ok) {
         const result = JSON.parse(responseText); // Парсим JSON только если ответ успешный
-        window.location.href = result.confirmation_url;
+        window.location.href = result.confirmation.confirmation_url;
       } else {
         console.error('Ошибка при создании платежа:', responseText);
       }
