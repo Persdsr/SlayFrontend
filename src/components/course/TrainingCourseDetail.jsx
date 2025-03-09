@@ -124,7 +124,7 @@ const TrainingCourseDetail = () => {
     };
 
     try {
-      const response = await fetch('/api/payment/create', {
+      const response = await fetch('https://24slay.ru/api/payment/create', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
