@@ -116,11 +116,10 @@ const TrainingCourseDetail = () => {
   const handleBuyCourse = async (event) => {
     event.preventDefault();
 
-    const formData = new FormData(event.target);
     const data = {
-      courseId: formData.get('courseId'),
-      buyerUsername: formData.get('buyerUsername'),
-      price: formData.get('price')
+      courseId: params.id,
+      buyerUsername: authStore?.userData?.username,
+      price: courseDetails?.price
     };
 
     try {
