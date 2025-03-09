@@ -1,4 +1,5 @@
 import axios from 'axios';
+import * as UUID from "uuid";
 
 export default class TrainingCourseService {
   static async getTrainingCourseById(id) {

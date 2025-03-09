@@ -113,6 +113,35 @@ const TrainingCourseDetail = () => {
     }
   };
 
+  const handleBuyCourse = async (event) => {
+    event.preventDefault();
+
+    const data = {
+      courseId: params.id,
+      buyerUsername: authStore?.userData?.username,
+      price: courseDetails?.price
+    };
+
+    try {
+      const response = await fetch('https://24slay.ru/api/payment/create', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+      });
+
+      if (response.ok) {
+        const result = await response.json();
+        window.location.href = result.confirmation_url; // Перенаправляем пользователя на страницу оплаты
+      } else {
+        console.error('Ошибка при создании платежа');
+      }
+    } catch (error) {
+      console.error('Ошибка:', error);
+    }
+  };
+
   return (
       <div className="main">
         {isPageLoading ? (
@@ -450,17 +479,10 @@ const TrainingCourseDetail = () => {
               ) : (
                   <div className="course-steps-block">
                     <div className="buy-btn-container">
-                      <form action="https://yookassa.ru/integration/simplepay/payment" method="post"
-                            acceptCharset="utf-8">
-                        <input name="shopSuccessURL" type="hidden" value="http://localhost:3000/payment/success"/>
-                        <input name="shopFailURL" type="hidden" value="http://localhost:3000/payment/fail"/>
-                        <input name="customerUsername" type="hidden" value={authStore?.userData?.username}/>
-                        <input name="sum" type="hidden" value={courseDetails.price}/>
-                        <input name="shopId" type="hidden" value="1024885"/>
-
-                        {/* Метаданные для передачи courseId и buyerUsername */}
-                        <input name="metadata[courseId]" type="hidden" value={courseDetails.id}/>
-                        <input name="metadata[buyerUsername]" type="hidden" value={authStore?.userData?.username}/>
+                      <form onSubmit={handleBuyCourse} method="post">
+                        <input name="courseId" type="hidden" value={courseDetails.id}/>
+                        <input name="buyerUsername" type="hidden" value={authStore?.userData?.username}/>
+                        <input name="price" type="hidden" value={courseDetails.price}/>
 
                         <button type="submit" className="btn-course-buy">
                           <span>Купить</span> <span className="ym-price-output"> {courseDetails.price}&nbsp;₽</span>
@@ -468,9 +490,10 @@ const TrainingCourseDetail = () => {
                       </form>
 
                       <span data-tooltip={"После покупки вы можете найти курс во вкладе 'Купленные курсы'"}>
-                  <img className="course-buy-info" src="/icon-info.png" alt=""/>
-                </span>
+            <img className="course-buy-info" src="/icon-info.png" alt=""/>
+        </span>
                     </div>
+
 
                     <div className="course-blur-course-steps">
                       <div className="step-block">
