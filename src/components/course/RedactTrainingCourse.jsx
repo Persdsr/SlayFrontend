@@ -560,6 +560,7 @@ const RedactTrainingCourse = () => {
 
                                 <div className="input-simple-wrapper">
                                     <label className="support-label">
+                                        Price
                                     </label>
                                     <input
                                         type="number"

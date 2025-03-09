@@ -30,6 +30,7 @@ import ResetPassword from "./pages/ResetPassword";
 import { Suspense } from "react";
 import AdminSportCategory from "./components/admin/AdminSportCategory";
 import LicenseAgreement from "./pages/LicenseAgreement";
+import PaymentForm from "./pages/PaymentForm";
 
 function App() {
   const authStore = useAuthStore();
@@ -80,6 +81,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Main />} />
         <Route path="/course/:id" element={<TrainingCourseDetail />} />
+        <Route path="/payment" element={<PaymentForm />} />
         <Route path="/create-course" element={<CreateTrainingCourse />} />
         <Route path="/search/:searchQuery" element={<TrainingCourseSearch />} />
         <Route path="/search" element={<Main />} />

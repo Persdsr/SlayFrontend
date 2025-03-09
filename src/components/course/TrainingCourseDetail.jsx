@@ -450,16 +450,22 @@ const TrainingCourseDetail = () => {
               ) : (
                   <div className="course-steps-block">
                     <div className="buy-btn-container">
-                      <button onClick={() => openPaymentModal(courseDetails.name,
-                          <CourseBuyModalContent
-                              handleSubmit={handleSubmit}
-                              register={register}
-                              navigate={navigate}
-                              courseId={params.id}
-                              authStore={authStore}
-                          />)} className="btn-course-buy">
-                        Купить за {courseDetails?.price}₽
-                      </button>
+                      <form action="https://yookassa.ru/integration/simplepay/payment" method="post"
+                            acceptCharset="utf-8">
+                        <input name="shopSuccessURL" type="hidden" value="http://localhost:3000/payment/success"/>
+                        <input name="shopFailURL" type="hidden" value="http://localhost:3000/payment/fail"/>
+                        <input name="customerUsername" type="hidden" value={authStore?.userData?.username}/>
+                        <input name="sum" type="hidden" value={courseDetails.price}/>
+                        <input name="shopId" type="hidden" value="1024885"/>
+
+                        {/* Метаданные для передачи courseId и buyerUsername */}
+                        <input name="metadata[courseId]" type="hidden" value={courseDetails.id}/>
+                        <input name="metadata[buyerUsername]" type="hidden" value={authStore?.userData?.username}/>
+
+                        <button type="submit" className="btn-course-buy">
+                          <span>Купить</span> <span className="ym-price-output"> {courseDetails.price}&nbsp;₽</span>
+                        </button>
+                      </form>
 
                       <span data-tooltip={"После покупки вы можете найти курс во вкладе 'Купленные курсы'"}>
                   <img className="course-buy-info" src="/icon-info.png" alt=""/>
