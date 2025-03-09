@@ -116,10 +116,11 @@ const TrainingCourseDetail = () => {
   const handleBuyCourse = async (event) => {
     event.preventDefault();
 
+    const formData = new FormData(event.target);
     const data = {
-      courseId: params.id,
-      buyerUsername: authStore?.userData?.username,
-      price: courseDetails?.price
+      courseId: formData.get('courseId'),
+      buyerUsername: formData.get('buyerUsername'),
+      price: formData.get('price')
     };
 
     try {
@@ -131,11 +132,14 @@ const TrainingCourseDetail = () => {
         body: JSON.stringify(data),
       });
 
+      const responseText = await response.text(); // Сначала читаем ответ как текст
+      console.log("Response text:", responseText); // Логируем ответ
+
       if (response.ok) {
-        const result = await response.json();
-        window.location.href = result.confirmation_url; // Перенаправляем пользователя на страницу оплаты
+        const result = JSON.parse(responseText); // Парсим JSON только если ответ успешный
+        window.location.href = result.confirmation_url;
       } else {
-        console.error('Ошибка при создании платежа');
+        console.error('Ошибка при создании платежа:', responseText);
       }
     } catch (error) {
       console.error('Ошибка:', error);
