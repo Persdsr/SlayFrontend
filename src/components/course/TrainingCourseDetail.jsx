@@ -116,14 +116,15 @@ const TrainingCourseDetail = () => {
   const handleBuyCourse = async (event) => {
     event.preventDefault();
 
+    const formData = new FormData(event.target);
     const data = {
-      courseId: params.id,
-      buyerUsername: authStore?.userData?.username,
-      price: courseDetails?.price
+      courseId: formData.get('courseId'),
+      buyerUsername: formData.get('buyerUsername'),
+      price: formData.get('price')
     };
 
     try {
-      const response = await fetch('https://24slay.ru/api/payment/create', {
+      const response = await fetch('/api/payment/create', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
