@@ -51,17 +51,6 @@ const TrainingCourseDetail = () => {
     reset();
   };
 
-  const openPaymentModal = (title, content) => {
-    setPaymentModalTitle(title);
-    setPaymentModalContent(content);
-    setPaymentShowModal(true);
-  };
-
-  const closePaymentModal = () => {
-    setPaymentShowModal(false);
-    setPaymentModalContent(null);
-    reset();
-  };
 
 
   useEffect(() => {
@@ -116,7 +105,6 @@ const TrainingCourseDetail = () => {
   const handleBuyCourse = async (event) => {
     event.preventDefault();
 
-    const formData = new FormData(event.target);
     const data = {
       courseId: params.id,
       buyerUsername: authStore?.userData?.username,
@@ -132,11 +120,11 @@ const TrainingCourseDetail = () => {
         body: JSON.stringify(data),
       });
 
-      const responseText = await response.text(); // Сначала читаем ответ как текст
-      console.log("Response text:", responseText); // Логируем ответ
+      const responseText = await response.text();
+      console.log("Response text:", responseText);
 
       if (response.ok) {
-        const result = JSON.parse(responseText); // Парсим JSON только если ответ успешный
+        const result = JSON.parse(responseText);
         window.location.href = result.confirmation.confirmation_url;
       } else {
         console.error('Ошибка при создании платежа:', responseText);
@@ -363,13 +351,6 @@ const TrainingCourseDetail = () => {
                   />
               )}
 
-              {showPaymentModal && (
-                  <ModalPayment
-                      title={modalPaymentTitle}
-                      content={modalPaymentContent}
-                      onClose={closePaymentModal}
-                  />
-              )}
 
               <div className="course-detail-material">
                 <h1 className="course-detail-title">Information</h1>

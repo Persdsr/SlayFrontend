@@ -128,7 +128,7 @@ const Navbar = () => {
                       ''
                   )}
                   <li>
-                    <a className="navbar-title" href={`/profile/${authStore?.userData.username}`}>
+                    <a className="navbar-title" href={`/profile/${authStore?.userData?.username}`}>
                       Profile
                     </a>
                   </li>

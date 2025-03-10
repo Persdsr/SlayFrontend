@@ -475,6 +475,7 @@ textarea {
   height: 444px;
   margin: 100px auto;
   padding: 30px;
+  -webkit-mask-image: linear-gradient(180deg, transparent, #fff, 15%, #fff, 85%, transparent);
 }
 
 .card {
