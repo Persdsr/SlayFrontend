@@ -35,32 +35,26 @@ const ChatDetail = () => {
     useEffect(() => {
         const fetchChatsAndChatDetail = async () => {
 
+            if (!authStore?.userData?.username) {
+                return;
+            }
+
             try {
+                const response = await ChatService.getChats(authStore?.userData?.username);
+                setChats(response.data);
 
-                try {
-                    const response = await ChatService.getChats();
-                    setChats(response.data);
-                } catch (error) {
-                    console.error('Error fetching chats:', error);
-                }
-
-                const responseChatDetail = await ChatService.getChatDetailById(
-                    params.chatId
-                );
+                const responseChatDetail = await ChatService.getChatDetailById(params.chatId);
                 setChatDetail(responseChatDetail);
                 setMessages(responseChatDetail.messages || []);
-
             } catch (error) {
                 console.error('Error fetching chat detail:', error);
-            } finally {
             }
         };
 
         if (params.chatId) {
             fetchChatsAndChatDetail();
         }
-
-    }, [params.chatId]);
+    }, [params.chatId, authStore?.userData?.username]);
 
     useEffect(() => {
         setIsChatDetailLoading(true)
@@ -158,7 +152,7 @@ const ChatDetail = () => {
 
         client.publish({
             destination: '/app/chat.sendUserMessage',
-            body: JSON.stringify(newMessage),
+            body: JSON.stringify(newMessage)
         });
 
         reset();

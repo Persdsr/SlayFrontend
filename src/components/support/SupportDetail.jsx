@@ -40,6 +40,9 @@ const SupportDetail = () => {
     const stompClient = new Client({
       webSocketFactory: () =>
         new SockJS(`${process.env.REACT_APP_API_BASE_URL}/ws`),
+      connectHeaders: {
+        Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+      },
       onConnect: () => {
         console.log('Connected to WebSocket');
         stompClient.subscribe(
@@ -48,6 +51,7 @@ const SupportDetail = () => {
             const newMessage = JSON.parse(message.body);
             setMessages((prevMessages) => [...prevMessages, newMessage]);
           }
+
         );
       },
     });
@@ -93,7 +97,7 @@ const SupportDetail = () => {
     const newMessage = {
       message: data.message,
       sender: {
-        username: authStore?.userData?.username,
+        username: authStore.userData.username,
         avatar: authStore?.userData?.avatar,
       },
       supportRequestId: params.supportId,
@@ -103,6 +107,9 @@ const SupportDetail = () => {
     client.publish({
       destination: '/app/chat.sendMessage',
       body: JSON.stringify(newMessage),
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+      },
     });
 
     reset();

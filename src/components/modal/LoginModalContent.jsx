@@ -31,10 +31,9 @@ const LoginModalContent = ({
                     window.location.reload();
                 })
                 .catch((err) => {
-                    console.log(err.response.data.message);
                     const errorMessage = document.getElementById('error-message');
                     errorMessage.classList.remove('hidden');
-                    setErrorMessage(err.response.data.message);
+                    setErrorMessage("Incorrect username or password");
                 });
         } finally {
             setIsLoginLoading(false)
@@ -65,6 +64,7 @@ const LoginModalContent = ({
                     <div className="input-wrapper">
                         <input
                             type="text"
+                            autoComplete="off"
                             className="input-box"
                             placeholder="username"
                             name="username"

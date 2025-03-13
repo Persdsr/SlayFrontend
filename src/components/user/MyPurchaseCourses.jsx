@@ -12,8 +12,14 @@ const MyPurchaseCourses = () => {
 
   useEffect(() => {
     const fetchData = async () => {
+      const username = authStore?.userData?.username;
+
+      if (!username) {
+        return;
+      }
+
       try {
-        const sortedData = await UserService.getUserPurchaseCourses();
+        const sortedData = await UserService.getUserPurchaseCourses(username);
         setCourses(sortedData.data);
       } catch (error) {
         console.error('Error fetching data:', error);

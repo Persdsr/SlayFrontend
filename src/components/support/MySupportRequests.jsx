@@ -86,7 +86,6 @@ const MySupportRequests = () => {
 
   return (
     <div className="content-container">
-      <UserRequestsToolbar />
 
       <div className="content-block">
         <h2>Supports</h2>

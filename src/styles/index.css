@@ -591,7 +591,6 @@ textarea {
 }
 
 footer {
-  background: #232323;
   color: white;
   padding: 40px 20px;
   font-family: 'Arial', sans-serif;
@@ -602,10 +601,8 @@ footer {
   display: flex;
   justify-content: space-between;
   flex-wrap: wrap;
-  max-width: 1200px;
+  max-width: 1350px;
   margin: 0 auto;
-  padding-bottom: 20px;
-  border-bottom: 1px solid rgb(84 90 106);
 }
 
 .footer-logo,
@@ -667,17 +664,6 @@ footer {
   height: 24px;
 }
 
-.footer-bottom {
-  text-align: center;
-  padding: 20px 0;
-  background-color: #23c483;
-  border-top: 1px solid rgb(84 90 106);
-}
-
-.footer-bottom p {
-  margin: 0;
-  color: rgb(255, 255, 255);
-}
 
 @media (max-width: 768px) {
   .footer-container {
@@ -1534,6 +1520,7 @@ footer {
 
 .courses-container {
   display: flex;
+  flex-wrap: wrap;
   flex-direction: row;
 }
 
@@ -1590,7 +1577,7 @@ footer {
 
 .catalog-half-circle {
   position: relative;
-  bottom: 28px;
+  bottom: 29px;
   left: 4px;
   width: 47px;
   height: 35px;

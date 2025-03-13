@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import TrainingCourseService from "../../service/TrainingCourseService";
 import AdminService from "../../service/AdminService";
 
@@ -28,11 +28,10 @@ const SportCategoryRedactModalContent = ({
             };
             formData.append(
                 'categoryFields',
-                new Blob([JSON.stringify(categoryFields)], { type: 'application/json' })
+                new Blob([JSON.stringify(categoryFields)], {type: 'application/json'})
             );
 
-
-                formData.append("poster", data.poster);
+            formData.append("poster", data.poster);
 
             await AdminService.updateSportCategoryFields(formData, category.name);
 
@@ -51,7 +50,7 @@ const SportCategoryRedactModalContent = ({
             )}
             <label htmlFor="title" className="support-label">
                 name
-                <span style={{ color: 'red', marginBottom: '5px' }}>*</span>
+                <span style={{color: 'red', marginBottom: '5px'}}>*</span>
             </label>
             <input
                 type="text"
@@ -77,7 +76,7 @@ const SportCategoryRedactModalContent = ({
             )}
             <label htmlFor="text" className="support-label">
                 description
-                <span style={{ color: 'red', marginBottom: '5px' }}>*</span>
+                <span style={{color: 'red', marginBottom: '5px'}}>*</span>
             </label>
             <textarea
                 defaultValue={category.description}
@@ -96,7 +95,7 @@ const SportCategoryRedactModalContent = ({
 
             <label htmlFor="title" className="support-label">
                 poster
-                <span style={{ color: 'red', marginBottom: '5px' }}>*</span>
+                <span style={{color: 'red', marginBottom: '5px'}}>*</span>
             </label>
 
             <div className="file-input-wrapper">
@@ -133,7 +132,7 @@ const SportCategoryRedactModalContent = ({
                     />
                     {posterPreview ? (
                         <img
-                            style={{ width: '220px', height: '300px' }}
+                            style={{width: '220px', height: '300px'}}
                             src={posterPreview}
                             alt="Poster Preview"
                         />

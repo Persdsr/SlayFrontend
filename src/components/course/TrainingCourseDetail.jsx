@@ -60,15 +60,15 @@ const TrainingCourseDetail = () => {
         const response = await TrainingCourseService.getTrainingCourseById(
             params.id
         );
-        setPurchased(!response.data.body.trainingCourseCroppedStep);
+        setPurchased(!response.data.trainingCourseCroppedStep);
 
         const responseComplaintTypes =
             await ComplaintCourseService.getComplaintCourseTypes();
         setComplaintTypesMap(responseComplaintTypes);
 
-        setCourseDetails(response.data.body);
-        setVideoUrl(response.data.body.trailer);
-        setCreateAt(formatDate(response.data.body.createAt));
+        setCourseDetails(response.data);
+        setVideoUrl(response.data.trailer);
+        setCreateAt(formatDate(response.data.createAt));
       } catch (error) {
         console.error('Error fetching course:', error);
       } finally {
@@ -116,6 +116,7 @@ const TrainingCourseDetail = () => {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          Authorization: `Bearer ${localStorage.getItem('accessToken')}`
         },
         body: JSON.stringify(data),
       });
@@ -308,7 +309,7 @@ const TrainingCourseDetail = () => {
                     </Link>
                   </span>
                     </div>
-                    {isPurchased ? (
+                    {/*{isPurchased ? (
                         courseDetails?.chatting ? (
                             ''
                         ) : authStore?.userData?.username === courseDetails?.author?.username ? (
@@ -326,7 +327,7 @@ const TrainingCourseDetail = () => {
                         )
                     ) : (
                         ''
-                    )}
+                    )}*/}
                   </div>
 
                   <div className="tags">

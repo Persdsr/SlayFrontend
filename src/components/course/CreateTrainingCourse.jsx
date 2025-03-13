@@ -4,7 +4,7 @@ import CreatableSelect from 'react-select/creatable';
 import { useAuthStore } from '../store/store';
 import TrainingCourseService from '../../service/TrainingCourseService';
 import VideoPlayer from '../player/VideoPlayer';
-import axios from 'axios';
+import axios, {HttpStatusCode} from 'axios';
 import LoadingPageIndicator from "../LoadingPageIndicator";
 import LoadingMiniIndicator from "../LoadingMiniIndicator";
 
@@ -425,7 +425,7 @@ const CreateTrainingCourse = () => {
           }
       );
 
-      if (response.status === 200) {
+      if (response.status === HttpStatusCode.Created) {
         console.log("Response:", response);
         alert("Course created successfully!");
       } else {

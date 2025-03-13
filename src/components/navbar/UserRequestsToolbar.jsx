@@ -7,9 +7,9 @@ const UserRequestsToolbar = () => {
       <NavLink className="left-menu-link" to="/my-supports">
         <span className="nav-span">Supports</span>{' '}
       </NavLink>
-      <NavLink className="left-menu-link" to="/my-complaints">
+      {/*<NavLink className="left-menu-link" to="/my-complaints">
         <span className="nav-span">Complaints</span>{' '}
-      </NavLink>
+      </NavLink>*/}
     </div>
   );
 };

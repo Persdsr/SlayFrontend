@@ -24,7 +24,7 @@ export default class ComplaintService {
         },
       }
     );
-    return response.data.body;
+    return response.data;
   }
 
   static async getComplaintTypes() {
@@ -89,7 +89,7 @@ export default class ComplaintService {
     );
   }
 
-  static async getAllUserComplaints() {
+  static async getAllUserComplaints(username) {
     try {
       const response = await axios.get(
         `${process.env.REACT_APP_API_BASE_URL}/api/complaint/user`,
@@ -97,6 +97,9 @@ export default class ComplaintService {
           headers: {
             Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
           },
+          params: {
+            username: username
+          }
         }
       );
       return response.data ? response.data : [];

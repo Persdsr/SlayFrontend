@@ -1,6 +1,7 @@
 import React, {useState} from 'react';
 import AdminService from "../../service/AdminService";
 import {useForm} from "react-hook-form";
+import {HttpStatusCode} from "axios";
 
 
 const CreateSportCategoryModal = () => {
@@ -22,10 +23,11 @@ const CreateSportCategoryModal = () => {
             data.poster.length > 0 ? data.poster[0] : data.poster
         );
 
-        const response = AdminService.createSportCategory(formData)
-        console.log(categoryFields)
-        if (response.status === 200) {
+        const response = await AdminService.createSportCategory(formData)
+        if (response.status === HttpStatusCode.Created) {
             window.location.reload();
+        } else {
+
         }
     };
 

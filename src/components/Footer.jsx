@@ -13,13 +13,13 @@ const Footer = () => {
           <h4>Дополнительно</h4>
           <ul>
             <li>
-              <a href={'/oferta'} className="footer-link">Лицензионное соглашение</a>
+              <a href={'/oferta'} className="footer-link">License agreement</a>
             </li>
             <li>
-              <a href={'/oferta'} className="footer-link">Контакты</a>
+              <a href={'/oferta'} className="footer-link">Contacts</a>
             </li>
             <li>
-              <a href={'/about'} className="footer-link">О нас</a>
+              <a href={'/about'} className="footer-link">About us</a>
             </li>
           </ul>
         </div>
@@ -31,10 +31,7 @@ const Footer = () => {
               <a className="footer-link" href="/">Home</a>
             </li>
             <li>
-              <a className="footer-link" href="/about-us">About us</a>
-            </li>
-            <li>
-              <a className="footer-link" href="/courses">Каталог курсов</a>
+              <a className="footer-link" href="/courses">Course catalog</a>
             </li>
           </ul>
         </div>
@@ -48,10 +45,6 @@ const Footer = () => {
             />
           </a>
         </div>
-      </div>
-
-      <div className="footer-bottom">
-        <p>&copy; 2025 Slay.</p>
       </div>
     </footer>
   );

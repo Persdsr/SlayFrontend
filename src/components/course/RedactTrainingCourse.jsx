@@ -5,7 +5,7 @@ import {useAuthStore} from '../store/store';
 import TrainingCourseService from '../../service/TrainingCourseService';
 import {useParams} from 'react-router-dom';
 import VideoPlayer from '../player/VideoPlayer';
-import axios from 'axios';
+import axios, {HttpStatusCode} from 'axios';
 import LoadingMiniIndicator from "../LoadingMiniIndicator";
 import LoadingPageIndicator from "../LoadingPageIndicator";
 
@@ -424,7 +424,7 @@ const RedactTrainingCourse = () => {
                 }
             );
 
-            if (response.status === 200) {
+            if (response.status === HttpStatusCode.NoContent) {
                 console.log('Response:', response);
                 alert('Course updated successfully!');
             } else {
@@ -447,7 +447,7 @@ const RedactTrainingCourse = () => {
                 );
                 const categoriesResponse =
                     await TrainingCourseService.getAllCategoriesWitTags();
-                const courseDetail = courseResponse?.data.body;
+                const courseDetail = courseResponse?.data;
 
                 setValue('name', courseDetail?.name || '');
                 setValue('description', courseDetail?.description || '');

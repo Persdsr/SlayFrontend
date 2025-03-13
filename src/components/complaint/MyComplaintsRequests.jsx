@@ -22,7 +22,13 @@ const MyComplaintsRequests = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const sortedData = await ComplaintService.getAllUserComplaints();
+        const username = authStore?.userData?.username;
+
+        if (!username) {
+          return
+        }
+
+        const sortedData = await ComplaintService.getAllUserComplaints(authStore?.userData?.username);
         setComplaints(sortedData);
         setFilteredSupports(sortedData);
 
@@ -80,10 +86,9 @@ const MyComplaintsRequests = () => {
 
   return (
     <div className="content-container">
-      <UserRequestsToolbar />
 
       <div className="content-block">
-        <h2>Супорты</h2>
+        <h2>Complaints</h2>
         <div className="main-content">
           <div className="object-list-container">
             {currentItems?.length > 0 ? (
@@ -91,7 +96,7 @@ const MyComplaintsRequests = () => {
                 <ComplaintItem complaint={complaint} />
               ))
             ) : (
-              <p>Нет данных для отображения.</p>
+              <p>There is not data to display</p>
             )}
             {filteredSupports?.length > 0 && (
               <div className="pagination">

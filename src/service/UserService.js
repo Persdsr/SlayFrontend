@@ -64,25 +64,31 @@ export default class UserService {
     return response;
   }
 
-  static async getUserProfileData() {
+  static async getUserProfileData(username) {
     const response = await axios.get(
       `${process.env.REACT_APP_API_BASE_URL}/api/user/profile`,
       {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
         },
+          params: {
+            username: username
+          }
       }
     );
     return response;
   }
 
-  static async getUserPurchaseCourses() {
+  static async getUserPurchaseCourses(username) {
     const response = await axios.get(
       `${process.env.REACT_APP_API_BASE_URL}/api/user/purchase-courses`,
       {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
         },
+        params: {
+          username: username
+        }
       }
     );
     return response;

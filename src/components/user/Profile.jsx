@@ -18,7 +18,6 @@ const Profile = () => {
   const [menuOpen, setMenuOpen] = useState('');
   const [menuReviewOpen, setMenuReviewOpen] = useState(null);
   const [editCourseId, setEditCourseId] = useState(null);
-  const [editedDescription, setEditedDescription] = useState('');
   const [showComplaintModal, setShowComplaintModal] = useState(false);
   const [selectedCourseId, setSelectedCourseId] = useState(null);
   const { register, handleSubmit, reset } = useForm();
@@ -96,29 +95,6 @@ const Profile = () => {
       } catch (error) {
         console.log('Error delete review:', error);
       }
-    }
-  };
-
-  const startEditing = (course) => {
-    setEditCourseId(course.id);
-    setEditedDescription(course.description);
-  };
-
-  const saveChanges = async (courseId) => {
-    try {
-      await TrainingCourseService.updateTrainingCourseByFields(courseId, {
-        description: editedDescription,
-      });
-      const updatedCourses = data.courses.map((course) =>
-        course.id === courseId
-          ? { ...course, description: editedDescription }
-          : course
-      );
-      setData(updatedCourses);
-      setEditCourseId(null);
-      window.location.reload();
-    } catch (error) {
-      console.log('Error updating course:', error);
     }
   };
 
@@ -391,10 +367,20 @@ const Profile = () => {
                       </button>
                       {menuOpen === course.name && (
                         <ul className="profile-menu-dropdown">
-                          <li onClick={() => deleteCourse(course.id)}>
-                            Delete
-                          </li>
-                          <li onClick={() => startEditing(course)}>Redact</li>
+                          {
+                            authStore?.userData?.roles.includes('ADMIN', 'MODERATOR')
+                                || authStore?.userData?.username === data.author.username
+                            ? (
+                                    <>
+                                      <li onClick={() => deleteCourse(course.id)}>
+                                        Delete
+                                      </li>
+                                      <li onClick={() => navigate(`/redact-course/${course.id}`)}>Redact</li>
+                                    </>
+
+
+                                ) : ""
+                          }
                           <li onClick={() => openComplaintModal(course.id)}>
                             Report
                           </li>
@@ -402,22 +388,6 @@ const Profile = () => {
                       )}
                     </div>
                   </div>
-
-                  {editCourseId === course.id ? (
-                    <div className="user-training-course-edit">
-                      <textarea
-                        value={editedDescription}
-                        onChange={(e) => setEditedDescription(e.target.value)}
-                      />
-                      <button onClick={() => saveChanges(course.id)}>
-                        Save
-                      </button>
-                    </div>
-                  ) : (
-                    <span className="user-training-course-description">
-                      {course.description}
-                    </span>
-                  )}
 
                   <div className="user-training-course-poster-block">
                     <img src={course.poster} alt="" />
@@ -486,14 +456,21 @@ const Profile = () => {
                   </button>
                   {menuReviewOpen === review?.id && (
                     <ul className="profile-menu-dropdown">
-                      <li onClick={() => deleteReview(review?.id)}>Delete</li>
-                      <li
+                      {
+                          authStore?.userData?.roles.includes('ADMIN', 'MODERATOR')
+                          || authStore?.userData?.username === data.author.username
+                          ?
+                              (
+                              <li onClick={() => deleteReview(review?.id)}>Delete</li>
+                          ) : ""
+                      }
+                      {/*<li
                         onClick={() =>
                           console.log('Change review', review?.id)
                         }
                       >
                         Redact
-                      </li>
+                      </li>*/}
                       {/* <li onClick={() => openComplaintModal(review.id)}>Пожаловаться</li>*/}
                     </ul>
                   )}

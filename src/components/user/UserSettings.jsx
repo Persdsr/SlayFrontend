@@ -6,6 +6,7 @@ import UserService from '../../service/UserService';
 import UserLeftToolbar from '../navbar/UserLeftToolbar';
 import LoadingPageIndicator from '../LoadingPageIndicator';
 import LoadingMiniIndicator from "../LoadingMiniIndicator";
+import {HttpStatusCode} from "axios";
 
 const UserSettings = () => {
   const authStore = useAuthStore();
@@ -39,7 +40,7 @@ const UserSettings = () => {
     );
 
     const response = await UserService.updateUserData(form);
-    if (response.status === 200) {
+    if (response.status === HttpStatusCode.NoContent) {
       window.location.reload();
     }
   };
@@ -47,9 +48,14 @@ const UserSettings = () => {
 
   useEffect(() => {
     setIsLoading(true);
-    try {
-      const fetchData = async () => {
-        const response = await UserService.getUserProfileData();
+    if (!authStore.userData?.username) {
+      setIsLoading(false);
+      return;
+    }
+
+    const fetchData = async () => {
+      try {
+        const response = await UserService.getUserProfileData(authStore.userData.username);
         setData(response.data);
         setValue('name', response.data.name || '');
         setValue('aboutMe', response.data.aboutMe || '');
@@ -60,14 +66,15 @@ const UserSettings = () => {
           const formattedDate = birthdayDate.toISOString().split('T')[0];
           setValue('birthday', formattedDate);
         }
-      };
-      fetchData();
-    } catch (e) {
-      console.error(e);
-    } finally {
-      setIsLoading(false);
-    }
-  }, [setValue]);
+      } catch (e) {
+        console.error(e);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchData();
+  }, [setValue, authStore?.userData?.username]);
 
   return (
       <div className="content-container">

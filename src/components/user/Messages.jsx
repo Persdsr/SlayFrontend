@@ -10,8 +10,11 @@ const Messages = () => {
 
   useEffect(() => {
     const fetchData = async () => {
+      if (!authStore?.userData?.username) {
+        return
+      }
       try {
-        const response = await ChatService.getChats();
+        const response = await ChatService.getChats(authStore?.userData?.username);
         setChats(response.data);
       } catch (error) {
         console.error('Error fetching data:', error);
