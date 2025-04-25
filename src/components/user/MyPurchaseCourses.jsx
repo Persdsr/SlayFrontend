@@ -21,6 +21,7 @@ const MyPurchaseCourses = () => {
       try {
         const sortedData = await UserService.getUserPurchaseCourses(username);
         setCourses(sortedData.data);
+        console.log(sortedData.data)
       } catch (error) {
         console.error('Error fetching data:', error);
       }

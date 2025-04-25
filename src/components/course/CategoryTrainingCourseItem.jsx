@@ -13,7 +13,7 @@ const CategoryTrainingCourseItem = ({ course }) => {
             <span>
               <img
                 className="catalog-author-avatar"
-                src={course.author.avatar || "/defaultAvatar.jpg"}
+                src={course?.author?.avatar || "/defaultAvatar.jpg"}
                 alt=""
               />
             </span>
@@ -24,8 +24,8 @@ const CategoryTrainingCourseItem = ({ course }) => {
         </div>
         <div className="author-name">
           <span className="course-name">{course?.name}</span>
-          <Link to={`/profile/${course?.author.username}`}>
-            <span className="card-author-name">{course?.author.username}</span>
+          <Link to={`/profile/${course?.author?.username}`}>
+            <span className="card-author-name">{course?.author?.username}</span>
           </Link>
         </div>
       </div>
